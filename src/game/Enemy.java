@@ -14,15 +14,6 @@ public abstract class Enemy {
 		currentRoad = road;
 	}
 	
-	/**
-	 Csak a skeleton bemutatása miatt lett létrehozva.
-	 */
-	public void setRoad(Road road){
-		
-		currentRoad = road;
-		
-	}
-	
 	public boolean damage(int damage){
 		System.out.println("Enemy --> damage(damage)");
 		return true;

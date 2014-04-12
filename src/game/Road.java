@@ -10,6 +10,7 @@ public class Road extends Block {
 	private boolean isFinal;
 	private MagicGem gem;
 	private Road nextRoad;
+	private Road nextRoad2;
 	
 	
 	public static int id = 1;		// csak a szkeleton miatt
@@ -51,7 +52,7 @@ public class Road extends Block {
 	}
 	
 	public void removeEnemy(Enemy enemy){
-		System.out.println("Road" + road_id +  "--> removeEnemy(enemy)");
+		enemies.remove(enemy);
 	}
 	
 	public MagicGem removeGem(){
@@ -62,25 +63,18 @@ public class Road extends Block {
 		isFinal = true;
 	}
 	public void setTrap(){
-		System.out.println("Road --> setTrap()");
 		isTrap = true;
-		
 	}
 	
 	public boolean isRoad(){
-		System.out.println("Road/Block --> isRoad()");
-		System.out.println("<-- true");
 		return true;
 	}
 	
 	public boolean isTrap(){
-		System.out.println("Road --> isTrap()");
-		System.out.println("<-- isTrap");
 		return isTrap;
 	}
 	
 	public boolean isFinal(){
-		System.out.println("Road" + road_id + " --> isFinal() ");
 		return isFinal;
 	}
 	
