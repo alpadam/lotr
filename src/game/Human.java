@@ -5,7 +5,7 @@ public class Human extends Enemy {
 	int trappedValue;
 	
 	public Human() {
-		// TODO Auto-generated constructor stub
+		health = 50;
 	}
 	
 	@Override
@@ -16,7 +16,20 @@ public class Human extends Enemy {
 	
 	@Override
 	public boolean damage(int damage) {
-		// TODO Auto-generated method stub
-		return false;
+		health -= Tower.simpleDamage;
+		if(health <= 0)
+			return true;
+		else
+			return false;
 	}
+
+	@Override
+	public Human duplicate() {
+		Human human = new Human();
+		int newhealth = health/2;
+		human.setHealth(newhealth);
+		human.setCurrentRoad(currentRoad);
+		return human;
+	}
+
 }

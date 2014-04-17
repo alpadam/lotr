@@ -10,6 +10,7 @@ public class Dwarf extends Enemy {
 	int trappedValue;
 	
 	public Dwarf() {
+		health = 50;
 		trappedValue = 0;
 	}
 	
@@ -59,6 +60,15 @@ public class Dwarf extends Enemy {
 	
 	public int getTrappedValue(){
 		return trappedValue;
+	}
+
+	@Override
+	public Dwarf duplicate() {
+		Dwarf dwarf = new Dwarf();
+		int newhealth = health/2;
+		dwarf.setHealth(newhealth);
+		dwarf.setCurrentRoad(currentRoad);
+		return dwarf;
 	}
 
 }

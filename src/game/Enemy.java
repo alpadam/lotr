@@ -7,16 +7,22 @@ public abstract class Enemy {
 
 	public abstract boolean move();
 	
+	public abstract Enemy duplicate();
+	
+	public void setHealth(int health){
+		this.health = health;
+	}
+	
 	public void setCurrentRoad(Road road){
-		
-		System.out.println("Enemy --> setCurrentRoad()" + "(road_id: " + road.road_id + ")");
-		
 		currentRoad = road;
 	}
 	
 	public boolean damage(int damage){
-		System.out.println("Enemy --> damage(damage)");
-		return true;
+		health -= damage;
+		if(health <= 0)
+			return true;
+		else
+			return false;
 	}
 	
 }
