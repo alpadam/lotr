@@ -1,5 +1,6 @@
 package game;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -157,6 +158,8 @@ public class Map {
 	public void createMap() {
 	}
 	
-	public void initMap() {
+	public void initMap(String path) throws IOException {
+		
+		
 	}
 }

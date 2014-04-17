@@ -8,7 +8,7 @@ public class Program {
 		
 		Controller controller = new Controller(5);
 		try {
-			controller.run(5);
+			controller.run();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

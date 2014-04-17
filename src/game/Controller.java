@@ -108,7 +108,7 @@ public class Controller {
 	public void newGame() {
 	}
 	
-	public void run(int testNumber) throws IOException {
+	public void run() throws IOException {
 		
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 		String line = "";
@@ -121,38 +121,76 @@ public class Controller {
 			if(line.equals("teszt")){
 				
 				try{
+					System.out.println("teszt");
+					
 					
 					String mapFile = in.readLine();
 					
-					FileReader input = new FileReader(mapFile);
-					//initMap(mapFile);
+					map.initMap(mapFile);										//MEG KELL MÉG ÍRNI
 					
 					String commandFile = in.readLine();
-					BufferedReader reader = new BufferedReader(new FileReader(commandFile));
+					BufferedReader fileReader = new BufferedReader(new FileReader(commandFile));
 					
 					while(true) {
-						String row = reader.readLine();
-						if(row == null) break;
+						String row = fileReader.readLine();
+						if(row == null){
+							fileReader.close();
+							break;
+						}
 						System.out.println(row);
-						//parancskezeles(row);
+						
+						parancskezeles(row);
 					}
 						
 					}catch(IOException io){
 					
-						System.out.println("Rossz parancs!");
+						System.out.println("Rossz fájlnév!");
 					
 					}
 					
+				}else if(line.equals("game")){
+					
+					System.out.println("game");
 					
 					
+					map.initMap("defaultMap.txt");					//MEG KELL MÉG ÍRNI
 					
 					
+					while(true) {
+						String row2 = in.readLine();
+						if(row2 == null) break;
+						System.out.println(row2);
+						
+						parancskezeles(row2);
+					}
+					
+					
+				}else{
+					System.out.println("'teszt' illetve 'game' közül választhat!");
 				}
 				
 				
 			}	
-	
 
+		}
+	
+	
+		private void parancskezeles(String command){
+			
+			
+			
+			
+			
+			/*switch (key) {
+			case value:
+				
+				break;
+
+			default:
+				break;
+			}*/
+			
+			
 		}
 		
 
