@@ -4,12 +4,17 @@ public class Hobbit extends Enemy {
 	
 	public Hobbit() {
 		health = 50;
+		trappedValue = 0;
 	}
 	
 	@Override
 	public boolean move() {
-		// TODO Auto-generated method stub
-		return false;
+		
+		currentRoad.removeEnemy(this);
+		currentRoad = currentRoad.getNext(Map.RIGHT);
+		currentRoad.addEnemy(this);
+		
+		return currentRoad.isFinal();
 	}
 
 	@Override

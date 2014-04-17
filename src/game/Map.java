@@ -1,19 +1,24 @@
 package game;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Map {
 	
 	private List<Tower> towers;
-	private List<Road> firstRoads;
 	private List<Road> roads;
 	private List<Block> map;		
 	private List<Enemy> enemies;
 	
-	private Road finalRoad;
+	private HashMap<Tower, List<Road>> towerRoads;
 	
-	public static int ciklus = 0;	// IDEIGLENES --> SZKELETONHOZ KELL
+	public static boolean RIGHT = false;
+	
+	private Road finalRoad;
+	private Road firstRoad;
+
+	
 	
 	
 	public Map(int testNumber) {
@@ -22,8 +27,8 @@ public class Map {
 		map = new ArrayList<Block>();
 		towers = new ArrayList<Tower>();
 		roads = new ArrayList<Road>();
-		firstRoads = new ArrayList<Road>();
 		
+		towerRoads = new HashMap<Tower, List<Road>>();
 	}
 
 	/**
@@ -59,33 +64,45 @@ public class Map {
 	
 	public int shootingTowers() {
 		
-		System.out.println("Map --> shootingTowers()");
-		
 		int killedEnemies = 0;
 
-		System.out.println("Halt-e meg valaki a lövések során?: " + towers.get(0).shoot(roads) ); 
+		for (int i = 0; i < towers.size(); i++) {
+			
+			Tower tempTower = towers.get(i);
+	
+			List<Road> roads = towerRoads.get(tempTower);
+			boolean isDied = tempTower.shoot(roads);
+			
+			if(isDied)
+				killedEnemies++;
+		}
 		
-		killedEnemies++;
-		
-		refreshEnemies();
+		if(killedEnemies > 0) {
+			refreshEnemies();
+		}
 		
 		return killedEnemies;
 	}
 
 	public boolean moveEnemies() {
 		
-		System.out.println("Map --> moveEnemies()");
-		
 		boolean isFinal = false;
 		
-		Dwarf dwarf = (Dwarf) enemies.get(0);
-		System.out.println("Dwarf's trappedValue:" + dwarf.getTrappedValue());
-		
-		isFinal = dwarf.move();
-		isFinal = dwarf.move();
-		isFinal = dwarf.move();
-		
-		System.out.println("Elérték-e az utolsó road-ot?: " + isFinal);
+		for (int i = 0; i < enemies.size(); i++) {
+			Enemy tempEnemy = enemies.get(i);
+			isFinal = tempEnemy.move();
+			
+			if(isFinal) {
+				return true;
+			}
+			
+			if(tempEnemy.getClass() == Elf.class) {
+				isFinal = tempEnemy.move();
+				if(isFinal) {
+					return true;
+				}
+			}
+		}
 		
 		return isFinal;
 	}
@@ -123,20 +140,18 @@ public class Map {
 	
 	public void initEnemy(Enemy enemy) {
 		
-		System.out.println("Map --> initEnemy()");
-		
-		Road road = firstRoads.get(ciklus);
-		
 		enemies.add(enemy);
-		road.addEnemy(enemy);
+		firstRoad.addEnemy(enemy);
 		
-		enemy.setCurrentRoad(road);
-		
-		ciklus++;
+		enemy.setCurrentRoad(firstRoad);
 	}
 	
 	public void refreshEnemies() {
-		System.out.println("Controller --> refreshEnemies()");
+		for (int i = 0; i < enemies.size(); i++) {
+			if(enemies.get(i).getHealth() < 0) {
+				enemies.remove(i);
+			}
+		}	
 	}
 	
 	public void createMap() {

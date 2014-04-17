@@ -19,8 +19,12 @@ public class Road extends Block {
 	public Road() {
 		
 		isTrap = false;
+		isFinal = false;
+		gem = null;
+		nextRoad2 = null;
 		
 		enemies = new ArrayList<Enemy>();
+		
 		road_id = id;
 		id++;
 	}
@@ -28,16 +32,13 @@ public class Road extends Block {
 	public Road(boolean isTrap) {
 		
 		this.isTrap = isTrap;
-		
 		enemies = new ArrayList<Enemy>();
+		
 		road_id = id;
 		id++;
 	}
 	
 	public void addEnemy(Enemy enemy){
-		
-		System.out.println("Road" + road_id + " --> addEnemy(enemy)");
-		
 		enemies.add(enemy);
 	}
 	
@@ -46,8 +47,6 @@ public class Road extends Block {
 	}
 	
 	public void placeGem(MagicGem magicGem){
-		System.out.println("Road --> placeGem(gem) ");
-		
 		gem = magicGem;
 	}
 	
@@ -62,6 +61,7 @@ public class Road extends Block {
 	public void setFinal(){
 		isFinal = true;
 	}
+	
 	public void setTrap(){
 		isTrap = true;
 	}
@@ -78,27 +78,28 @@ public class Road extends Block {
 		return isFinal;
 	}
 	
-	public Road getNext(){
-		System.out.println("Road" + road_id + " --> getNext()");
-		return nextRoad;
+	public Road getNext(boolean right){
+		if(nextRoad2 == null || right == true)
+			return nextRoad;
+		else
+			return nextRoad2;
 	}
 	
 	public void setNext(Road road){
 		nextRoad = road;
 	}
 	
+	public void setNext2(Road road){
+		nextRoad2 = road;
+	}
+	
 	public Type getGemType(){
-		System.out.println("Road --> getGemType()");
-		if (gem == null) {
-			System.out.println("<-- null");
+		if (gem == null)
 			return null;
-		}
-		System.out.println("<-- type");
 		return gem.getType();
 	}
 	
 	public List<Enemy> getEnemies(){
-		System.out.println("Road --> getEnemies()");
 		return enemies;
 	}
 	

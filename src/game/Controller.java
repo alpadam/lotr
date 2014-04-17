@@ -1,5 +1,10 @@
 package game;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 public class Controller {
 	
 	private static int towerPrice = 20;		
@@ -103,37 +108,53 @@ public class Controller {
 	public void newGame() {
 	}
 	
-	/**
-	Két függvény van, amit a Controller run() függvénye automatikusan hív
-	Az ellenségek léptetése és a torony lövése
-	Ellenségek léptetése: meghívódik a map (Map) moveEnemies() függvénye
-	Torony lövése: meghívódik a map (Map) shootingTowers() függvénye,
-				   ami a megölt ellenségek számával tér vissza
-				   hogy bemutassuk, kiíratjuk hogyan nõ a játékos mágiája,
-				   ha megöl egy ellenséget
-	testNumber csak a szkeleton miatt van			   
-	*/
-	public void run(int testNumber){
+	public void run(int testNumber) throws IOException {
 		
-		System.out.println("Controller --> run()");
+		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+		String line = "";
 		
-		switch (testNumber) {
+		while(!line.equals("exit")) {
 			
-			case 8:
-				map.moveEnemies();
-				break;
-			case 9:
-				System.out.println("Varazsero:" + player.getMagic());
-				int killedEnemies = map.shootingTowers();
-				System.out.println("killedEnemies: " + killedEnemies);
-				player.addMagic(killedEnemies);
-				System.out.println("Varazsero:" + player.getMagic());
-				break;
 			
-			default:
-				break;
+			line = in.readLine();
+			
+			if(line.equals("teszt")){
+				
+				try{
+					
+					String mapFile = in.readLine();
+					
+					FileReader input = new FileReader(mapFile);
+					//initMap(mapFile);
+					
+					String commandFile = in.readLine();
+					BufferedReader reader = new BufferedReader(new FileReader(commandFile));
+					
+					while(true) {
+						String row = reader.readLine();
+						if(row == null) break;
+						System.out.println(row);
+						//parancskezeles(row);
+					}
+						
+					}catch(IOException io){
+					
+						System.out.println("Rossz parancs!");
+					
+					}
+					
+					
+					
+					
+					
+				}
+				
+				
+			}	
+	
+
 		}
 		
+
 		
 	}
-}

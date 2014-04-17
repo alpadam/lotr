@@ -1,10 +1,23 @@
 package game;
 
+import java.io.IOException;
+
 public class Program {
 
-	public static void main(String[] args) {
+	public static void main(String[] args)  {
 		
-		int testNumber = Integer.parseInt(args[0]);
+		Controller controller = new Controller(5);
+		try {
+			controller.run(5);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		
+		
+		
+		
+		/*int testNumber = Integer.parseInt(args[0]);
 		
 		//int testNumber = 9;
 		
@@ -98,6 +111,6 @@ public class Program {
 				
 			default:
 				break;
-		}
+		}*/
 	}
 }

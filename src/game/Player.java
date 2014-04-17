@@ -21,56 +21,31 @@ public class Player {
 		this.magic = 100;							
 		inventory = new ArrayList<MagicGem>();
 		
-		switch (testNumber) {
-		case 1:
-			inventory.add(new MagicGem(Type.RANGE_EXPANDER));
-			inventory.add(new MagicGem(Type.DAMAGE_INCREASER));
-			inventory.add(new MagicGem(Type.SHOOTING_INCREASER));
-			break;
-			
-		case 2:
-			inventory.add(new MagicGem(Type.MOVEMENT_DECREASER));
-			break;
-
-		default:
-			break;
-		}
 	}
 	
 	public void addGem(MagicGem magicGem) {
-		System.out.println("Player --> addGem()");
 		inventory.add(magicGem);
-		System.out.println("Inventory tartalma: ");
-		for (MagicGem g : inventory) {
-			System.out.println(g.getType() + " ");
-		}
 	}
 		
 	public MagicGem getGem(Type type) {
-		System.out.println("Player --> getGem(" + type + ")");
-		System.out.println("<-- gem");
 			
 		for (MagicGem g : inventory) {
 			if (g.getType() == type)
 				return g;
 		}
+		
 		return null;
 	}
 	
 	public int getMagic() {							
-		System.out.println("Player --> getMagic()");
-		System.out.println("<-- magic");
-		
 		return magic;
 	}
 	
 	public void substractMagic(int magic) {		
 		this.magic = this.magic-magic;
-		
 	}
 	
 	public void addMagic(int killedEnemies) {
-		System.out.println("Player --> addMagic(killedEnemies)");
 		this.magic += killedEnemies * Controller.killedEnemyReward;
 	}
 

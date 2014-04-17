@@ -2,16 +2,9 @@ package game;
 
 public class Elf extends Enemy {
 	
-	int trappedValue;
-	
 	public Elf() {
 		health = 50;
-	}
-	
-	@Override
-	public boolean move() {
-		// TODO Auto-generated method stub
-		return false;
+		trappedValue = 0;
 	}
 
 	@Override
@@ -24,3 +17,4 @@ public class Elf extends Enemy {
 	}
 	
 }
+
