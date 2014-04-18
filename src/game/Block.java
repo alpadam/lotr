@@ -9,4 +9,5 @@ public class Block {
 	public boolean isTower(){
 		return false;
 	}
+	
 }

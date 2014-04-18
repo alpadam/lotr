@@ -8,6 +8,7 @@ public class Road extends Block {
 	private List<Enemy> enemies;
 	private boolean isTrap;
 	private boolean isFinal;
+	private boolean isFirst;
 	private MagicGem gem;
 	private Road nextRoad;
 	private Road nextRoad2;
@@ -19,6 +20,7 @@ public class Road extends Block {
 	public Road() {
 		
 		isTrap = false;
+		isFinal = false;
 		isFinal = false;
 		gem = null;
 		nextRoad2 = null;
@@ -62,6 +64,10 @@ public class Road extends Block {
 		isFinal = true;
 	}
 	
+	public void setFirst(){
+		isFirst = true;
+	}
+	
 	public void setTrap(){
 		isTrap = true;
 	}
@@ -72,6 +78,10 @@ public class Road extends Block {
 	
 	public boolean isTrap(){
 		return isTrap;
+	}
+	
+	public boolean isFirst(){
+		return isFirst;
 	}
 	
 	public boolean isFinal(){
@@ -101,6 +111,11 @@ public class Road extends Block {
 	
 	public List<Enemy> getEnemies(){
 		return enemies;
+	}
+	
+	@Override
+	public String toString() {
+		return "road" + road_id + "szomszedai: " + nextRoad.road_id  + ", " + nextRoad2;
 	}
 	
 }

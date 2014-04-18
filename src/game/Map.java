@@ -6,28 +6,30 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Vector;
 
 public class Map {
 	
+	private Block[][] map;
+	
 	private List<Tower> towers;
 	private List<Road> roads;
-	private List<Block> map;		
 	private List<Enemy> enemies;
 	
 	private HashMap<Tower, List<Road>> towerRoads;
 	
 	public static boolean RIGHT = false;
 	
-	private Road finalRoad;
 	private Road firstRoad;
-
+	private Road finalRoad;
 	
 	
 	
 	public Map(int testNumber) {
 		
+		//map = new Block[][];
+		
 		enemies = new ArrayList<Enemy>();
-		map = new ArrayList<Block>();
 		towers = new ArrayList<Tower>();
 		roads = new ArrayList<Road>();
 		
@@ -41,13 +43,13 @@ public class Map {
 	 */
 	public void createTower(){							
 		System.out.println("Map --> createTower()");		
-		boolean isTower = map.get(0).isTower();
-		System.out.println("Torony-e?:" + isTower);
+		//boolean isTower = map.get(0).isTower();
+		//System.out.println("Torony-e?:" + isTower);
 		Tower tower = new Tower();
 		System.out.println("<<create>> tower ");
 		towers.add(tower);
 		System.out.println("Map --> towers.add(tower)");
-		map.remove(0);
+		//map.remove(0);
 		System.out.println("block removed");
 	}
 	
@@ -162,16 +164,64 @@ public class Map {
 	
 	public void initMap(String path) throws IOException {
 		
-		System.out.println("Pálya betöltése '" + path + "' fájlból.." );
+		//Block feltöltése fájlból
 		
-		BufferedReader fileReader = new BufferedReader(new FileReader(path));
+		BufferedReader br = new BufferedReader(new FileReader(path));
+		Vector<String> lines = new Vector<String>();
+		String s;
+		while((s = br.readLine()) != null) {
+			lines.add(s);
+		}
+		br.close();										/// ezmég nem jó lezárás...
 		
-		while(true) {
-			String row = fileReader.readLine();
-			if(row == null){
-				fileReader.close();
-				break;
+		Block[][] map = new Block[lines.size()][];
+		for (int i = 0; i < lines.size(); i++) {
+			s = lines.get(i);
+			map[i] = new Block[s.length()];
+			for (int j = 0; j < s.length(); j++) {
+				int value = Character.getNumericValue(s.charAt(j));
+				if (value == 0) {
+					map[i][j] = new Block();
+					System.out.println("0");
+				} else if (value == 1) {
+					map[i][j] = new Road();
+					System.out.println("1");
+				} else if (value == 2) {
+					Road firstRoad = new Road();
+					firstRoad.setFirst();
+					map[i][j] = firstRoad;
+					this.firstRoad = firstRoad;
+					System.out.println("2");
+				} else if (value == 3) {
+					Road finalRoad = new Road();
+					finalRoad.setFinal();
+					map[i][j] = finalRoad;
+					this.finalRoad = finalRoad;
+					System.out.println("3");
+				}
 			}
+		}		
+		
+		for (int i = 0; i < map.length-1; i++) {
+			for (int j = 0; j < map[i].length-1; j++) {
+				if(map[i][j].isRoad()) {
+					System.out.println("road");
+					Road tempRoad = (Road) map[i][j];
+					roads.add(tempRoad);
+					if(map[i+1][j].isRoad() && !map[i][j+1].isRoad()) { 
+						tempRoad.setNext((Road) map[i+1][j]);
+					} else if(map[i][j+1].isRoad() && !map[i+1][j].isRoad()) { 
+						tempRoad.setNext((Road) map[i][j+1]);
+					} else if(map[i][j+1].isRoad() && map[i+1][j].isRoad()) {
+						tempRoad.setNext((Road) map[i][j+1]);
+						tempRoad.setNext2((Road) map[i+1][j]);
+					}
+				}
+			}
+		}
+		
+		for (int i = 0; i < roads.size(); i++) {
+			System.out.println(roads.get(i).toString());
 		}
 		
 		
