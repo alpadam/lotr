@@ -115,6 +115,8 @@ public class Road extends Block {
 	
 	@Override
 	public String toString() {
+		if(road_id == 9)
+			return "Utolsó út";
 		return "road" + road_id + "szomszedai: " + nextRoad.road_id  + ", " + nextRoad2;
 	}
 	

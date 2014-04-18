@@ -1,0 +1,9 @@
+createEnemy dwarf
+listEnemies
+buildTower 6
+move
+shoot OFF ON
+listEnemies
+listTowers
+listRoads
+listMap

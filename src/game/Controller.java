@@ -34,7 +34,7 @@ public class Controller {
 		System.out.println("Controller --> buildTower() ");		
 		System.out.println("Varazsero:" + player.getMagic());
 		
-		map.createTower();
+		//map.createTower();
 		
 		player.substractMagic(towerPrice);
 		System.out.println("Player --> substractMagic(towerPrice)");
@@ -46,7 +46,7 @@ public class Controller {
 		System.out.println("Controller --> buildTrap()");
 		System.out.println("Varazsero:" + player.getMagic());
 		
-		map.createTrap();
+		//map.createTrap();
 		
 		player.substractMagic(trapPrice);
 		System.out.println("Varazsero:" + player.getMagic());
@@ -172,23 +172,315 @@ public class Controller {
 		}
 	
 	
-		private void parancskezeles(String command){
-			
-			System.out.println(command);
-			
-			
-			
-			/*switch (key) {
-			case value:
+	private void parancskezeles(String command) {
+
+		String[] commandSplit = command.split(" ");
+
+		if (commandSplit.length >= 1) { // csak akkor, ha valami szöveget
+										// tartalmaz a command
+
+			switch (commandSplit[0]) {
+
+			case "createEnemy":
+
+				if (commandSplit.length == 1) {
+					System.out.println("Nincs elég argumentum!");
+					break;
+				}
+				switch (commandSplit[1]) {
+
+				case "dwarf":
+					// this.createEnemy(Dwarf.class);
+					System.out.println("dwarf létrehozás");
+					break;
+				case "hobbit":
+					// this.createEnemy(Hobbit.class);
+					System.out.println("hobbit létrehozás");
+					break;
+				case "human":
+					// this.createEnemy(Human.class);
+					System.out.println("human létrehozás");
+					break;
+				case "elf":
+					// this.createEnemy(Elf.class);
+					System.out.println("elf létrehozás");
+					break;
+				default:
+					System.out.println("nincs ilyen elleségtípus!");
+					break;
+
+				}
+
+				break;
+
+			case "move":
+
+				switch (commandSplit[1]) {
+				case "JOBB":
+					Map.RIGHT = true;
+					System.out.println("jobbra mozgás");
+					break;
+
+				case "BAL":
+					Map.RIGHT = false;
+					System.out.println("balra mozgás");
+					break;
+
+				default:
+					System.out.println("nincs ilyen paraméter!");
+					break;
+				}
+				
+				// map.moveEnemies();
 				
 				break;
 
-			default:
+			case "shoot":
+				if (commandSplit.length <= 2) {
+					System.out.println("Nincs elég argumentum!");
+					break;
+				}else{
+					
+					if(commandSplit[1].equals("OFF") && commandSplit[2].equals("OFF")){
+						Map.DUPLICATE = false;
+						Map.FOG = false;
+						System.out.println("Köd off, duplicate: off");
+						
+					}else if(commandSplit[1].equals("ON") && commandSplit[2].equals("OFF")){
+						Map.DUPLICATE = false;
+						Map.FOG = true;
+						System.out.println("Köd on, duplicate: off");
+						
+					}else if(commandSplit[1].equals("OFF") && commandSplit[2].equals("ON")){
+						Map.DUPLICATE = false;
+						Map.FOG = true;
+						System.out.println("Köd off, duplicate: on");
+					}else if(commandSplit[1].equals("ON") && commandSplit[2].equals("ON")){
+						Map.DUPLICATE = true;
+						Map.FOG = true;
+						System.out.println("Köd on, duplicate: on");
+						
+					}else{
+						System.out.println("Nem megfelelõ argumnetum!");
+					}
+					
+					//map.shootingTowers();
+				}
+				
 				break;
-			}*/
-			
-			
+
+			case "buildTrap":
+				if (commandSplit.length == 1) {
+					System.out.println("Nincs elég argumentum!");
+					break;
+				}
+				try {
+					int id = Integer.parseInt(commandSplit[1]);
+
+					// this.buildTrap(id);
+
+					System.out.println("Csapda létrejött a " + id
+							+ " azonosítójú útra");
+				} catch (NumberFormatException e) {
+					System.out.println("Nem jó azonsító!");
+					break;
+				}
+				break;
+
+			case "buildTower":
+				if (commandSplit.length == 1) {
+					System.out.println("Nincs elég argumentum!");
+					break;
+				}
+				try {
+					int hol = Integer.parseInt(commandSplit[1]);
+
+					// this.buildTower(hol);
+
+					System.out.println("Torony létrejött a " + hol + " helyre");
+				} catch (NumberFormatException e) {
+					System.out.println("Nem jó azonsító!");
+					break;
+				}
+				break;
+
+			case "gemToTower":
+				if (commandSplit.length == 1) {
+					System.out.println("Nincs elég argumentum!");
+					break;
+				}
+				try {
+					int toronyazonosito = Integer.parseInt(commandSplit[2]);
+
+					switch (commandSplit[1]) {
+
+					case "rangeExpander":
+						// this.placeGem(Type.RANGE_EXPANDER, toronyazonosito);
+						System.out.println("Range Expander gem elhelyezve "
+								+ toronyazonosito + " toronyba");
+						break;
+					case "damageIncreaser":
+						// this.placeGem(Type.DAMAGE_INCREASER, toronyazonosito);
+						System.out.println("damage Increaser gem elhelyezve "
+								+ toronyazonosito + " toronyba");
+						break;
+					case "shootingIncreaser":
+						// this.placeGem(Type.SHOOTING_INCREASER, toronyazonosito);
+						System.out.println("Shooting Increaser gem elhelyezve "
+								+ toronyazonosito + " toronyba");
+						break;
+						
+					default:
+						System.out.println("nincs ilyen gem típus!");
+						break;
+
+					}
+
+				} catch (NumberFormatException e) {
+					System.out.println("nem jó azonosító");
+					break;
+				}
+
+				break;
+
+			case "gemToTrap":
+				if (commandSplit.length == 1) {
+					System.out.println("Nincs elég argumentum!");
+					break;
+				}
+				try {
+					int roadazonosito = Integer.parseInt(commandSplit[1]);
+
+					// this.PlaceGem(Type.MOVEMENT_DECREASER);
+
+					System.out.println("Gem elhelyezve" + roadazonosito
+							+ " helyre");
+				} catch (NumberFormatException e) {
+					System.out.println("Nem jó azonsító!");
+				}
+
+				break;
+
+			case "buyGem":
+				if (commandSplit.length == 1) {
+					System.out.println("Nincs elég argumentum!");
+					break;
+				}
+
+				switch (commandSplit[1]) {
+				case "rangeExpander":
+					// this.buyGem(Type.RANGE_EXPANDER);
+					System.out.println("Range Expander gem megvásárolva!");
+					break;
+				case "damageIncreaser":
+					// this.buyGem(Type.DAMAGE_INCREASER);
+					System.out.println("Damage increaser gem megvásárolva!");
+					break;
+				case "shootingIncreaser":
+					// this.buyGem(Type.SHOOTING_INCREASER);
+					System.out.println(" Shooting Increaser gem megvásárolva!");
+					break;
+				case "movementDecreaser":
+					// this.buyGem(Type.MOVEMENT_DECREASER);
+					System.out.println("Movement decreaser gem megvásárolva!");
+					break;
+				default:
+					System.out.println("nincs ilyen gem típus!");
+					break;
+
+				}
+
+				break;
+
+			case "removeGem":
+				if (commandSplit.length == 1) {
+					System.out.println("Nincs elég argumentum!");
+					break;
+				}
+				try {
+					int toronyazonosito = Integer.parseInt(commandSplit[1]);
+
+					// this.removeGem(toronyazonosito);
+
+					System.out.println("Gem kivéve a  " + toronyazonosito
+							+ " toronyból");
+				} catch (NumberFormatException e) {
+					System.out.println("Nem jó azonsító!");
+				}
+				break;
+
+			case "simulate":
+
+				// map.moveEnemies(true);
+				// this.shootingTowers(false,false);
+				System.out.println("simulálás - lépés, lövés");
+
+				break;
+
+			case "listInventory":
+
+				System.out.println("listInventory");
+				// player
+
+				break;
+
+			case "listEnemies":
+
+				System.out.println("Ellenségek:");
+				// map.listEnemies();
+				break;
+
+			case "listTowers":
+
+				System.out.println("Tornyok:");
+				// map.listTowers();
+				break;
+
+			case "listRoads":
+
+				System.out.println("Utak:");
+				// map.listRoads();
+				break;
+
+			case "listMap":
+
+				System.out.println("Pálya:");
+				// map.listMap();
+				break;
+
+			case "help":
+
+				System.out.println("Parancsok:\n");
+				System.out
+						.println("createEnemy <enemy típus>\t\t\t\t Ellenség létrehozás\n"
+								+ "move <irány> \t\t\t\t\t\t Ellenségek mozgatása\n"
+								+ "shoot <köd ON/OFF> <kettészedõ lövedék ON/OFF> \t\t Lövés toronnyal\n"
+								+ "buildTrap <útazonosító> \t\t\t\t Akadály építése a megfelelõ útra\n"
+								+ "buildTower <hol> \t\t\t\t\t Torony építése a megfelelõ blokkra\n"
+								+ "gemToTower <gem típus> <toronyazonosító> \t\t Torony fejlesztése a megfelelõ gemmel.\n"
+								+ "gemToTrap <roadazonosító> \t\t\t\t Varázskõ elhelyezése a megfelelõ akadályba\n"
+								+ "buyGem <gem típus> \t\t\t\t\t Megfelelõ varázskõ vásárlása\n"
+								+ "removeGem <toronyazonosító> \t\t\t\t Varázskõ kivétele a megfelelõ toronyból\n"
+								+ "simulate \t\t\t\t\t\t Szimuláció: Ellenségek léptetése, tornyok lövése.\n"
+								+ "listInventory \t\t\t\t\t\t Játékos rendelkezésére álló varázskövek listázása\n"
+								+ "listEnemies \t\t\t\t\t\t A pályán lévõ ellenségek kilistázása.\n"
+								+ "listTowers \t\t\t\t\t\t A pályán lévõ tornyok kilistázása.\n"
+								+ "listRoads \t\t\t\t\t\t A pályán lévõ utak kilistázása.\n"
+								+ "listMap \t\t\t\t\t\t A pálya kirajzolása.\n"
+								+ "help \t\t\t\t\t\t\t Parancsok kilistázása.\n"
+								+ "exit \t\t\t\t\t\t\t Kilépés a programoból.");
+				break;
+
+			case "exit":
+
+				System.out.println("Exit");
+				break;
+			default:
+				System.out.println("Nincs ilyen parancs!");
+				break;
+			}
 		}
+	}
 		
 
 		

@@ -1,0 +1,10 @@
+createEnemy human
+createEnemy hobbit
+buildTrap 2
+listEnemies
+listRoads
+move
+listEnemies
+move
+listEnemies
+listRoads

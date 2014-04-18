@@ -19,6 +19,8 @@ public class Map {
 	private HashMap<Tower, List<Road>> towerRoads;
 	
 	public static boolean RIGHT = false;
+	public static boolean DUPLICATE = false;
+	public static boolean FOG = false;
 	
 	private Road firstRoad;
 	private Road finalRoad;
@@ -41,7 +43,7 @@ public class Map {
 	Nem a Controller run() függvényében hívjuk meg, mert ezt a függvényt 
 	közvetlenül a user fogja hívni
 	 */
-	public void createTower(){							
+	public void createTower(int blockId){							
 		System.out.println("Map --> createTower()");		
 		//boolean isTower = map.get(0).isTower();
 		//System.out.println("Torony-e?:" + isTower);
@@ -53,7 +55,7 @@ public class Map {
 		System.out.println("block removed");
 	}
 	
-	public void createTrap(){
+	public void createTrap(int roadId){
 		System.out.println("Map --> createTrap()");
 		
 		Road r = roads.get(0);
@@ -144,10 +146,8 @@ public class Map {
 	}
 	
 	public void initEnemy(Enemy enemy) {
-		
 		enemies.add(enemy);
 		firstRoad.addEnemy(enemy);
-		
 		enemy.setCurrentRoad(firstRoad);
 	}
 	
@@ -172,7 +172,7 @@ public class Map {
 		while((s = br.readLine()) != null) {
 			lines.add(s);
 		}
-		br.close();										/// ezmég nem jó lezárás...
+		br.close();										/// ez még nem jó lezárás...
 		
 		Block[][] map = new Block[lines.size()][];
 		for (int i = 0; i < lines.size(); i++) {
@@ -202,19 +202,34 @@ public class Map {
 			}
 		}		
 		
-		for (int i = 0; i < map.length-1; i++) {
-			for (int j = 0; j < map[i].length-1; j++) {
+		for (int i = 0; i < map.length; i++) {
+			for (int j = 0; j < map[i].length; j++) {
 				if(map[i][j].isRoad()) {
+					
 					System.out.println("road");
 					Road tempRoad = (Road) map[i][j];
 					roads.add(tempRoad);
-					if(map[i+1][j].isRoad() && !map[i][j+1].isRoad()) { 
-						tempRoad.setNext((Road) map[i+1][j]);
-					} else if(map[i][j+1].isRoad() && !map[i+1][j].isRoad()) { 
-						tempRoad.setNext((Road) map[i][j+1]);
-					} else if(map[i][j+1].isRoad() && map[i+1][j].isRoad()) {
-						tempRoad.setNext((Road) map[i][j+1]);
-						tempRoad.setNext2((Road) map[i+1][j]);
+					
+					if(!tempRoad.isFinal()){
+						
+						if( (i == map.length-1) && map[i][j+1].isRoad()){
+	
+							tempRoad.setNext((Road) map[i][j+1]);
+	
+						}else if( (j == map[i].length-1) && map[i+1][j].isRoad()) {
+							
+							tempRoad.setNext((Road) map[i+1][j]);
+							
+						}else {
+							if(map[i+1][j].isRoad() && !map[i][j+1].isRoad()) { 
+								tempRoad.setNext((Road) map[i+1][j]);
+							} else if(map[i][j+1].isRoad() && !map[i+1][j].isRoad()) { 
+								tempRoad.setNext((Road) map[i][j+1]);
+							} else if(map[i][j+1].isRoad() && map[i+1][j].isRoad()) {
+								tempRoad.setNext((Road) map[i][j+1]);
+								tempRoad.setNext2((Road) map[i+1][j]);
+							}
+						}
 					}
 				}
 			}
@@ -225,5 +240,26 @@ public class Map {
 		}
 		
 		
+	}
+
+	
+	public Block[][] getMap() {
+		return map;
+	}
+
+	public List<Tower> getTowers() {
+		return towers;
+	}
+
+	public List<Road> getRoads() {
+		return roads;
+	}
+
+	public List<Enemy> getEnemies() {
+		return enemies;
+	}
+
+	public HashMap<Tower, List<Road>> getTowerRoads() {
+		return towerRoads;
 	}
 }

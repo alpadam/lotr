@@ -1,0 +1,9 @@
+createEnemy elf
+listEnemies
+buildTower 6
+simulate
+listEnemies
+listTowers
+gemToTower damageIncreaser 1
+simulate
+listEnemies

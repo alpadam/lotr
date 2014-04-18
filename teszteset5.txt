@@ -1,0 +1,3 @@
+buildTower 6
+listTowers
+buyGem damageIncreaser
