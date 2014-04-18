@@ -1,5 +1,7 @@
 package game;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -159,6 +161,18 @@ public class Map {
 	}
 	
 	public void initMap(String path) throws IOException {
+		
+		System.out.println("Pálya betöltése '" + path + "' fájlból.." );
+		
+		BufferedReader fileReader = new BufferedReader(new FileReader(path));
+		
+		while(true) {
+			String row = fileReader.readLine();
+			if(row == null){
+				fileReader.close();
+				break;
+			}
+		}
 		
 		
 	}

@@ -124,10 +124,11 @@ public class Controller {
 					System.out.println("teszt");
 					
 					
+					System.out.println("Pálya fájl: '<név>.txt':");
 					String mapFile = in.readLine();
-					
 					map.initMap(mapFile);										//MEG KELL MÉG ÍRNI
 					
+					System.out.println("Parancs fájl: '<név>.txt':");
 					String commandFile = in.readLine();
 					BufferedReader fileReader = new BufferedReader(new FileReader(commandFile));
 					
@@ -137,8 +138,6 @@ public class Controller {
 							fileReader.close();
 							break;
 						}
-						System.out.println(row);
-						
 						parancskezeles(row);
 					}
 						
@@ -152,14 +151,12 @@ public class Controller {
 					
 					System.out.println("game");
 					
-					
+					System.out.println("Pálya betöltése: defaultMap.txt-bõl");
 					map.initMap("defaultMap.txt");					//MEG KELL MÉG ÍRNI
-					
 					
 					while(true) {
 						String row2 = in.readLine();
 						if(row2 == null) break;
-						System.out.println(row2);
 						
 						parancskezeles(row2);
 					}
@@ -177,7 +174,7 @@ public class Controller {
 	
 		private void parancskezeles(String command){
 			
-			
+			System.out.println(command);
 			
 			
 			
