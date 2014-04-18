@@ -214,7 +214,13 @@ public class Controller {
 				break;
 
 			case "move":
-
+				
+				if (commandSplit.length == 1) {
+					Map.RIGHT = false;
+					System.out.println("véletlenszerû lépés");
+					break;
+				}
+			
 				switch (commandSplit[1]) {
 				case "JOBB":
 					Map.RIGHT = true;
