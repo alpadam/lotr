@@ -63,8 +63,8 @@ public abstract class Enemy {
 		return health;
 	}
 	
-	public String getEnemyID(){
-		return "Enemy#" + enemy_id;
+	public int getEnemyID(){
+		return enemy_id;
 	}
 	
 	public Road getCurrentRoad(){

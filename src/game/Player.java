@@ -23,6 +23,8 @@ public class Player {
 		
 	}
 	
+
+
 	public void addGem(MagicGem magicGem) {
 		inventory.add(magicGem);
 	}
@@ -48,5 +50,10 @@ public class Player {
 	public void addMagic(int killedEnemies) {
 		this.magic += killedEnemies * Controller.killedEnemyReward;
 	}
+	
+	public List<MagicGem> getInventory() {
+		return inventory;
+	}
+	
 
 }

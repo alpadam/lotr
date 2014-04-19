@@ -105,15 +105,12 @@ public class Controller {
 
 	public void buyGem(Type type) {
 
-		System.out.println("Controller --> buyGem(" + type + ") ");
-		System.out.println("Varazsero:" + player.getMagic());
-
 		MagicGem gem = new MagicGem(type);
 
 		player.addGem(gem);
 
 		player.substractMagic(gemPrice);
-		System.out.println("Varazsero:" + player.getMagic());
+		System.out.println(gem.getGemTypeName() + " varázskõ megvásárolva!");
 	}
 
 	public void newGame() {
@@ -389,20 +386,20 @@ public class Controller {
 
 				switch (commandSplit[1]) {
 				case "rangeExpander":
-					// this.buyGem(Type.RANGE_EXPANDER);
-					System.out.println("Range Expander gem megvásárolva!");
+					 this.buyGem(Type.RANGE_EXPANDER);
+					
 					break;
 				case "damageIncreaser":
-					// this.buyGem(Type.DAMAGE_INCREASER);
-					System.out.println("Damage increaser gem megvásárolva!");
+					 this.buyGem(Type.DAMAGE_INCREASER);
+				
 					break;
 				case "shootingIncreaser":
-					// this.buyGem(Type.SHOOTING_INCREASER);
-					System.out.println(" Shooting Increaser gem megvásárolva!");
+					 this.buyGem(Type.SHOOTING_INCREASER);
+					
 					break;
 				case "movementDecreaser":
-					// this.buyGem(Type.MOVEMENT_DECREASER);
-					System.out.println("Movement decreaser gem megvásárolva!");
+					 this.buyGem(Type.MOVEMENT_DECREASER);
+					
 					break;
 				default:
 					System.out.println("nincs ilyen gem típus!");
@@ -439,20 +436,24 @@ public class Controller {
 
 			case "listInventory":
 
-				System.out.println("listInventory");
-				// player
+				System.out.println("Inventory:");
+				for (int i = 0; i < player.getInventory().size(); i++) {
+					MagicGem tempGem = player.getInventory().get(i);
+					System.out.println("Varázskõ#" + tempGem.getGemID() + "\t" + tempGem.getGemTypeName());
+					
+				}
 
 				break;
 
 			case "listEnemies":
 
-				System.out.println("Az Enemy lista:\n");
+				System.out.println("Az Enemy lista:");
 				for (int i = 0; i < map.getEnemies().size(); i++) {
 					
 					Enemy e = map.getEnemies().get(i);
-					System.out.println("\t"+ e.getEnemyID() + "\t"
+					System.out.println("\t"+"Enemy#"+ e.getEnemyID() + "\t"
 							+ e.getClass().toString() + "\t" + "Életerõ:"+ e.getHealth()
-							+"\t" + "Road:" + e.getCurrentRoad().getRoadID());
+							+"\t" + "Road:" + "Road#" + e.getCurrentRoad().getRoadID());
 				}
 				break;
 
@@ -461,20 +462,20 @@ public class Controller {
 				System.out.println("Torony lista:");
 				for (int i = 0; i < map.getTowers().size(); i++) {
 					Tower t = map.getTowers().get(i);
-					System.out.println(t.getTowerID() + "\t" + "gem: MÉG MEG KELL ÍRNI" );
+					System.out.println("Tower#" + t.getTowerID() + "\t" + "gem: MÉG MEG KELL ÍRNI" );
 					
 				}
 				break;
 
 			case "listRoads":
 
-				System.out.println("Road lista:\n");
+				System.out.println("Road lista:");
 				for (int i = 0; i < map.getRoads().size(); i++) {
 					Road r = map.getRoads().get(i);
-					System.out.println("\t" + r.getRoadID() + "\t" + "helye: ??? MEG KELL ÍRNI!" + "\t"
-					+ " Ellenségek:");
+					System.out.println("\t" +"Road#"+ r.getRoadID() + "\t" + "helye: ??? MEG KELL ÍRNI!" + "\t"
+					+ "Akadály-e:"+(r.isTrap() ? "Igen" : "Nem")+ "\t "+ " Ellenségek:");
 					for (int j = 0; j < r.getEnemies().size(); j++) {
-						System.out.println("\t\t\t\t\t\t" + r.getEnemies().get(j).getEnemyID());
+						System.out.println("\t\t\t\t\t\t\t\t" +"Enemy#"+ r.getEnemies().get(j).getEnemyID());
 						
 					}
 					

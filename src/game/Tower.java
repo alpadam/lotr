@@ -72,7 +72,7 @@ public class Tower extends Block {
 		return true;
 	}
 	
-	public String getTowerID(){
-		return "Tower#" + tower_id;
+	public int getTowerID(){
+		return tower_id;
 	}
 }
