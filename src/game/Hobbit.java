@@ -5,6 +5,11 @@ public class Hobbit extends Enemy {
 	public Hobbit() {
 		health = 50;
 		trappedValue = 0;
+		
+		enemy_id = id;
+		id++;
+		
+		System.out.println("A Hobbit#"+ enemy_id + " ellenség létrejött!");
 	}
 	
 	@Override

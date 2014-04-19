@@ -10,6 +10,11 @@ public class Dwarf extends Enemy {
 	public Dwarf() {
 		health = 50;
 		trappedValue = 0;
+		
+		enemy_id = id;
+		id++;
+		
+		System.out.println("A Dwarf#"+ enemy_id + " ellenség létrejött!");
 	}
 
 	@Override

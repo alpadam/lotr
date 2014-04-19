@@ -120,4 +120,8 @@ public class Road extends Block {
 		return "road" + road_id + "szomszedai: " + nextRoad.road_id  + ", " + nextRoad2;
 	}
 	
+	public String getRoadID(){
+		return "Road#" +road_id;
+	}
+	
 }

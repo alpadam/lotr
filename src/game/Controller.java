@@ -6,172 +6,180 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class Controller {
-	
-	private static int towerPrice = 20;		
+
+	private static int towerPrice = 20;
 	private static int trapPrice = 10;
 	private static int gemPrice = 5;
 	public static int killedEnemyReward = 10;
-	
+
 	private Map map;
 	private Player player;
 	private int killedEnemies;
 	private int sumOfEnemies;
-	
-	
+
 	public Controller(int testNumber) {
-		
+
 		map = new Map(testNumber);
-		player = new Player(testNumber); 
-		
+		player = new Player(testNumber);
+
 		sumOfEnemies = 0;
 	}
-	
-	public Map getMap(){
+
+	public Map getMap() {
 		return map;
 	}
-	
-	public void buildTower(){
-		System.out.println("Controller --> buildTower() ");		
+
+	public void buildTower() {
+		System.out.println("Controller --> buildTower() ");
 		System.out.println("Varazsero:" + player.getMagic());
-		
-		//map.createTower();
-		
+
+		// map.createTower();
+
 		player.substractMagic(towerPrice);
 		System.out.println("Player --> substractMagic(towerPrice)");
 		System.out.println("Varazsero:" + player.getMagic());
 	}
-	
+
 	public void buildTrap() {
-		
+
 		System.out.println("Controller --> buildTrap()");
 		System.out.println("Varazsero:" + player.getMagic());
-		
-		//map.createTrap();
-		
+
+		// map.createTrap();
+
 		player.substractMagic(trapPrice);
 		System.out.println("Varazsero:" + player.getMagic());
-		
+
 	}
-	
-	public void createEnemy() {
-		
-		System.out.println("Controller --> createEnemy() ");
-		
-		Dwarf dwarf = new Dwarf();
-		System.out.println("Dwarf létrejött!");
-		map.initEnemy(dwarf);
-		
+
+	public void createEnemy(Class<? extends Enemy> c) {
+
+		if (c == Elf.class) {
+			
+			Elf elf = new Elf();
+			map.initEnemy(elf);
+			
+		} else if (c == Hobbit.class) {
+
+			Hobbit hobbit = new Hobbit();					//Lehet nem a legszebb megoldás, 
+			map.initEnemy(hobbit);							//de így láttam egyszerûnek. :D - Zsoca
+			
+		} else if (c == Human.class) {
+
+			Human human = new Human();
+			map.initEnemy(human);
+			
+		} else if (c == Dwarf.class) {
+
+			Dwarf dwarf = new Dwarf();
+			map.initEnemy(dwarf);
+
+		}
+
 		sumOfEnemies++;
-		
-		Elf elf = new Elf();
-		map.initEnemy(elf);
-		
-		sumOfEnemies++;
-		
+
 	}
-	
+
 	public void placeGem(Type type, boolean tmp) {
 		/**
-		 * a tmp változóra csak a szkeletonban van szükség, ezzel jelezzük, hogy melyik teszteset hívódik meg:
-		 * a kõ elhelyezése toronyba (=false), vagy a kõ elhelyezése akadályba (=true)
-		 */ 
-			
+		 * a tmp változóra csak a szkeletonban van szükség, ezzel jelezzük, hogy
+		 * melyik teszteset hívódik meg: a kõ elhelyezése toronyba (=false),
+		 * vagy a kõ elhelyezése akadályba (=true)
+		 */
+
 		System.out.println("Controller --> placeGem(" + type + ") ");
 		MagicGem gem = player.getGem(type);
-			
+
 		map.placeGem(gem, tmp);
 	}
-	
+
 	public void removeGem() {
-			
+
 		System.out.println("Controller --> removeGem()");
-			
+
 		MagicGem gem = map.removeGem();
-			
-		if (gem!= null)
+
+		if (gem != null)
 			player.addGem(gem);
 	}
-		
+
 	public void buyGem(Type type) {
-			
-		System.out.println("Controller --> buyGem("+ type +") ");
+
+		System.out.println("Controller --> buyGem(" + type + ") ");
 		System.out.println("Varazsero:" + player.getMagic());
-			
+
 		MagicGem gem = new MagicGem(type);
-			
+
 		player.addGem(gem);
-			
+
 		player.substractMagic(gemPrice);
 		System.out.println("Varazsero:" + player.getMagic());
 	}
-	
+
 	public void newGame() {
 	}
-	
+
 	public void run() throws IOException {
-		
+
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 		String line = "";
-		
-		while(!line.equals("exit")) {
-			
-			
+
+		while (!line.equals("exit")) {
+
 			line = in.readLine();
-			
-			if(line.equals("teszt")){
-				
-				try{
+
+			if (line.equals("teszt")) {
+
+				try {
 					System.out.println("teszt");
-					
-					
+
 					System.out.println("Pálya fájl: '<név>.txt':");
 					String mapFile = in.readLine();
-					map.initMap(mapFile);										//MEG KELL MÉG ÍRNI
-					
+					map.initMap(mapFile); // MEG KELL MÉG ÍRNI
+
 					System.out.println("Parancs fájl: '<név>.txt':");
 					String commandFile = in.readLine();
-					BufferedReader fileReader = new BufferedReader(new FileReader(commandFile));
-					
-					while(true) {
+					BufferedReader fileReader = new BufferedReader(
+							new FileReader(commandFile));
+
+					while (true) {
 						String row = fileReader.readLine();
-						if(row == null){
+						if (row == null) {
 							fileReader.close();
 							break;
 						}
 						parancskezeles(row);
 					}
-						
-					}catch(IOException io){
-					
-						System.out.println("Rossz fájlnév!");
-					
-					}
-					
-				}else if(line.equals("game")){
-					
-					System.out.println("game");
-					
-					System.out.println("Pálya betöltése: defaultMap.txt-bõl");
-					map.initMap("defaultMap.txt");					//MEG KELL MÉG ÍRNI
-					
-					while(true) {
-						String row2 = in.readLine();
-						if(row2 == null) break;
-						
-						parancskezeles(row2);
-					}
-					
-					
-				}else{
-					System.out.println("'teszt' illetve 'game' közül választhat!");
+
+				} catch (IOException io) {
+
+					System.out.println("Rossz fájlnév!");
+
 				}
-				
-				
-			}	
+
+			} else if (line.equals("game")) {
+
+				System.out.println("game");
+
+				System.out.println("Pálya betöltése: defaultMap.txt-bõl");
+				map.initMap("defaultMap.txt"); // MEG KELL MÉG ÍRNI
+
+				while (true) {
+					String row2 = in.readLine();
+					if (row2 == null)
+						break;
+
+					parancskezeles(row2);
+				}
+
+			} else {
+				System.out.println("'teszt' illetve 'game' közül választhat!");
+			}
 
 		}
-	
-	
+
+	}
+
 	private void parancskezeles(String command) {
 
 		String[] commandSplit = command.split(" ");
@@ -190,20 +198,20 @@ public class Controller {
 				switch (commandSplit[1]) {
 
 				case "dwarf":
-					// this.createEnemy(Dwarf.class);
-					System.out.println("dwarf létrehozás");
+					this.createEnemy(Dwarf.class);
+
 					break;
 				case "hobbit":
-					// this.createEnemy(Hobbit.class);
-					System.out.println("hobbit létrehozás");
+					 this.createEnemy(Hobbit.class);
+
 					break;
 				case "human":
-					// this.createEnemy(Human.class);
-					System.out.println("human létrehozás");
+					 this.createEnemy(Human.class);
+
 					break;
 				case "elf":
-					// this.createEnemy(Elf.class);
-					System.out.println("elf létrehozás");
+					this.createEnemy(Elf.class);
+
 					break;
 				default:
 					System.out.println("nincs ilyen elleségtípus!");
@@ -214,13 +222,13 @@ public class Controller {
 				break;
 
 			case "move":
-				
+
 				if (commandSplit.length == 1) {
 					Map.RIGHT = false;
 					System.out.println("véletlenszerû lépés");
 					break;
 				}
-			
+
 				switch (commandSplit[1]) {
 				case "JOBB":
 					Map.RIGHT = true;
@@ -236,43 +244,47 @@ public class Controller {
 					System.out.println("nincs ilyen paraméter!");
 					break;
 				}
-				
+
 				// map.moveEnemies();
-				
+
 				break;
 
 			case "shoot":
 				if (commandSplit.length <= 2) {
 					System.out.println("Nincs elég argumentum!");
 					break;
-				}else{
-					
-					if(commandSplit[1].equals("OFF") && commandSplit[2].equals("OFF")){
+				} else {
+
+					if (commandSplit[1].equals("OFF")
+							&& commandSplit[2].equals("OFF")) {
 						Map.DUPLICATE = false;
 						Map.FOG = false;
 						System.out.println("Köd off, duplicate: off");
-						
-					}else if(commandSplit[1].equals("ON") && commandSplit[2].equals("OFF")){
+
+					} else if (commandSplit[1].equals("ON")
+							&& commandSplit[2].equals("OFF")) {
 						Map.DUPLICATE = false;
 						Map.FOG = true;
 						System.out.println("Köd on, duplicate: off");
-						
-					}else if(commandSplit[1].equals("OFF") && commandSplit[2].equals("ON")){
+
+					} else if (commandSplit[1].equals("OFF")
+							&& commandSplit[2].equals("ON")) {
 						Map.DUPLICATE = false;
 						Map.FOG = true;
 						System.out.println("Köd off, duplicate: on");
-					}else if(commandSplit[1].equals("ON") && commandSplit[2].equals("ON")){
+					} else if (commandSplit[1].equals("ON")
+							&& commandSplit[2].equals("ON")) {
 						Map.DUPLICATE = true;
 						Map.FOG = true;
 						System.out.println("Köd on, duplicate: on");
-						
-					}else{
+
+					} else {
 						System.out.println("Nem megfelelõ argumnetum!");
 					}
-					
-					//map.shootingTowers();
+
+					// map.shootingTowers();
 				}
-				
+
 				break;
 
 			case "buildTrap":
@@ -326,16 +338,18 @@ public class Controller {
 								+ toronyazonosito + " toronyba");
 						break;
 					case "damageIncreaser":
-						// this.placeGem(Type.DAMAGE_INCREASER, toronyazonosito);
+						// this.placeGem(Type.DAMAGE_INCREASER,
+						// toronyazonosito);
 						System.out.println("damage Increaser gem elhelyezve "
 								+ toronyazonosito + " toronyba");
 						break;
 					case "shootingIncreaser":
-						// this.placeGem(Type.SHOOTING_INCREASER, toronyazonosito);
+						// this.placeGem(Type.SHOOTING_INCREASER,
+						// toronyazonosito);
 						System.out.println("Shooting Increaser gem elhelyezve "
 								+ toronyazonosito + " toronyba");
 						break;
-						
+
 					default:
 						System.out.println("nincs ilyen gem típus!");
 						break;
@@ -432,20 +446,40 @@ public class Controller {
 
 			case "listEnemies":
 
-				System.out.println("Ellenségek:");
-				// map.listEnemies();
+				System.out.println("Az Enemy lista:\n");
+				for (int i = 0; i < map.getEnemies().size(); i++) {
+					
+					Enemy e = map.getEnemies().get(i);
+					System.out.println("\t"+ e.getEnemyID() + "\t"
+							+ e.getClass().toString() + "\t" + "Életerõ:"+ e.getHealth()
+							+"\t" + "Road:" + e.getCurrentRoad().getRoadID());
+				}
 				break;
 
 			case "listTowers":
 
-				System.out.println("Tornyok:");
-				// map.listTowers();
+				System.out.println("Torony lista:");
+				for (int i = 0; i < map.getTowers().size(); i++) {
+					Tower t = map.getTowers().get(i);
+					System.out.println(t.getTowerID() + "\t" + "gem: MÉG MEG KELL ÍRNI" );
+					
+				}
 				break;
 
 			case "listRoads":
 
-				System.out.println("Utak:");
-				// map.listRoads();
+				System.out.println("Road lista:\n");
+				for (int i = 0; i < map.getRoads().size(); i++) {
+					Road r = map.getRoads().get(i);
+					System.out.println("\t" + r.getRoadID() + "\t" + "helye: ??? MEG KELL ÍRNI!" + "\t"
+					+ " Ellenségek:");
+					for (int j = 0; j < r.getEnemies().size(); j++) {
+						System.out.println("\t\t\t\t\t\t" + r.getEnemies().get(j).getEnemyID());
+						
+					}
+					
+				}
+				
 				break;
 
 			case "listMap":
@@ -487,7 +521,5 @@ public class Controller {
 			}
 		}
 	}
-		
 
-		
-	}
+}

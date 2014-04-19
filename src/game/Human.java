@@ -5,6 +5,11 @@ public class Human extends Enemy {
 	public Human() {
 		health = 50;
 		trappedValue = 0;
+		
+		enemy_id = id;
+		id++;
+		
+		System.out.println("A Human#"+ enemy_id + " ellenség létrejött!");
 	}
 	
 	@Override

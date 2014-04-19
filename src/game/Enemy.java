@@ -5,6 +5,10 @@ public abstract class Enemy {
 	protected int health;
 	protected Road currentRoad;
 	protected int trappedValue;
+	
+	
+	public static int id = 1;		// megkülönböztetni az ellenségeket - Zsoca
+	public int enemy_id;			// Enemy szinten különböztetjük meg, nem típus szinten
 
 	
 	
@@ -57,6 +61,14 @@ public abstract class Enemy {
 	
 	public int getHealth(){
 		return health;
+	}
+	
+	public String getEnemyID(){
+		return "Enemy#" + enemy_id;
+	}
+	
+	public Road getCurrentRoad(){
+		return currentRoad;
 	}
 	
 }

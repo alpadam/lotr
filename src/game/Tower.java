@@ -10,6 +10,9 @@ public class Tower extends Block {
 	private int damage;
 	
 	
+	public static int id = 1;		// csak a szkeleton miatt
+	public int tower_id;
+	
 	public Tower() {
 		gem = null;
 		damage = simpleDamage;
@@ -67,5 +70,9 @@ public class Tower extends Block {
 	@Override
 	public boolean isTower() {		
 		return true;
+	}
+	
+	public String getTowerID(){
+		return "Tower#" + tower_id;
 	}
 }
