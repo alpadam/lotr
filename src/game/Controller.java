@@ -33,9 +33,10 @@ public class Controller {
 		if (player.getMagic() >= towerPrice) {
 			map.createTower(blockId);
 			player.substractMagic(towerPrice);
+			System.out.println("Torony " + blockId + " helyen létrehozva.");
 		}
 		else {
-			//nem sikerült
+			System.out.println("Torony építése sikertelen.");
 		}
 	}
 
@@ -43,9 +44,10 @@ public class Controller {
 		if (player.getMagic() >= trapPrice) {
 			map.createTrap(roadId);
 			player.substractMagic(trapPrice);
+			System.out.println("Akadály " + roadId + " helyen létrehozva.");
 		}
 		else {
-			//nem sikerült
+			System.out.println("Akadály építése sikertelen.");
 		}
 	}
 
@@ -86,6 +88,36 @@ public class Controller {
 		
 		if (gem != null) {
 			map.placeGem(gem, id, tmp);
+			if (tmp) {
+				System.out.println("Gem elhelyezve" + id + " helyre");
+			} else {
+				switch (gem.getType()) {
+
+				case RANGE_EXPANDER:
+					this.placeGem(Type.RANGE_EXPANDER, id, false);
+					System.out.println("Range Expander gem elhelyezve "
+							+ id + " toronyba");
+					break;
+				case DAMAGE_INCREASER:
+					this.placeGem(Type.DAMAGE_INCREASER, id, false);
+					System.out.println("damage Increaser gem elhelyezve "
+							+ id + " toronyba");
+					break;
+				case SHOOTING_INCREASER:
+					this.placeGem(Type.SHOOTING_INCREASER, id, false);
+					System.out.println("Shooting Increaser gem elhelyezve "
+							+ id + " toronyba");
+					break;
+
+				default:
+					System.out.println("Nincs ilyen gem típus!");
+					break;
+
+				}
+			}
+		}
+		else {
+			
 		}
 	}
 
@@ -93,8 +125,13 @@ public class Controller {
 
 		MagicGem gem = map.removeGem(id);
 
-		if (gem != null)
+		if (gem != null) {
 			player.addGem(gem);
+			System.out.println(id + " építménybõl varázskõ kivéve.");
+		}
+		else {
+			System.out.println("Nem sikerült varázskövet kivenni " + id + " építménybõl");
+		}
 	}
 
 	public void buyGem(Type type) {
@@ -102,9 +139,10 @@ public class Controller {
 			MagicGem gem = new MagicGem(type);
 			player.addGem(gem);
 			player.substractMagic(gemPrice);
+			System.out.println(type + " varázskõ megvásárolva.");
 		}
 		else {
-			//nem sikerült megvenni
+			System.out.println("Nem sikerült megvásárolni a varázskövet.");
 		}
 	}
 
@@ -288,9 +326,6 @@ public class Controller {
 					int id = Integer.parseInt(commandSplit[1]);
 
 					this.buildTrap(id);
-
-					System.out.println("Csapda létrejött a " + id
-							+ " azonosítójú útra");
 				} catch (NumberFormatException e) {
 					System.out.println("Nem jó azonsító!");
 					break;
@@ -306,8 +341,6 @@ public class Controller {
 					int hol = Integer.parseInt(commandSplit[1]);
 
 					this.buildTower(hol);
-
-					System.out.println("Torony létrejött a " + hol + " helyre");
 				} catch (NumberFormatException e) {
 					System.out.println("Nem jó azonsító!");
 					break;
@@ -362,9 +395,6 @@ public class Controller {
 					int roadazonosito = Integer.parseInt(commandSplit[1]);
 
 					this.placeGem(Type.MOVEMENT_DECREASER, roadazonosito, true);
-
-					System.out.println("Gem elhelyezve" + roadazonosito
-							+ " helyre");
 				} catch (NumberFormatException e) {
 					System.out.println("Nem jó azonsító!");
 				}
@@ -395,7 +425,7 @@ public class Controller {
 					
 					break;
 				default:
-					System.out.println("nincs ilyen gem típus!");
+					System.out.println("Nincs ilyen gem típus!");
 					break;
 
 				}
