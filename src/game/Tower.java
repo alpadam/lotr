@@ -9,11 +9,12 @@ public class Tower extends Block {
 	private MagicGem gem;
 	private int damage;
 	
-	
 	public static int id = 1;		// csak a szkeleton miatt
 	public int tower_id;
 	
 	public Tower() {
+		tower_id += id;
+		id++;
 		gem = null;
 		damage = simpleDamage;
 	}
@@ -44,12 +45,16 @@ public class Tower extends Block {
 		return gem.getType();
 	}
 	
+	public MagicGem getGem(){
+		return gem;
+	}
+	
 	public boolean shoot(List<Road> roads){
 		
 		boolean died = false;
 		
-		for(int i = 0; i < roads.size(); i++){
-			
+		for(int i = 0; i < roads.size() - 1; i++){
+
 			Road tempRoad = roads.get(i);
 			List<Enemy> enemies = tempRoad.getEnemies();
 			
@@ -57,7 +62,7 @@ public class Tower extends Block {
 				
 				Enemy tempEnemy = enemies.get(0);				//ezt még módosítani kell egy véletlenszerû algoritmusra
 				died = tempEnemy.damage(damage);
-				
+
 				if(died){
 					tempRoad.removeEnemy(tempEnemy);
 				}

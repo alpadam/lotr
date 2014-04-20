@@ -1,8 +1,0 @@
-createEnemy elf
-listEnemies
-buildTower 6	
-simulate
-listEnemies
-listTowers
-listRoads
-listMap

@@ -33,7 +33,7 @@ public class Controller {
 		if (player.getMagic() >= towerPrice) {
 			map.createTower(blockId);
 			player.substractMagic(towerPrice);
-			System.out.println("Torony " + blockId + " helyen létrehozva.");
+			System.out.println("Torony " + "Block#" + blockId + " helyen létrehozva.");
 		}
 		else {
 			System.out.println("Torony építése sikertelen.");
@@ -163,12 +163,12 @@ public class Controller {
 				try {
 					System.out.println("teszt");
 
-					System.out.println("Pálya fájl: '<név>.txt':");
-					String mapFile = in.readLine();
+					System.out.println("Pálya fájl: '<név>':");
+					String mapFile = "esetek/" + in.readLine() + ".txt";
 					map.initMap(mapFile); // MEG KELL MÉG ÍRNI
 
-					System.out.println("Parancs fájl: '<név>.txt':");
-					String commandFile = in.readLine();
+					System.out.println("Parancs fájl: '<név>':");
+					String commandFile = "esetek/" + in.readLine() + ".txt";
 					BufferedReader fileReader = new BufferedReader(
 							new FileReader(commandFile));
 
@@ -451,8 +451,8 @@ public class Controller {
 
 			case "simulate":
 
-				// map.moveEnemies(true);
-				// this.shootingTowers(false,false);
+				map.moveEnemies();
+				int killedEnemies = map.shootingTowers();
 				System.out.println("simulálás - lépés, lövés");
 
 				break;
@@ -462,7 +462,7 @@ public class Controller {
 				System.out.println("Inventory:");
 				for (int i = 0; i < player.getInventory().size(); i++) {
 					MagicGem tempGem = player.getInventory().get(i);
-					System.out.println("Varázskõ#" + tempGem.getGemID() + "\t" + tempGem.getGemTypeName());
+					System.out.println("Varázskõ#" + tempGem.getGemID() + "\t" + tempGem);
 					
 				}
 
@@ -485,7 +485,7 @@ public class Controller {
 				System.out.println("Torony lista:");
 				for (int i = 0; i < map.getTowers().size(); i++) {
 					Tower t = map.getTowers().get(i);
-					System.out.println("Tower#" + t.getTowerID() + "\t" + "gem: MÉG MEG KELL ÍRNI" );
+					System.out.println("Tower#" + t.getTowerID() + "\t" + "gem: " + t.getGem());
 					
 				}
 				break;
@@ -495,7 +495,7 @@ public class Controller {
 				System.out.println("Road lista:");
 				for (int i = 0; i < map.getRoads().size(); i++) {
 					Road r = map.getRoads().get(i);
-					System.out.println("\t" +"Road#"+ r.getRoadID() + "\t" + "helye: ??? MEG KELL ÍRNI!" + "\t"
+					System.out.println("\t" +"Road#"+ r.getRoadID() + "\t" + "helye: Block#" + r.getBlockID() + "\t"
 					+ "Akadály-e:"+(r.isTrap() ? "Igen" : "Nem")+ "\t "+ " Ellenségek:");
 					for (int j = 0; j < r.getEnemies().size(); j++) {
 						System.out.println("\t\t\t\t\t\t\t\t" +"Enemy#"+ r.getEnemies().get(j).getEnemyID());
@@ -509,7 +509,15 @@ public class Controller {
 			case "listMap":
 
 				System.out.println("Pálya:");
-				// map.listMap();
+				Block[][] tempBlock = map.getMap();
+				for (int i = 0; i < tempBlock.length; i++) {
+					if(i != 0) //txt-be íráskor legyen itt enter, hogy pályaként nézzen ki
+						System.out.println("\n");
+					for (int j = 0; j < tempBlock[i].length; j++) {
+						System.out.println("Block#" + tempBlock[i][j].getBlockID() + " ");
+					}
+				}
+				
 				break;
 
 			case "help":

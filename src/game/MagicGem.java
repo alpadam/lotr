@@ -21,7 +21,8 @@ public class MagicGem {
 		return gem_id;
 	}
 	
-	public String getGemTypeName(){
+	@Override
+	public String toString() {
 		switch (type){
 		case DAMAGE_INCREASER:
 			return "Gem.DamageIncreaser";
@@ -32,6 +33,8 @@ public class MagicGem {
 		case SHOOTING_INCREASER:
 			return "Gem.shootingIncreaser";
 		}
+		
 		return null;
 	}
+	
 }

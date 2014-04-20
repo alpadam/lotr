@@ -25,7 +25,7 @@ public class Map {
 	private Road firstRoad;
 	private Road finalRoad;
 	
-	
+	private int radius = 2;
 	
 	public Map(int testNumber) {
 		
@@ -38,15 +38,20 @@ public class Map {
 		towerRoads = new HashMap<Tower, List<Road>>();
 	}
 
-	/**
-	Toronyépítés
-	Nem a Controller run() függvényében hívjuk meg, mert ezt a függvényt 
-	közvetlenül a user fogja hívni
-	 */
+	
+	public void setRadius(int radius) {
+		this.radius = radius;
+	}
+	
 	public void createTower(int blockId){							
-		Tower tower = new Tower();
+		
+		List<Integer> tempCoordinate = blockIdToCoordinate(blockId);
+		Integer first = tempCoordinate.get(0);
+		Integer second = tempCoordinate.get(1);
+		map[first][second] = new Tower();
+		Tower tower = (Tower) map[first][second];
 		towers.add(tower);
-		//ide kéne az, hogy megkeresi a mapban a blockot, kicseréli a towerre, és feltölti a tower által látott területeket
+		setHashMap(tempCoordinate);
 		
 	}
 	
@@ -58,15 +63,56 @@ public class Map {
 		}
 	}
 	
+	public List<Integer> blockIdToCoordinate(int blockId) {
+		List<Integer> tempCoordinate = new ArrayList<Integer>();
+		if(map != null) {
+			int widthId = map[0].length;
+			if((blockId%widthId) == 0) {
+				tempCoordinate.add((blockId/widthId)-1);
+				tempCoordinate.add(widthId-1);
+			} else {
+				tempCoordinate.add((blockId/widthId));
+				tempCoordinate.add((blockId%widthId)-1);
+			}
+		} else {
+			tempCoordinate.add(-1);
+		}
+		
+		return tempCoordinate;
+	}
+	
+	public void setHashMap(List<Integer> tempCoordinate) {
+		
+		List<Road> tempRoads = new ArrayList<Road>();
+		Integer first = tempCoordinate.get(0);
+		Integer second = tempCoordinate.get(1);
+		
+		for (int i = first-radius-1; i < first+radius; i++) {
+			for (int j = second-radius; j < second+radius+1; j++) {
+				if(i >= 0 && i < map.length) {
+					if(j >= 0 && j < map[i].length) {
+						if(map[i][j].isRoad()){
+							System.out.println(i + " " + j);
+							tempRoads.add((Road) map[i][j]);
+						}
+					}
+				}
+			}
+		}
+		
+		towerRoads.put((Tower) map[first][second], tempRoads);
+	}
+	
 	public int shootingTowers() {
 		
 		int killedEnemies = 0;
-
+		
 		for (int i = 0; i < towers.size(); i++) {
 			
 			Tower tempTower = towers.get(i);
-	
+			
 			List<Road> roads = towerRoads.get(tempTower);
+			System.out.println(roads);
 			boolean isDied = tempTower.shoot(roads);
 			
 			if(isDied)
@@ -164,7 +210,7 @@ public class Map {
 		}
 		br.close();										/// ez még nem jó lezárás...
 		
-		Block[][] map = new Block[lines.size()][];
+		map = new Block[lines.size()][];
 		for (int i = 0; i < lines.size(); i++) {
 			s = lines.get(i);
 			map[i] = new Block[s.length()];
@@ -202,13 +248,23 @@ public class Map {
 					
 					if (!tempRoad.isFinal()){
 						
-						if ( (i == map.length-1) && map[i][j+1].isRoad()){
-	
-							tempRoad.setNext((Road) map[i][j+1]);
-	
-						} else if ( (j == map[i].length-1) && map[i+1][j].isRoad()) {
+						if ( (i == map.length-1) ){
+							if (map[i][j+1].isRoad() ) {
+								tempRoad.setNext((Road) map[i][j+1]);
+								break;
+							} else {
+								break;
+							}
 							
-							tempRoad.setNext((Road) map[i+1][j]);
+	
+						} else if ( (j == map[i].length-1) ) {
+							if (map[i+1][j].isRoad()) {
+								tempRoad.setNext((Road) map[i+1][j]);
+								break;
+							} else {
+								break;
+							}
+							
 							
 						} else {
 							if(map[i+1][j].isRoad() && !map[i][j+1].isRoad()) { 
@@ -220,6 +276,7 @@ public class Map {
 								tempRoad.setNext2((Road) map[i+1][j]);
 							}
 						}
+						
 					}
 				}
 			}
