@@ -28,9 +28,6 @@ public class Map {
 	private int radius = 2;
 	
 	public Map(int testNumber) {
-		
-		//map = new Block[][];
-		
 		enemies = new ArrayList<Enemy>();
 		towers = new ArrayList<Tower>();
 		roads = new ArrayList<Road>();
@@ -52,7 +49,6 @@ public class Map {
 		Tower tower = (Tower) map[first][second];
 		towers.add(tower);
 		setHashMap(tempCoordinate);
-		
 	}
 	
 	public void createTrap(int roadId){
@@ -63,7 +59,7 @@ public class Map {
 		}
 	}
 	
-	public List<Integer> blockIdToCoordinate(int blockId) {
+	private List<Integer> blockIdToCoordinate(int blockId) {
 		List<Integer> tempCoordinate = new ArrayList<Integer>();
 		if(map != null) {
 			int widthId = map[0].length;
@@ -81,7 +77,7 @@ public class Map {
 		return tempCoordinate;
 	}
 	
-	public void setHashMap(List<Integer> tempCoordinate) {
+	private void setHashMap(List<Integer> tempCoordinate) {
 		
 		List<Road> tempRoads = new ArrayList<Road>();
 		Integer first = tempCoordinate.get(0);
@@ -92,27 +88,25 @@ public class Map {
 				if(i >= 0 && i < map.length) {
 					if(j >= 0 && j < map[i].length) {
 						if(map[i][j].isRoad()){
-							System.out.println(i + " " + j);
 							tempRoads.add((Road) map[i][j]);
 						}
 					}
 				}
 			}
 		}
-		
 		towerRoads.put((Tower) map[first][second], tempRoads);
 	}
 	
 	public int shootingTowers() {
 		
+		System.out.println("Lövés:");	
+		
 		int killedEnemies = 0;
 		
 		for (int i = 0; i < towers.size(); i++) {
-			
 			Tower tempTower = towers.get(i);
 			
 			List<Road> roads = towerRoads.get(tempTower);
-			System.out.println(roads);
 			boolean isDied = tempTower.shoot(roads);
 			
 			if(isDied)
@@ -193,9 +187,6 @@ public class Map {
 				enemies.remove(i);
 			}
 		}	
-	}
-	
-	public void createMap() {
 	}
 	
 	public void initMap(String path) throws IOException {
@@ -286,10 +277,8 @@ public class Map {
 			System.out.println(roads.get(i).toString());
 		}
 		
-		
 	}
 
-	
 	public Block[][] getMap() {
 		return map;
 	}

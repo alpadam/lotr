@@ -2,6 +2,8 @@ package game;
 
 import java.util.List;
 
+import javax.swing.text.html.BlockView;
+
 public class Tower extends Block {
 
 	public static int simpleDamage = 10;
@@ -14,6 +16,7 @@ public class Tower extends Block {
 	
 	public Tower() {
 		tower_id += id;
+		block_id-=1;
 		id++;
 		gem = null;
 		damage = simpleDamage;
@@ -36,7 +39,6 @@ public class Tower extends Block {
 		return g;
 	}
 		
-	
 	public Type getGemType(){
 		
 		if (gem == null) {
@@ -53,14 +55,19 @@ public class Tower extends Block {
 		
 		boolean died = false;
 		
-		for(int i = 0; i < roads.size() - 1; i++){
+		for(int i = 0; i < roads.size(); i++){
 
 			Road tempRoad = roads.get(i);
 			List<Enemy> enemies = tempRoad.getEnemies();
 			
+			System.out.println("Enemy size elõtt");
+			
 			if(enemies.size() > 0){
 				
+				System.out.println("Enemy size után");
+				
 				Enemy tempEnemy = enemies.get(0);				//ezt még módosítani kell egy véletlenszerû algoritmusra
+				
 				died = tempEnemy.damage(damage);
 
 				if(died){

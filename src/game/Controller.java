@@ -450,11 +450,12 @@ public class Controller {
 				break;
 
 			case "simulate":
-
+				
+				System.out.println("simulálás - lépés, lövés");
 				map.moveEnemies();
 				int killedEnemies = map.shootingTowers();
-				System.out.println("simulálás - lépés, lövés");
-
+				
+				player.addMagic(killedEnemies);
 				break;
 
 			case "listInventory":
