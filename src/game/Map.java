@@ -24,8 +24,7 @@ public class Map {
 	
 	private Road firstRoad;
 	private Road finalRoad;
-	
-	private int radius = 2;
+
 	
 	public Map(int testNumber) {
 		enemies = new ArrayList<Enemy>();
@@ -33,11 +32,6 @@ public class Map {
 		roads = new ArrayList<Road>();
 		
 		towerRoads = new HashMap<Tower, List<Road>>();
-	}
-
-	
-	public void setRadius(int radius) {
-		this.radius = radius;
 	}
 	
 	public void createTower(int blockId){							
@@ -83,6 +77,9 @@ public class Map {
 		Integer first = tempCoordinate.get(0);
 		Integer second = tempCoordinate.get(1);
 		
+		Tower tempTower = (Tower) map[first][second];
+		int radius = tempTower.getRadius();
+		
 		for (int i = first-radius-1; i < first+radius; i++) {
 			for (int j = second-radius; j < second+radius+1; j++) {
 				if(i >= 0 && i < map.length) {
@@ -94,7 +91,7 @@ public class Map {
 				}
 			}
 		}
-		towerRoads.put((Tower) map[first][second], tempRoads);
+		towerRoads.put(tempTower, tempRoads);
 	}
 	
 	public int shootingTowers() {
@@ -106,13 +103,22 @@ public class Map {
 		for (int i = 0; i < towers.size(); i++) {
 			Tower tempTower = towers.get(i);
 			
-			List<Road> roads = towerRoads.get(tempTower);
-			boolean isDied = tempTower.shoot(roads);
+			System.out.println("DUPLICATE: " + DUPLICATE);
 			
-			if(isDied)
-				killedEnemies++;
+			if(!DUPLICATE){
+				List<Road> roads = towerRoads.get(tempTower);
+				boolean isDied = tempTower.shoot(roads);
+				if(isDied)
+					killedEnemies++;
+			}else{
+				Enemy newEnemy = tempTower.duplicateShoot(roads);
+				if(newEnemy != null){
+					enemies.add(newEnemy);
+				}
+			}
+			
 		}
-		
+
 		if(killedEnemies > 0) {
 			refreshEnemies();
 		}
@@ -158,7 +164,43 @@ public class Map {
 		} else {
 			for (int i = 0; i < towers.size(); i++) {
 				if (towers.get(i).tower_id == id) {
-					towers.get(i).placeGem(magicGem);
+					
+					Tower tempTower = towers.get(i);
+					if(tempTower.getGem() == null){
+						
+						if(magicGem.getType() == Type.RANGE_EXPANDER){
+							
+							int radius = tempTower.getRadius();
+							
+							//MEG KELL ÍRNI, MERT FOS!
+							/*for (int i = first-radius-1; i < first+radius; i++) {
+								for (int j = second-radius; j < second+radius+1; j++) {
+									if(i >= 0 && i < map.length) {
+										if(j >= 0 && j < map[i].length) {
+											if(map[i][j].isRoad()){
+												tempRoads.add((Road) map[i][j]);
+											}
+										}
+									}
+								}
+							}
+							towerRoads.put(tempTower, tempRoads);*/
+							
+							
+							
+							
+							
+							
+						}
+							
+						
+						towers.get(i).placeGem(magicGem);
+						
+					}
+					
+					
+					
+					
 				}
 			}
 		}
@@ -233,7 +275,6 @@ public class Map {
 			for (int j = 0; j < map[i].length; j++) {
 				if(map[i][j].isRoad()) {
 					
-					System.out.println("road");
 					Road tempRoad = (Road) map[i][j];
 					roads.add(tempRoad);
 					

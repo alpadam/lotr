@@ -255,7 +255,8 @@ public class Controller {
 
 				if (commandSplit.length == 1) {
 					Map.RIGHT = false;
-					System.out.println("véletlenszerû lépés");
+					System.out.println("Lépés:");
+					map.moveEnemies();
 					break;
 				}
 
@@ -263,11 +264,13 @@ public class Controller {
 				case "JOBB":
 					Map.RIGHT = true;
 					System.out.println("jobbra mozgás");
+					map.moveEnemies();
 					break;
 
 				case "BAL":
 					Map.RIGHT = false;
 					System.out.println("balra mozgás");
+					map.moveEnemies();
 					break;
 
 				default:
@@ -275,7 +278,7 @@ public class Controller {
 					break;
 				}
 
-				// map.moveEnemies();
+				 map.moveEnemies();
 
 				break;
 
@@ -293,14 +296,14 @@ public class Controller {
 
 					} else if (commandSplit[1].equals("ON")
 							&& commandSplit[2].equals("OFF")) {
-						Map.DUPLICATE = false;
 						Map.FOG = true;
+						Map.DUPLICATE = false;
 						System.out.println("Köd on, duplicate: off");
 
 					} else if (commandSplit[1].equals("OFF")
 							&& commandSplit[2].equals("ON")) {
-						Map.DUPLICATE = false;
-						Map.FOG = true;
+						Map.FOG = false;
+						Map.DUPLICATE = true;
 						System.out.println("Köd off, duplicate: on");
 					} else if (commandSplit[1].equals("ON")
 							&& commandSplit[2].equals("ON")) {
@@ -312,7 +315,7 @@ public class Controller {
 						System.out.println("Nem megfelelõ argumnetum!");
 					}
 
-					// map.shootingTowers();
+					 map.shootingTowers();
 				}
 
 				break;
