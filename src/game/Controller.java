@@ -29,27 +29,24 @@ public class Controller {
 		return map;
 	}
 
-	public void buildTower() {
-		System.out.println("Controller --> buildTower() ");
-		System.out.println("Varazsero:" + player.getMagic());
-
-		// map.createTower();
-
-		player.substractMagic(towerPrice);
-		System.out.println("Player --> substractMagic(towerPrice)");
-		System.out.println("Varazsero:" + player.getMagic());
+	public void buildTower(int blockId) {
+		if (player.getMagic() >= towerPrice) {
+			map.createTower(blockId);
+			player.substractMagic(towerPrice);
+		}
+		else {
+			//nem sikerült
+		}
 	}
 
-	public void buildTrap() {
-
-		System.out.println("Controller --> buildTrap()");
-		System.out.println("Varazsero:" + player.getMagic());
-
-		// map.createTrap();
-
-		player.substractMagic(trapPrice);
-		System.out.println("Varazsero:" + player.getMagic());
-
+	public void buildTrap(int roadId) {
+		if (player.getMagic() >= trapPrice) {
+			map.createTrap(roadId);
+			player.substractMagic(trapPrice);
+		}
+		else {
+			//nem sikerült
+		}
 	}
 
 	public void createEnemy(Class<? extends Enemy> c) {
@@ -80,37 +77,35 @@ public class Controller {
 
 	}
 
-	public void placeGem(Type type, boolean tmp) {
-		/**
-		 * a tmp változóra csak a szkeletonban van szükség, ezzel jelezzük, hogy
-		 * melyik teszteset hívódik meg: a kõ elhelyezése toronyba (=false),
-		 * vagy a kõ elhelyezése akadályba (=true)
-		 */
-
-		System.out.println("Controller --> placeGem(" + type + ") ");
+	public void placeGem(Type type, int id, boolean tmp) {
+		/*
+		 * a tmp változóra csak a szkeletonban van szükség, ezzel jelezzük, hogy melyik teszteset hívódik meg:
+		 * a kõ elhelyezése toronyba (=false), vagy a kõ elhelyezése akadályba (=true)
+		 */ 
 		MagicGem gem = player.getGem(type);
-
-		map.placeGem(gem, tmp);
+		
+		if (gem != null) {
+			map.placeGem(gem, id, tmp);
+		}
 	}
 
-	public void removeGem() {
+	public void removeGem(int id) {
 
-		System.out.println("Controller --> removeGem()");
-
-		MagicGem gem = map.removeGem();
+		MagicGem gem = map.removeGem(id);
 
 		if (gem != null)
 			player.addGem(gem);
 	}
 
 	public void buyGem(Type type) {
-
-		MagicGem gem = new MagicGem(type);
-
-		player.addGem(gem);
-
-		player.substractMagic(gemPrice);
-		System.out.println(gem.getGemTypeName() + " varázskõ megvásárolva!");
+		if (player.getMagic() >= gemPrice) {
+			MagicGem gem = new MagicGem(type);
+			player.addGem(gem);
+			player.substractMagic(gemPrice);
+		}
+		else {
+			//nem sikerült megvenni
+		}
 	}
 
 	public void newGame() {
@@ -292,7 +287,7 @@ public class Controller {
 				try {
 					int id = Integer.parseInt(commandSplit[1]);
 
-					// this.buildTrap(id);
+					this.buildTrap(id);
 
 					System.out.println("Csapda létrejött a " + id
 							+ " azonosítójú útra");
@@ -310,7 +305,7 @@ public class Controller {
 				try {
 					int hol = Integer.parseInt(commandSplit[1]);
 
-					// this.buildTower(hol);
+					this.buildTower(hol);
 
 					System.out.println("Torony létrejött a " + hol + " helyre");
 				} catch (NumberFormatException e) {
@@ -330,19 +325,17 @@ public class Controller {
 					switch (commandSplit[1]) {
 
 					case "rangeExpander":
-						// this.placeGem(Type.RANGE_EXPANDER, toronyazonosito);
+						this.placeGem(Type.RANGE_EXPANDER, toronyazonosito, false);
 						System.out.println("Range Expander gem elhelyezve "
 								+ toronyazonosito + " toronyba");
 						break;
 					case "damageIncreaser":
-						// this.placeGem(Type.DAMAGE_INCREASER,
-						// toronyazonosito);
+						this.placeGem(Type.DAMAGE_INCREASER, toronyazonosito, false);
 						System.out.println("damage Increaser gem elhelyezve "
 								+ toronyazonosito + " toronyba");
 						break;
 					case "shootingIncreaser":
-						// this.placeGem(Type.SHOOTING_INCREASER,
-						// toronyazonosito);
+						this.placeGem(Type.SHOOTING_INCREASER, toronyazonosito, false);
 						System.out.println("Shooting Increaser gem elhelyezve "
 								+ toronyazonosito + " toronyba");
 						break;
@@ -368,7 +361,7 @@ public class Controller {
 				try {
 					int roadazonosito = Integer.parseInt(commandSplit[1]);
 
-					// this.PlaceGem(Type.MOVEMENT_DECREASER);
+					this.placeGem(Type.MOVEMENT_DECREASER, roadazonosito, true);
 
 					System.out.println("Gem elhelyezve" + roadazonosito
 							+ " helyre");
@@ -417,7 +410,7 @@ public class Controller {
 				try {
 					int toronyazonosito = Integer.parseInt(commandSplit[1]);
 
-					// this.removeGem(toronyazonosito);
+					this.removeGem(toronyazonosito);
 
 					System.out.println("Gem kivéve a  " + toronyazonosito
 							+ " toronyból");

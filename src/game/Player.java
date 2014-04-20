@@ -44,7 +44,7 @@ public class Player {
 	}
 	
 	public void substractMagic(int magic) {		
-		this.magic = this.magic-magic;
+		this.magic -= magic;
 	}
 	
 	public void addMagic(int killedEnemies) {

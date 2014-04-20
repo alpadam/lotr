@@ -44,29 +44,18 @@ public class Map {
 	közvetlenül a user fogja hívni
 	 */
 	public void createTower(int blockId){							
-		System.out.println("Map --> createTower()");		
-		//boolean isTower = map.get(0).isTower();
-		//System.out.println("Torony-e?:" + isTower);
 		Tower tower = new Tower();
-		System.out.println("<<create>> tower ");
 		towers.add(tower);
-		System.out.println("Map --> towers.add(tower)");
-		//map.remove(0);
-		System.out.println("block removed");
+		//ide kéne az, hogy megkeresi a mapban a blockot, kicseréli a towerre, és feltölti a tower által látott területeket
+		
 	}
 	
 	public void createTrap(int roadId){
-		System.out.println("Map --> createTrap()");
-		
-		Road r = roads.get(0);
-		
-		System.out.println("Road-e?: " + r.isRoad());
-		
-		System.out.println("Trap-e?: " + r.isTrap());
-		
-		r.setTrap();
-		
-		System.out.println("Trap-e?: " + r.isTrap());
+		for (int i = 0; i < roads.size(); i++) {
+			if (roads.get(i).road_id == roadId) {
+				roads.get(i).setTrap();
+			}
+		}
 	}
 	
 	public int shootingTowers() {
@@ -114,34 +103,35 @@ public class Map {
 		return isFinal;
 	}
 	
-	public void placeGem(MagicGem magicGem, boolean tmp) {
+	public void placeGem(MagicGem magicGem, int id, boolean tmp) {
 		/*
 		 * a tmp változóra csak a szkeletonban van szükség, ezzel jelezzük, hogy melyik teszteset hívódik meg:
 		 * a kõ elhelyezése toronyba (=false), vagy a kõ elhelyezése akadályba (=true)
 		 */ 	
-		System.out.println("Map --> placeGem()");
-			
 		if (tmp) {
-			roads.get(0).isRoad();
-			roads.get(0).isTrap();
-			roads.get(0).getGemType();
-			roads.get(0).placeGem(magicGem);
+			for (int i = 0; i < roads.size(); i++) {
+				if (roads.get(i).road_id == id) {
+					roads.get(i).placeGem(magicGem);
+				}
+			}
 				
 		} else {
-			towers.get(0).isRoad();
-			towers.get(0).isTower();
-			towers.get(0).getGemType();
-			towers.get(0).placeGem(magicGem);
+			for (int i = 0; i < towers.size(); i++) {
+				if (towers.get(i).tower_id == id) {
+					towers.get(i).placeGem(magicGem);
+				}
+			}
 		}
 	}
 		
-	public MagicGem removeGem() {
-		System.out.println("Map -->removeGem()");
+	public MagicGem removeGem(int id) {
+		MagicGem gem = null;
 		
-		towers.get(0).isTower();
-		MagicGem gem = towers.get(0).removeGem();
-			
-		System.out.println("<-- gem");
+		for (int i = 0; i < towers.size(); i++) {
+			if (towers.get(i).tower_id == id) {
+				gem = towers.get(i).removeGem();
+			}
+		}
 		return gem;
 	}
 	
@@ -210,17 +200,17 @@ public class Map {
 					Road tempRoad = (Road) map[i][j];
 					roads.add(tempRoad);
 					
-					if(!tempRoad.isFinal()){
+					if (!tempRoad.isFinal()){
 						
-						if( (i == map.length-1) && map[i][j+1].isRoad()){
+						if ( (i == map.length-1) && map[i][j+1].isRoad()){
 	
 							tempRoad.setNext((Road) map[i][j+1]);
 	
-						}else if( (j == map[i].length-1) && map[i+1][j].isRoad()) {
+						} else if ( (j == map[i].length-1) && map[i+1][j].isRoad()) {
 							
 							tempRoad.setNext((Road) map[i+1][j]);
 							
-						}else {
+						} else {
 							if(map[i+1][j].isRoad() && !map[i][j+1].isRoad()) { 
 								tempRoad.setNext((Road) map[i+1][j]);
 							} else if(map[i][j+1].isRoad() && !map[i+1][j].isRoad()) { 
