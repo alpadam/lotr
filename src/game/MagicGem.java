@@ -37,4 +37,9 @@ public class MagicGem {
 		return null;
 	}
 	
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		return this;
+	}
+	
 }

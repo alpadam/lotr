@@ -22,8 +22,11 @@ public class Player {
 		
 	public MagicGem getGem(Type type) {
 		for (MagicGem g : inventory) {
-			if (g.getType() == type)
+			if (g.getType() == type){
+				inventory.remove(g);
 				return g;
+			}
+				
 		}
 		return null;
 	}

@@ -458,7 +458,7 @@ public class Controller {
 					System.out.println("\t" +"Road#"+ r.getRoadID() + "\t" + "helye: Block#" + r.getBlockID() + "\t"
 					+ "Akadály-e:"+(r.isTrap() ? "Igen" : "Nem")+ "\t "+ " Ellenségek:");
 					for (int j = 0; j < r.getEnemies().size(); j++) {
-						System.out.println("\t\t\t\t\t\t\t\t" +"Enemy#"+ r.getEnemies().get(j).getEnemyID());
+						System.out.println("\t\t\t\t\t\t\t\t" +"Ellenség#"+ r.getEnemies().get(j).getEnemyID());
 						
 					}
 					

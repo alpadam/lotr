@@ -6,5 +6,6 @@ listInventory
 gemToTower damageIncreaser 1
 listTowers
 gemToTrap 1
+listRoads
 removeGem 1
 listTowers

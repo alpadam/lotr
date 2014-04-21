@@ -34,7 +34,7 @@ public class Human extends Enemy {
 	
 	@Override
 	public String toString() {
-		return "\t"+"Enemy#"+ enemy_id + "\t Human.class" + "\t" + "Életerõ:"+ health
+		return "\t"+"Ellenség#"+ enemy_id + "\t Human.class" + "\t" + "Életerõ:"+ health
 				+"\t" + "Road:" + "Road#" + currentRoad.getRoadID();
 	}
 

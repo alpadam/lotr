@@ -34,16 +34,16 @@ public class Tower extends Block {
 			
 			switch (magicGem.getType()) {
 				case RANGE_EXPANDER:
-					radius = radius + 3;
-					System.out.println("RangeExpander varázskõ Torony#" + t_id + "-ban/ben elhelyezve.");
+					radius = radius + 1;
+					System.out.println("RangeExpander varázskõ Torony#" + tower_id + "-ban/ben elhelyezve.");
 				break;
 				case DAMAGE_INCREASER:
 					damage = simpleDamage + 15;
-					System.out.println("DamageIncreaser varázskõ Torony#" + t_id + "-ban/ben elhelyezve.");
+					System.out.println("DamageIncreaser varázskõ Torony#" + tower_id + "-ban/ben elhelyezve.");
 				break;
 				case SHOOTING_INCREASER:
 					damage = 2 * simpleDamage;
-					System.out.println("ShootingIncreaser varázskõ Torony#" + t_id + "-ban/ben elhelyezve.");
+					System.out.println("ShootingIncreaser varázskõ Torony#" + tower_id + "-ban/ben elhelyezve.");
 				break;
 
 				default:
@@ -55,19 +55,29 @@ public class Tower extends Block {
 		
 	public MagicGem removeGem(){
 		
-		MagicGem g = gem;
-		
-		if (gem!=null) {
-			if(gem.getType() == Type.DAMAGE_INCREASER)
-				damage = simpleDamage;
-			else if (gem.getType() == Type.SHOOTING_INCREASER)
-				damage = simpleDamage;
-			else if (gem.getType() == Type.RANGE_EXPANDER)
-				radius = radius - 3;
+		MagicGem g = null;
+		try {
+			g = (MagicGem) gem.clone();
+		} catch (CloneNotSupportedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		
+		if (gem != null) {
 			
+			//g = new MagicGem(gem.getType());
+			
+			if(gem.getType() == Type.DAMAGE_INCREASER){
+				damage = simpleDamage;
+			}
+			else if (gem.getType() == Type.SHOOTING_INCREASER){
+				damage = simpleDamage;
+			}else if (gem.getType() == Type.RANGE_EXPANDER){
+				radius--;
+			}
+		}
 		gem = null;
-			
+		
 		return g;
 	}
 		

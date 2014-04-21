@@ -38,7 +38,7 @@ public class Hobbit extends Enemy {
 	
 	@Override
 	public String toString() {
-		return "\t"+"Enemy#"+ enemy_id + "\t Hobbit.class" + "\t" + "Életerõ:"+ health
+		return "\t"+"Ellenség#"+ enemy_id + "\t Hobbit.class" + "\t" + "Életerõ:"+ health
 				+"\t" + "Road:" + "Road#" + currentRoad.getRoadID();
 	}
 	

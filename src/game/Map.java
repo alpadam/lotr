@@ -174,19 +174,21 @@ public class Map {
 		} else {
 			for (int i = 0; i < towers.size(); i++) {
 				if (towers.get(i).tower_id == id) {
-					Tower tempTower = towers.get(i);
 					
+					Tower tempTower = towers.get(i);
+
 					if(tempTower.getGem() == null){
 						
 						if(magicGem.getType() == Type.RANGE_EXPANDER){
-							System.out.println(towerRoads.get(tempTower));
+							//System.out.println(towerRoads.get(tempTower));
 							tempTower.placeGem(magicGem);
 							towerRoads.remove(tempTower);
-							setHashMap(tempTower.getBlockID());
-							System.out.println(towerRoads.get(tempTower));
+							setHashMap(tempTower.block_id);
+							//System.out.println(towerRoads.get(tempTower));
+						}else{
+							tempTower.placeGem(magicGem);
 						}
-					
-						towers.get(i).placeGem(magicGem);
+						break;
 					}
 				}
 			}
@@ -194,20 +196,24 @@ public class Map {
 	}
 		
 	public MagicGem removeGem(int id) {
+		
 		MagicGem gem = null;
 		
 		for (int i = 0; i < towers.size(); i++) {
-			if (towers.get(i).tower_id == id) {
-				gem = towers.get(i).removeGem();
+			Tower tempTower = towers.get(i);
+			if (tempTower.tower_id == id) {
+				
+				gem = tempTower.removeGem();
 				
 				if (gem != null && gem.getType() == Type.RANGE_EXPANDER) {
-					Tower tempTower = towers.get(i);
-					System.out.println(towerRoads.get(tempTower));
-					tempTower.removeGem();
+					
+					//System.out.println(towerRoads.get(tempTower));
+					
 					towerRoads.remove(tempTower);
-					setHashMap(tempTower.getBlockID());
-					System.out.println(towerRoads.get(tempTower));
+					setHashMap(tempTower.block_id);
+					//System.out.println(towerRoads.get(tempTower));
 				}
+				break;
 			}
 		}
 		

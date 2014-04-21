@@ -1,4 +1,8 @@
 buildTower 10
 buyGem rangeExpander
+listInventory
 gemToTower rangeExpander 1
+listTowers
 removeGem 1
+listInventory
+listTowers
