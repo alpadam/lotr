@@ -85,11 +85,10 @@ public class Map {
 		Integer first = tempCoordinate.get(0);
 		Integer second = tempCoordinate.get(1);
 		
-		System.out.println(first + " " + second);
 		Tower tempTower = (Tower) map[first][second];
 		int radius = tempTower.getRadius();
 		
-		for (int i = first-radius-1; i < first+radius; i++) {
+		for (int i = first-radius; i < first+radius+1; i++) {
 			for (int j = second-radius; j < second+radius+1; j++) {
 				if(i >= 0 && i < map.length) {
 					if(j >= 0 && j < map[i].length) {
@@ -112,10 +111,16 @@ public class Map {
 		for (int i = 0; i < towers.size(); i++) {
 			Tower tempTower = towers.get(i);
 			
-			System.out.println("DUPLICATE: " + DUPLICATE);
+			List<Road> roads;
+			if(!FOG){
+				roads = towerRoads.get(tempTower);
+			}else{
+				
+				roads = towerRoads.get(tempTower);				// EZT KELL MEGCSINÁLNI!!!!!!!
+			}
+			
 			
 			if(!DUPLICATE){
-				List<Road> roads = towerRoads.get(tempTower);
 				boolean isDied = tempTower.shoot(roads);
 				if(isDied)
 					killedEnemies++;
@@ -262,22 +267,22 @@ public class Map {
 				int value = Character.getNumericValue(s.charAt(j));
 				if (value == 0) {
 					map[i][j] = new Block();
-					System.out.println("0");
+					//System.out.println("0");
 				} else if (value == 1) {
 					map[i][j] = new Road();
-					System.out.println("1");
+					//System.out.println("1");
 				} else if (value == 2) {
 					Road firstRoad = new Road();
 					firstRoad.setFirst();
 					map[i][j] = firstRoad;
 					this.firstRoad = firstRoad;
-					System.out.println("2");
+					//System.out.println("2");
 				} else if (value == 3) {
 					Road finalRoad = new Road();
 					finalRoad.setFinal();
 					map[i][j] = finalRoad;
 					this.finalRoad = finalRoad;
-					System.out.println("3");
+					//System.out.println("3");
 				}
 			}
 		}		
@@ -328,10 +333,10 @@ public class Map {
 				}
 			}
 		}
-		
+		/*
 		for (int i = 0; i < roads.size(); i++) {
 			System.out.println(roads.get(i).toString());
-		}
+		}*/
 		
 	}
 

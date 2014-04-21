@@ -1,4 +1,4 @@
-buildTower 10
+buildTower 25
 buyGem rangeExpander
 listInventory
 gemToTower rangeExpander 1
