@@ -2,12 +2,12 @@ package game;
 
 public class Block {
 	
-	public static int id = 1;		// csak a szkeleton miatt
+	public static int b_id = 1;		// csak a szkeleton miatt
 	public int block_id;
 	
 	public Block() {
-		block_id += id;
-		id++;
+		block_id = b_id;
+		b_id++;
 	}
 	
 	public int getBlockID() {

@@ -14,7 +14,7 @@ public class Road extends Block {
 	private Road nextRoad2;
 	
 	
-	public static int id = 1;		// csak a szkeleton miatt
+	public static int r_id = 1;		// csak a szkeleton miatt
 	public int road_id;
 	
 	public Road() {
@@ -27,8 +27,8 @@ public class Road extends Block {
 		
 		enemies = new ArrayList<Enemy>();
 		
-		road_id = id;
-		id++;
+		road_id = r_id;
+		r_id++;
 	}
 	
 	public Road(boolean isTrap) {
@@ -36,8 +36,8 @@ public class Road extends Block {
 		this.isTrap = isTrap;
 		enemies = new ArrayList<Enemy>();
 		
-		road_id = id;
-		id++;
+		road_id = r_id;
+		r_id++;
 	}
 	
 	public void addEnemy(Enemy enemy){

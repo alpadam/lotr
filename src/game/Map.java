@@ -30,9 +30,9 @@ public class Map {
 		enemies = new ArrayList<Enemy>();
 		towers = new ArrayList<Tower>();
 		roads = new ArrayList<Road>();
-		Tower.id = 1;
-		Road.id = 1;
-		Block.id = 1;
+		Tower.t_id = 1;
+		Road.r_id = 1;
+		Block.b_id = 1;
 		
 		towerRoads = new HashMap<Tower, List<Road>>();
 	}
@@ -42,8 +42,12 @@ public class Map {
 		List<Integer> tempCoordinate = blockIdToCoordinate(blockId);
 		Integer first = tempCoordinate.get(0);
 		Integer second = tempCoordinate.get(1);
+		
+		int new_id = map[first][second].block_id;
+		
 		map[first][second] = new Tower();
 		Tower tower = (Tower) map[first][second];
+		tower.block_id = new_id;
 		towers.add(tower);
 		setHashMap(tempCoordinate);
 	}
@@ -247,9 +251,9 @@ public class Map {
 		enemies = new ArrayList<Enemy>();
 		towers = new ArrayList<Tower>();
 		roads = new ArrayList<Road>();
-		Tower.id = 1;
-		Road.id = 1;
-		Block.id = 1;
+		Tower.t_id = 1;
+		Road.r_id = 1;
+		Block.b_id = 1;
 		
 		towerRoads = new HashMap<Tower, List<Road>>();
 		

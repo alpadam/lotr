@@ -55,28 +55,22 @@ public class Controller {
 
 		if (c == Elf.class) {
 			
-			Elf elf = new Elf();
-			map.initEnemy(elf);
+			map.initEnemy(new Elf());
 			
 		} else if (c == Hobbit.class) {
-
-			Hobbit hobbit = new Hobbit();					//Lehet nem a legszebb megoldás, 
-			map.initEnemy(hobbit);							//de így láttam egyszerûnek. :D - Zsoca
+			
+			map.initEnemy(new Hobbit());
 			
 		} else if (c == Human.class) {
-
-			Human human = new Human();
-			map.initEnemy(human);
+			
+			map.initEnemy(new Human());
 			
 		} else if (c == Dwarf.class) {
-
-			Dwarf dwarf = new Dwarf();
-			map.initEnemy(dwarf);
-
+			
+			map.initEnemy(new Dwarf());
 		}
 
 		sumOfEnemies++;
-
 	}
 
 	public void placeGem(Type type, int id, boolean tmp) {
@@ -123,6 +117,12 @@ public class Controller {
 	}
 
 	public void newGame() {
+		
+		map = new Map();
+		player = new Player();
+
+		sumOfEnemies = 0;
+		
 	}
 
 	public void run() throws IOException {
@@ -133,17 +133,18 @@ public class Controller {
 		while (!line.equals("exit")) {
 
 			line = in.readLine();
+			
+			newGame();							// kinullázzuk az eddigieket
 
 			if (line.equals("teszt")) {
-
+				
 				try {
-					System.out.println("teszt");
 
 					System.out.println("Pálya fájl: '<név>':");
 					String mapFile = "esetek/" + in.readLine() + ".txt";
 					map = new Map();
 					player = new Player();
-					map.initMap(mapFile); // MEG KELL MÉG ÍRNI
+					map.initMap(mapFile);
 
 					System.out.println("Parancs fájl: '<név>':");
 					String commandFile = "esetek/" + in.readLine() + ".txt";
@@ -160,17 +161,14 @@ public class Controller {
 					}
 
 				} catch (IOException io) {
-
 					System.out.println("Rossz fájlnév!");
-
 				}
 
 			} else if (line.equals("game")) {
 
-				System.out.println("game");
-
+				System.out.println("Parancsok:");
 				System.out.println("Pálya betöltése: defaultMap.txt-bõl");
-				map.initMap("defaultMap.txt"); // MEG KELL MÉG ÍRNI
+				map.initMap("defaultMap.txt"); 
 
 				while (true) {
 					String row2 = in.readLine();
@@ -185,7 +183,6 @@ public class Controller {
 			}
 
 		}
-
 	}
 
 	private void parancskezeles(String command) {
@@ -205,32 +202,31 @@ public class Controller {
 				}
 				switch (commandSplit[1]) {
 
-				case "dwarf":
-					this.createEnemy(Dwarf.class);
-
-					break;
-				case "hobbit":
-					 this.createEnemy(Hobbit.class);
-
-					break;
-				case "human":
-					 this.createEnemy(Human.class);
-
-					break;
-				case "elf":
-					this.createEnemy(Elf.class);
-
-					break;
-				default:
-					System.out.println("nincs ilyen elleségtípus!");
-					break;
-
+					case "dwarf":
+						this.createEnemy(Dwarf.class);
+	
+						break;
+					case "hobbit":
+						 this.createEnemy(Hobbit.class);
+	
+						break;
+					case "human":
+						 this.createEnemy(Human.class);
+	
+						break;
+					case "elf":
+						this.createEnemy(Elf.class);
+	
+						break;
+					default:
+						System.out.println("nincs ilyen elleségtípus!");
+						break;
 				}
 
 				break;
 
 			case "move":
-
+				
 				if (commandSplit.length == 1) {
 					Map.RIGHT = false;
 					map.moveEnemies();
@@ -238,24 +234,22 @@ public class Controller {
 				}
 
 				switch (commandSplit[1]) {
-				case "JOBB":
-					Map.RIGHT = true;
-					System.out.println("jobbra mozgás");
-					map.moveEnemies();
-					break;
-
-				case "BAL":
-					Map.RIGHT = false;
-					System.out.println("balra mozgás");
-					map.moveEnemies();
-					break;
-
-				default:
-					System.out.println("nincs ilyen paraméter!");
-					break;
+					case "JOBB":
+						Map.RIGHT = true;
+						System.out.println("jobbra mozgás");
+						map.moveEnemies();
+						break;
+	
+					case "BAL":
+						Map.RIGHT = false;
+						System.out.println("balra mozgás");
+						map.moveEnemies();
+						break;
+	
+					default:
+						System.out.println("nincs ilyen paraméter!");
+						break;
 				}
-
-				 map.moveEnemies();
 
 				break;
 
@@ -489,8 +483,7 @@ public class Controller {
 			case "help":
 
 				System.out.println("Parancsok:\n");
-				System.out
-						.println("createEnemy <enemy típus>\t\t\t\t Ellenség létrehozás\n"
+				System.out.println("createEnemy <enemy típus>\t\t\t\t Ellenség létrehozás\n"
 								+ "move <irány> \t\t\t\t\t\t Ellenségek mozgatása\n"
 								+ "shoot <köd ON/OFF> <kettészedõ lövedék ON/OFF> \t\t Lövés toronnyal\n"
 								+ "buildTrap <útazonosító> \t\t\t\t Akadály építése a megfelelõ útra\n"
@@ -511,8 +504,11 @@ public class Controller {
 
 			case "exit":
 
-				System.out.println("Exit");
+				System.out.println("Exit...");
+				System.exit(0);
+				
 				break;
+				
 			default:
 				System.out.println("Nincs ilyen parancs!");
 				break;

@@ -10,13 +10,15 @@ public class Tower extends Block {
 	private int damage;
 	private int radius;
 	
-	public static int id = 1;		// csak a szkeleton miatt
+	public static int t_id = 1;		// csak a szkeleton miatt
 	public int tower_id;
 	
 	public Tower() {
-		tower_id += id;
 		block_id-=1;
-		id++;
+		
+		tower_id = t_id;
+		t_id++;
+		
 		gem = null;
 		damage = simpleDamage;
 		radius = 2;
@@ -33,15 +35,15 @@ public class Tower extends Block {
 			switch (magicGem.getType()) {
 				case RANGE_EXPANDER:
 					radius = 3;
-					System.out.println("RangeExpander varázskõ Torony#" + id + "-ban/ben elhelyezve.");
+					System.out.println("RangeExpander varázskõ Torony#" + t_id + "-ban/ben elhelyezve.");
 				break;
 				case DAMAGE_INCREASER:
 					damage = simpleDamage + 15;
-					System.out.println("DamageIncreaser varázskõ Torony#" + id + "-ban/ben elhelyezve.");
+					System.out.println("DamageIncreaser varázskõ Torony#" + t_id + "-ban/ben elhelyezve.");
 				break;
 				case SHOOTING_INCREASER:
 					damage = 2 * simpleDamage;
-					System.out.println("ShootingIncreaser varázskõ Torony#" + id + "-ban/ben elhelyezve.");
+					System.out.println("ShootingIncreaser varázskõ Torony#" + t_id + "-ban/ben elhelyezve.");
 				break;
 
 				default:
