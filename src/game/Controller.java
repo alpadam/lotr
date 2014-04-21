@@ -1,9 +1,14 @@
 package game;
 
 import java.io.BufferedReader;
+import java.io.FileDescriptor;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
+import java.io.PrintWriter;
 
 public class Controller {
 
@@ -19,8 +24,9 @@ public class Controller {
 	private int killedEnemies;
 	private int sumOfEnemies;
 
+	
+	
 	public Controller() {
-
 		map = new Map();
 		player = new Player();
 		sumOfEnemies = 0;
@@ -31,7 +37,7 @@ public class Controller {
 	}
 
 	public void buildTower(int blockId) {
-		if (player.getMagic() >= towerPrice) {
+		if ((player.getMagic() >= towerPrice) && (blockId < Block.b_id)) {
 			map.createTower(blockId);
 			player.substractMagic(towerPrice);
 			System.out.println("Torony " + "Block#" + blockId + " helyen létrehozva.");
@@ -152,7 +158,8 @@ public class Controller {
 					String commandFile = "esetek/" + in.readLine() + ".txt";
 					BufferedReader fileReader = new BufferedReader(
 							new FileReader(commandFile));
-
+					
+					System.setOut(new PrintStream(new FileOutputStream("output.txt")));
 					while (true) {
 						String row = fileReader.readLine();
 						if (row == null) {
@@ -161,6 +168,8 @@ public class Controller {
 						}
 						parancskezeles(row);
 					}
+					
+					System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
 					
 					System.out.println("Válasszon a 'teszt' vagy 'game' üzemmód közül!");
 
@@ -173,7 +182,9 @@ public class Controller {
 				System.out.println("Parancsok:");
 				System.out.println("Pálya betöltése: defaultMap.txt-bõl");
 				map.initMap("defaultMap.txt"); 
-
+				
+				System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
+				
 				while (true) {
 					String row2 = in.readLine();
 					if (row2 == null){
@@ -417,8 +428,8 @@ public class Controller {
 				}
 				try {
 					int toronyazonosito = Integer.parseInt(commandSplit[1]);
-
 					this.removeGem(toronyazonosito);
+					
 				} catch (NumberFormatException e) {
 					System.out.println("Nem jó azonsító!");
 				}
@@ -464,11 +475,10 @@ public class Controller {
 				System.out.println("Road lista:");
 				for (int i = 0; i < map.getRoads().size(); i++) {
 					Road r = map.getRoads().get(i);
-					System.out.println("\t" +"Road#"+ r.getRoadID() + "\t" + "helye: Block#" + r.getBlockID() + "\t"
-					+ "Akadály-e:"+(r.isTrap() ? "Igen" : "Nem")+ "\t "+ " Ellenségek:");
+					
+					System.out.println(r);
 					for (int j = 0; j < r.getEnemies().size(); j++) {
 						System.out.println("\t\t\t\t\t\t\t\t" +"Ellenség#"+ r.getEnemies().get(j).getEnemyID());
-						
 					}
 					
 				}

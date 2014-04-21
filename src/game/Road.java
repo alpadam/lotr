@@ -111,19 +111,9 @@ public class Road extends Block {
 	
 	@Override
 	public String toString() {
-		try {
-			if(nextRoad == null){
-				return "road" + road_id + " végsõ út";
-			}else if(nextRoad2 == null){
-				return "road" + road_id + "szomszedai: " + nextRoad.road_id  + ", " + "null";
-			}else{
-				return "road" + road_id + "szomszedai: " + nextRoad.road_id  + ", " + nextRoad2.road_id;
-			}
-			
-		} catch(NullPointerException e) {
-			return null;
-		}
-			
+		
+			return "\t" +"Road#"+ road_id + "\t" + "helye: Block#" + block_id + "\t"
+			+ "Akadály-e:"+(isTrap ? "Igen" : "Nem")+ "\t "+ " Ellenségek:";
 	}
 	
 	public int getRoadID(){

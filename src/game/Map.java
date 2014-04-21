@@ -50,6 +50,7 @@ public class Map {
 		tower.block_id = new_id;
 		towers.add(tower);
 		setHashMap(blockId);
+		
 	}
 	
 	public void createTrap(int roadId){
@@ -265,15 +266,22 @@ public class Map {
 		
 		towerRoads = new HashMap<Tower, List<Road>>();
 		
-		//Block feltöltése fájlból
+		//Elõször Block[][] map feltöltése fájlból
 		
-		BufferedReader br = new BufferedReader(new FileReader(path));
-		Vector<String> lines = new Vector<String>();
+		Vector<String> lines;
 		String s;
-		while((s = br.readLine()) != null) {
-			lines.add(s);
+		BufferedReader br = null;
+		try{
+			br = new BufferedReader(new FileReader(path));
+			lines = new Vector<String>();
+			
+			while((s = br.readLine()) != null) {
+				lines.add(s);
+			}
+		}finally{
+			if(br != null)
+				br.close();
 		}
-		br.close();										/// ez még nem jó lezárás...
 		
 		map = new Block[lines.size()][];
 		for (int i = 0; i < lines.size(); i++) {
@@ -297,7 +305,9 @@ public class Map {
 					this.finalRoad = finalRoad;
 				}
 			}
-		}		
+		}	
+		
+		//Majd a List<Road> roads feltöltése a Block[][] map-bõl
 		
 		for (int i = 0; i < map.length; i++) {
 			for (int j = 0; j < map[i].length; j++) {
