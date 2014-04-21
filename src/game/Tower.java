@@ -24,17 +24,29 @@ public class Tower extends Block {
 	
 	public void placeGem(MagicGem magicGem){
 		
-		if(gem != null){
+		if (gem != null) {
+			System.out.println("Varázskõ elhelyezése sikertelen Torony#" + tower_id + "-n.");
 			return;
-		}else{
+		} else {
 			gem = magicGem;
 			
-			if(magicGem.getType() == Type.DAMAGE_INCREASER){
-				damage = 25;
-			}else if (magicGem.getType() == Type.SHOOTING_INCREASER) {
-				damage = 20;
-			}else if (magicGem.getType() == Type.RANGE_EXPANDER) {
-				
+			switch (magicGem.getType()) {
+				case RANGE_EXPANDER:
+					radius = 3;
+					System.out.println("RangeExpander varázskõ Torony#" + id + "-ban/ben elhelyezve.");
+				break;
+				case DAMAGE_INCREASER:
+					damage = simpleDamage + 15;
+					System.out.println("DamageIncreaser varázskõ Torony#" + id + "-ban/ben elhelyezve.");
+				break;
+				case SHOOTING_INCREASER:
+					damage = 2 * simpleDamage;
+					System.out.println("ShootingIncreaser varázskõ Torony#" + id + "-ban/ben elhelyezve.");
+				break;
+
+				default:
+					System.out.println("Nincs ilyen gem típus!");
+				break;
 			}
 		}
 	}
@@ -42,6 +54,16 @@ public class Tower extends Block {
 	public MagicGem removeGem(){
 		
 		MagicGem g = gem;
+		
+		if (gem!=null) {
+			if(gem.getType() == Type.DAMAGE_INCREASER)
+				damage = simpleDamage;
+			else if (gem.getType() == Type.SHOOTING_INCREASER)
+				damage = simpleDamage;
+			else if (gem.getType() == Type.RANGE_EXPANDER)
+				radius = 2;
+		}
+			
 		gem = null;
 			
 		return g;

@@ -26,10 +26,13 @@ public class Map {
 	private Road finalRoad;
 
 	
-	public Map(int testNumber) {
+	public Map() {
 		enemies = new ArrayList<Enemy>();
 		towers = new ArrayList<Tower>();
 		roads = new ArrayList<Road>();
+		Tower.id = 1;
+		Road.id = 1;
+		Block.id = 1;
 		
 		towerRoads = new HashMap<Tower, List<Road>>();
 	}
@@ -165,11 +168,11 @@ public class Map {
 		} else {
 			for (int i = 0; i < towers.size(); i++) {
 				if (towers.get(i).tower_id == id) {
-					
 					Tower tempTower = towers.get(i);
+					
 					if(tempTower.getGem() == null){
+						
 						if(magicGem.getType() == Type.RANGE_EXPANDER){
-							
 							int radius = tempTower.getRadius();
 							
 							//MEG KELL ÍRNI, MERT FOS!
@@ -185,22 +188,10 @@ public class Map {
 								}
 							}
 							towerRoads.put(tempTower, tempRoads);*/
-							
-							
-							
-							
-							
-							
 						}
-							
-						
+					
 						towers.get(i).placeGem(magicGem);
-						
 					}
-					
-					
-					
-					
 				}
 			}
 		}
@@ -212,8 +203,29 @@ public class Map {
 		for (int i = 0; i < towers.size(); i++) {
 			if (towers.get(i).tower_id == id) {
 				gem = towers.get(i).removeGem();
+				
+				if (gem != null && gem.getType() == Type.RANGE_EXPANDER) {
+					Tower tempTower = towers.get(i);
+					
+					int radius = tempTower.getRadius();
+					
+					//MEG KELL ÍRNI, MERT FOS!
+					/*for (int i = first-radius-1; i < first+radius; i++) {
+						for (int j = second-radius; j < second+radius+1; j++) {
+							if(i >= 0 && i < map.length) {
+								if(j >= 0 && j < map[i].length) {
+									if(map[i][j].isRoad()){
+										tempRoads.add((Road) map[i][j]);
+									}	
+								}
+							}
+						}
+					}
+					towerRoads.put(tempTower, tempRoads);*/
+				}
 			}
 		}
+		
 		return gem;
 	}
 	
@@ -232,6 +244,14 @@ public class Map {
 	}
 	
 	public void initMap(String path) throws IOException {
+		enemies = new ArrayList<Enemy>();
+		towers = new ArrayList<Tower>();
+		roads = new ArrayList<Road>();
+		Tower.id = 1;
+		Road.id = 1;
+		Block.id = 1;
+		
+		towerRoads = new HashMap<Tower, List<Road>>();
 		
 		//Block feltöltése fájlból
 		

@@ -10,7 +10,7 @@ public class Player {
 	private int magic;
 
 	
-	public Player(int testNumber) {
+	public Player() {
 		this.magic = 100;							
 		inventory = new ArrayList<MagicGem>();
 		

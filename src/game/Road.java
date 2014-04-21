@@ -49,7 +49,13 @@ public class Road extends Block {
 	}
 	
 	public void placeGem(MagicGem magicGem){
-		gem = magicGem;
+		if (gem != null) {
+			System.out.println("Varázskõ elhelyezése sikertelen Road#" + road_id + "-n.");
+			return;
+		} else {
+			System.out.println("Varázskõ Road#" + road_id + " akadállyal ellátott úton elhelyezve.");
+			gem = magicGem;
+		}
 	}
 	
 	public void removeEnemy(Enemy enemy){

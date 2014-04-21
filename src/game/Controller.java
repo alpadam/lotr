@@ -19,8 +19,8 @@ public class Controller {
 
 	public Controller(int testNumber) {
 
-		map = new Map(testNumber);
-		player = new Player(testNumber);
+		map = new Map();
+		player = new Player();
 
 		sumOfEnemies = 0;
 	}
@@ -80,7 +80,7 @@ public class Controller {
 	}
 
 	public void placeGem(Type type, int id, boolean tmp) {
-		/* this.placeGem ??!?!?!?!?
+		/* 
 		 * a tmp változóra csak a szkeletonban van szükség, ezzel jelezzük, hogy melyik teszteset hívódik meg:
 		 * a kõ elhelyezése toronyba (=false), vagy a kõ elhelyezése akadályba (=true)
 		 */ 
@@ -88,32 +88,12 @@ public class Controller {
 		
 		if (gem != null) {
 			map.placeGem(gem, id, tmp);
-			if (tmp) {
-				System.out.println("Gem elhelyezve" + id + " helyre");
-			} else {
-				switch (gem.getType()) {
-
-				case RANGE_EXPANDER:
-					map.placeGem(gem, id, false);
-					System.out.println("RangeExpander varázskõ Torony#" + id + "-ban/ben elhelyezve.");
-					break;
-				case DAMAGE_INCREASER:
-					this.placeGem(Type.DAMAGE_INCREASER, id, false);
-					System.out.println("DamageIncreaser varázskõ Torony#" + id + "-ban/ben elhelyezve.");
-					break;
-				case SHOOTING_INCREASER:
-					this.placeGem(Type.SHOOTING_INCREASER, id, false);
-					System.out.println("ShootingIncreaser varázskõ Torony#" + id + "-ban/ben elhelyezve.");
-					break;
-
-				default:
-					System.out.println("Nincs ilyen gem típus!");
-					break;
-				}
-			}
 		}
 		else {
-			
+			if (tmp)
+				System.out.println("Varázskõ elhelyezése sikertelen Road#" + id + "-n.");
+			else
+				System.out.println("Varázskõ elhelyezése sikertelen Torony#" + id + "-n.");
 		}
 	}
 
@@ -123,10 +103,10 @@ public class Controller {
 
 		if (gem != null) {
 			player.addGem(gem);
-			System.out.println(id + " építménybõl varázskõ kivéve.");
+			System.out.println("Torony#" + id + " építménybõl varázskõ kivéve.");
 		}
 		else {
-			System.out.println("Nem sikerült varázskövet kivenni " + id + " építménybõl");
+			System.out.println("Nem sikerült varázskövet kivenni Torony#" + id + " építménybõl");
 		}
 	}
 
@@ -161,6 +141,8 @@ public class Controller {
 
 					System.out.println("Pálya fájl: '<név>':");
 					String mapFile = "esetek/" + in.readLine() + ".txt";
+					map = new Map();
+					player = new Player();
 					map.initMap(mapFile); // MEG KELL MÉG ÍRNI
 
 					System.out.println("Parancs fájl: '<név>':");
@@ -357,28 +339,22 @@ public class Controller {
 
 					case "rangeExpander":
 						this.placeGem(Type.RANGE_EXPANDER, toronyazonosito, false);
-						System.out.println("Range Expander gem elhelyezve "
-								+ toronyazonosito + " toronyba");
 						break;
 					case "damageIncreaser":
 						this.placeGem(Type.DAMAGE_INCREASER, toronyazonosito, false);
-						System.out.println("damage Increaser gem elhelyezve "
-								+ toronyazonosito + " toronyba");
 						break;
 					case "shootingIncreaser":
 						this.placeGem(Type.SHOOTING_INCREASER, toronyazonosito, false);
-						System.out.println("Shooting Increaser gem elhelyezve "
-								+ toronyazonosito + " toronyba");
 						break;
 
 					default:
-						System.out.println("nincs ilyen gem típus!");
+						System.out.println("Nincs ilyen gem típus!");
 						break;
 
 					}
 
 				} catch (NumberFormatException e) {
-					System.out.println("nem jó azonosító");
+					System.out.println("Nem jó azonosító");
 					break;
 				}
 
@@ -439,9 +415,6 @@ public class Controller {
 					int toronyazonosito = Integer.parseInt(commandSplit[1]);
 
 					this.removeGem(toronyazonosito);
-
-					System.out.println("Gem kivéve a  " + toronyazonosito
-							+ " toronyból");
 				} catch (NumberFormatException e) {
 					System.out.println("Nem jó azonsító!");
 				}
