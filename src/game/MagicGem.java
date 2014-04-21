@@ -1,13 +1,18 @@
 package game;
 
+/**
+ * 
+ * A varázsköveket reprezentáló osztály. Alapvetõen a kõ típusát tárolja, amit nlhány kényelmi funkcióval egészít ki.
+ *
+ */
 public class MagicGem {
 	
-	private Type type; 
+	private Type type; 		//a varázskõ típusa
 	
-	public static int id = 1;		// csak a szkeleton miatt
-	public int gem_id;
+	public static int id = 1;		//ez a változó tartja számon a már kiosztott varázskõazonosítók számát
+	public int gem_id;		//a varázskõ egyéni azonosítója
 	
-	public MagicGem(Type type) {
+	public MagicGem (Type type) {
 		this.type = type;
 		gem_id = id;
 		id++;

@@ -1,33 +1,41 @@
 package game;
 
+/**
+ * 
+ * Az ellenfeleket reprezentáló absztakrt osztály, a többi faj ennek a leszármazottja.
+ *
+ */
 public abstract class Enemy {
 	
-	protected int health;
-	protected Road currentRoad;
-	protected int trappedValue;
+	protected int health; 	//ellenfél aktuális élete
+	protected Road currentRoad; 	//az az útelem, melyen az ellenfél tartózkodik
+	protected int trappedValue;		//megmutatja, hogy az ellenfél mennyi idõt tölt még akadályon, ha egyáltalán akadályon van
 	
-	public static int id = 1;		// megkülönböztetni az ellenségeket
-	public int enemy_id;			// Enemy szinten különböztetjük meg, nem típus szinten
-
+	public static int id = 1;		//ez a változó tartja számon a már kiosztott ellenfélazonosítók számát
+	public int enemy_id;			//az ellenfél egyéni azonosítója
 	
 	public abstract Enemy duplicate();
 	
-	public boolean move(){
+	/**
+	 * 
+	 * Az ellenfelek mozgását megvalósító függvény.
+	 * Visszaétéri értéke mutatja, hogy az ellenfél eljutott-e a Végzet Hegyére.
+	 *
+	 */
+	public boolean move() {
 		
-		if (trappedValue == 0) {
+		if (trappedValue == 0) {	//amennyiben nincs akadályon az ellenfél, vagy már kijutott belõle
 			
-			currentRoad.removeEnemy(this);
-			currentRoad = currentRoad.getNext(Map.RIGHT);
+			currentRoad.removeEnemy(this);		//ellép az aktuális útról
+			currentRoad = currentRoad.getNext(Map.RIGHT);		//lekérjük a következõ utat
 			
-			if(currentRoad != null){
+			if (currentRoad != null) {
+				currentRoad.addEnemy(this);		//a kövektezõ útra ér
 				
-				currentRoad.addEnemy(this);
-				
-				if(currentRoad.isTrap()){
-					
+				if (currentRoad.isTrap()) {		//amennyiben akadályra lépett, akkor a megfelelõ változó változik
 					trappedValue++;
 					
-					if(currentRoad.getGemType() != null){
+					if (currentRoad.getGemType() != null) {	//ha az akadályon erõsítõ varázskõ van, akkor tovább marad az akadályon, így tovább nõ az érték
 						trappedValue++;
 					}
 				}
@@ -36,13 +44,13 @@ public abstract class Enemy {
 			System.out.println("Ellenség#" + this.enemy_id  + " lépett Road#" + currentRoad.road_id + "-ra/re " + 
 					"Történt végsõ útra lépés: " + currentRoad.isFinal());
 			
-			return currentRoad.isFinal();
+			return currentRoad.isFinal();		//visszaadjuk, hogy elért-e a Végzet Hegyét
 			
-		}else{
-			trappedValue--;
+		} else {
+			trappedValue--;		//ha akadálon volt, akkor próbál kiszabadulni belõle, a megfelelõ érték egyel csökken
 			
 			System.out.println("Ellenség#" + this.enemy_id  + " csapdába esett Road#" + currentRoad.road_id + "-n ");
-			return false;
+			return false;		//mivel ilyenkor nem mozgott tovább, biztosan nem érte el a Végzet Hegyét
 		}
 	}
 	
@@ -54,6 +62,12 @@ public abstract class Enemy {
 		currentRoad = road;
 	}
 	
+	/**
+	 * 
+	 * Az ellenfelet sebzõ függvény, ezt az ellenférle lövõ tornyok fogják hívni. 
+	 * Feladata még az is, hogy jelzi, az ellenfél meghalt-e.
+	 *
+	 */
 	public boolean damage(int damage){
 		health -= damage;
 		if(health <= 0)

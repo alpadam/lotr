@@ -10,12 +10,18 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 
+/**
+ * 
+ * A játékot vezérlõ osztály, tartalamzza a pályát és a játékost, ezen felül minden vezérlésért felelõs függvényt.
+ * A felhasználó ezen keresztül kommunikál a mappal, de a felhasználón kívüli mûködést (léptetést) is ez a vezérlõ osztál irányítja. 
+ *
+ */
 public class Controller {
-
-	private static int towerPrice = 20;
-	private static int trapPrice = 10;
-	private static int gemPrice = 5;
-	public static int killedEnemyReward = 10;
+	
+	private static int towerPrice = 20;	//torony ára statikus változó, így könnyen finomhangolható
+	private static int trapPrice = 10;	//akadály ára
+	private static int gemPrice = 5;	//varázskõ ára
+	public static int killedEnemyReward = 10;	//megölt ellenfelekért járó bónusz mágia
 	
 	public static boolean gameOver = false;
 
@@ -24,8 +30,6 @@ public class Controller {
 	private int killedEnemies;
 	private int sumOfEnemies;
 
-	
-	
 	public Controller() {
 		map = new Map();
 		player = new Player();
@@ -36,59 +40,79 @@ public class Controller {
 		return map;
 	}
 
-	public void buildTower(int blockId) {
-		if ((player.getMagic() >= towerPrice) && (blockId < Block.b_id)) {
-			map.createTower(blockId);
-			player.substractMagic(towerPrice);
-			System.out.println("Torony " + "Block#" + blockId + " helyen létrehozva.");
+	/**
+	 * 
+	 * Torony építését végzõ függvényt. Értesíti a map-ot a torony építésének szándékáról.
+	 *
+	 */
+	public void buildTower (int blockId) {
+		if ((player.getMagic() >= towerPrice) && (blockId < Block.b_id)) {	//van-e elég mágiája a játékosnak
+			boolean built = map.createTower(blockId);
+			if (built) {
+				player.substractMagic(towerPrice);	//levonjuk a megfelelõ mágiát
+				System.out.println("Torony " + "Block#" + blockId + " helyen létrehozva.");
+			} else {
+				System.out.println("Torony építése sikertelen.");
+			}
 		}
 		else {
 			System.out.println("Torony építése sikertelen.");
 		}
 	}
 
+	/**
+	 * 
+	 * Akadály építését végzõ függvényt. Értesíti a map-ot az akadály építésének szándékáról.
+	 *
+	 */
 	public void buildTrap(int roadId) {
-		if (player.getMagic() >= trapPrice) {
+		if (player.getMagic() >= trapPrice) {	//van-e elég mágiája a játékosnak
 			map.createTrap(roadId);
-			player.substractMagic(trapPrice);
+			player.substractMagic(trapPrice);	//levonjuk a megfelelõ mágiát
 			System.out.println("Akadály Road#" + roadId + " helyen létrehozva.");
 		}
 		else {
 			System.out.println("Akadály építése sikertelen.");
 		}
 	}
-
+	
+	/**
+	 * 
+	 * Adott fajhoz tartozó ellenfél létrehozása.
+	 *
+	 */
 	public void createEnemy(Class<? extends Enemy> c) {
 
 		if (c == Elf.class) {
-			
 			map.initEnemy(new Elf());
-			
 		} else if (c == Hobbit.class) {
-			
 			map.initEnemy(new Hobbit());
-			
 		} else if (c == Human.class) {
-			
 			map.initEnemy(new Human());
-			
 		} else if (c == Dwarf.class) {
-			
 			map.initEnemy(new Dwarf());
 		}
 
-		sumOfEnemies++;
+		sumOfEnemies++;	//eddigi ellenfelek számát növeljük
 	}
 
+	/**
+	 * 
+	 * Kõ behelyezése építménybe, legyen szó toronyról vagy akadályról.
+	 * Értesíti a map-ot a kõ behelyezésének szándékáról.
+	 *
+	 */
 	public void placeGem(Type type, int id, boolean tmp) {
 		/* 
-		 * a tmp változóra csak a szkeletonban van szükség, ezzel jelezzük, hogy melyik teszteset hívódik meg:
+		 * a tmp változóra csak a prototípusban van szükség, ezzel jelezzük, hogy melyik teszteset hívódik meg:
 		 * a kõ elhelyezése toronyba (=false), vagy a kõ elhelyezése akadályba (=true)
 		 */ 
-		MagicGem gem = player.getGem(type);
+		MagicGem gem = player.getGem(type);	//lekérjük az adott típusú követ a játékostól
 		
-		if (gem != null) {
-			map.placeGem(gem, id, tmp);
+		if (gem != null) {	//csak akkor tudunk mit kezdeni, ha tényleg volt ilyen köve a játékosnak
+			boolean placed = map.placeGem(gem, id, tmp);
+			if (!placed)
+				player.addGem(gem); 	//ha nem sikerült beraknunk a követ, akkor azt a játékos visszakapja
 		}
 		else {
 			if (tmp)
@@ -98,12 +122,16 @@ public class Controller {
 		}
 	}
 
+	/**
+	 * 
+	 * Kõ kivétele toronyból, továbbadja a kérést a map felé.
+	 *
+	 */
 	public void removeGem(int id) {
-
 		MagicGem gem = map.removeGem(id);
 
 		if (gem != null) {
-			player.addGem(gem);
+			player.addGem(gem);	//ha sikerrel vettük ki a követ, akkor azt aodaadja a játékosnak
 			System.out.println("Torony#" + id + " építménybõl varázskõ kivéve.");
 		}
 		else {
@@ -111,11 +139,16 @@ public class Controller {
 		}
 	}
 
+	/**
+	 * 
+	 * Varázskõ vásárlása a játékos karakter számára. 
+	 *
+	 */
 	public void buyGem(Type type) {
-		if (player.getMagic() >= gemPrice) {
+		if (player.getMagic() >= gemPrice) {	//csak akkor tudunk vásárolni, ha van rá mágiánk
 			MagicGem gem = new MagicGem(type);
-			player.addGem(gem);
-			player.substractMagic(gemPrice);
+			player.addGem(gem);		//a játékos eszköztárához kerül a kõ
+			player.substractMagic(gemPrice);	//a megfelelõ összeg levonásra kerül a mágiából
 			System.out.println(type + " varázskõ megvásárolva.");
 		}
 		else {
@@ -124,7 +157,6 @@ public class Controller {
 	}
 
 	public void newGame() {
-		
 		map = new Map();
 		player = new Player();
 		gameOver = false;
@@ -133,26 +165,27 @@ public class Controller {
 		
 	}
 
+	/**
+	 * 
+	 * A folyamatos futásért felelõs függvény. 
+	 *
+	 */
 	public void run() throws IOException {
-
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 		String line = "";
 
 		while (!line.equals("exit")) {
-
 			line = in.readLine();
 			
 			newGame();							// kinullázzuk az eddigieket
 
-			if (line.equals("teszt")) {
-				
+			if (line.equals("teszt")) {		//elõlre definiált tesztesetet akarunk futtatni
 				try {
-
 					System.out.println("Pálya fájl: '<név>':");
 					String mapFile = "esetek/" + in.readLine() + ".txt";
 					map = new Map();
 					player = new Player();
-					map.initMap(mapFile);
+					map.initMap(mapFile);	//map inicializálása
 
 					System.out.println("Parancs fájl: '<név>':");
 					String commandFile = "esetek/" + in.readLine() + ".txt";
@@ -177,21 +210,20 @@ public class Controller {
 					System.out.println("Rossz fájlnév!");
 				}
 
-			} else if (line.equals("game")) {
-
+			} else if (line.equals("game")) {	//a parancsokat manuálisan adjuk meg, mintha játszanánk
 				System.out.println("Parancsok:");
-				System.out.println("Pálya betöltése: defaultMap.txt-bõl");
+				System.out.println("Pálya betöltése: defaultMap.txt-bõl");	//elõlre definiált a pálya
 				map.initMap("defaultMap.txt"); 
 				
 				System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
 				
 				while (true) {
 					String row2 = in.readLine();
-					if (row2 == null){
+					if (row2 == null) {
 						break;
 					}
 					parancskezeles(row2);
-					if(gameOver){
+					if (gameOver) {
 						System.out.println("A játék véget ért! Sajnos nem nyert!");
 						System.out.println("Válasszon a 'teszt' vagy 'game' üzemmód közül!");
 						break;
@@ -206,8 +238,12 @@ public class Controller {
 		}
 	}
 
+	/**
+	 * 
+	 * A bemeneti nyelvben specifikált parancsok értelmezéséért felelõs függvény. 
+	 *
+	 */
 	private void parancskezeles(String command) {
-
 		String[] commandSplit = command.split(" ");
 
 		if (commandSplit.length >= 1) { // csak akkor, ha valami szöveget
@@ -216,13 +252,11 @@ public class Controller {
 			switch (commandSplit[0]) {
 
 			case "createEnemy":
-
 				if (commandSplit.length == 1) {
 					System.out.println("Nincs elég argumentum!");
 					break;
 				}
 				switch (commandSplit[1]) {
-
 					case "dwarf":
 						this.createEnemy(Dwarf.class);
 	
@@ -247,7 +281,6 @@ public class Controller {
 				break;
 
 			case "move":
-				
 				if (commandSplit.length == 1) {
 					Map.RIGHT = false;
 					gameOver = map.moveEnemies();
@@ -436,7 +469,6 @@ public class Controller {
 				break;
 
 			case "simulate":
-				
 				System.out.println("Szimulálás: \t");
 				map.moveEnemies();							//Lépés
 				int killedEnemies = map.shootingTowers();	//Lövés
@@ -445,7 +477,6 @@ public class Controller {
 				break;
 
 			case "listInventory":
-
 				System.out.println("Inventory:");
 				for (int i = 0; i < player.getInventory().size(); i++) {
 					MagicGem tempGem = player.getInventory().get(i);

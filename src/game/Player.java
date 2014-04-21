@@ -3,11 +3,15 @@ package game;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * 
+ * Az osztály a játékos karakterét, Szarumánt reprezentálja, a megfelelõ változóival, eszköztárával és függvényeivel.
+ *
+ */
 public class Player {
 	
-	private List<MagicGem> inventory;
-	private int magic;
+	private List<MagicGem> inventory;	//a játékos eszköztára, azaz a tulajdonában lévõ varázskövek
+	private int magic;		//a játékos aktuális varázsereje
 
 	
 	public Player() {
@@ -16,10 +20,20 @@ public class Player {
 		
 	}
 	
+	/**
+	 * 
+	 * Egy követ a játékos eszköztárába rak.
+	 *
+	 */
 	public void addGem(MagicGem magicGem) {
 		inventory.add(magicGem);
 	}
-		
+	
+	/**
+	 * 
+	 * Adott típusú követ kivesz a játékos eszköztárából, és visszaadja.
+	 *
+	 */
 	public MagicGem getGem(Type type) {
 		for (MagicGem g : inventory) {
 			if (g.getType() == type){
@@ -35,10 +49,21 @@ public class Player {
 		return magic;
 	}
 	
+	/**
+	 * 
+	 * Vásárlások után adott értékkel csökkenti a játékos varázserejét. 
+	 * A vásárlófüggvények feladata annak vizsgálata, hogy van-e elég varázsereje a játékosnak, emiatt nem vizsgálja, hogy lemegy-e nulla alá.
+	 *
+	 */
 	public void substractMagic(int magic) {		
 		this.magic -= magic;
 	}
 	
+	/**
+	 * 
+	 * A játékos által éppen megölt ellenfelekkel arányosan növeli a játékos varázserejét.
+	 *
+	 */
 	public void addMagic(int killedEnemies) {
 		this.magic += killedEnemies * Controller.killedEnemyReward;
 	}

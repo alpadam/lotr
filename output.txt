@@ -1,28 +1,19 @@
-Az Elf#1 ellenség létrejött!
-Az Enemy lista:
-	Ellenség#1	 Elf.class	Életerõ:50	Road:Road#1
+false
 Torony Block#6 helyen létrehozva.
-Szimulálás: 	
-Lépések:
-Ellenség#1 lépett Road#2-ra/re Történt végsõ útra lépés: false
-Ellenség#1 lépett Road#3-ra/re Történt végsõ útra lépés: false
-Lövések:
-Torony#1 lõtt Ellenség#1-ra/re!
-Az Enemy lista:
-	Ellenség#1	 Elf.class	Életerõ:40	Road:Road#3
+Akadály Road#1 helyen létrehozva.
+DAMAGE_INCREASER varázskõ megvásárolva.
+MOVEMENT_DECREASER varázskõ megvásárolva.
+Inventory:
+Varázskõ#1	Gem.DamageIncreaser
+Varázskõ#2	Gem.movementDecreaser
+DamageIncreaser varázskõ Torony#1-ban/ben elhelyezve.
 Torony lista:
-Tower#1	gem: null Helye: Block#6
+Tower#1	gem: Gem.DamageIncreaser Helye: Block#6
+Varázskõ Road#1 akadállyal ellátott úton elhelyezve.
 Road lista:
-	Road#1	helye: Block#1	Akadály-e:Nem	  Ellenségek:
+	Road#1	helye: Block#1	Akadály-e:Igen	  Ellenségek:
 	Road#2	helye: Block#2	Akadály-e:Nem	  Ellenségek:
 	Road#3	helye: Block#3	Akadály-e:Nem	  Ellenségek:
-								Ellenség#1
-Pálya:
-Block#1 
-Block#2 
-Block#3 
-
-
-Block#4 
-Block#5 
-Block#6 
+Torony#1 építménybõl varázskõ kivéve.
+Torony lista:
+Tower#1	gem: null Helye: Block#6

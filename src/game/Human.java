@@ -1,5 +1,10 @@
 package game;
 
+/**
+ * 
+ * Az Enemy osztályból leszármazó osztály, amely a Humán fajú ellenfeleket reprezentálja.
+ *
+ */
 public class Human extends Enemy {
 	
 	public Human() {
@@ -12,6 +17,12 @@ public class Human extends Enemy {
 		System.out.println("A Human#"+ enemy_id + " ellenség létrejött!");
 	}
 	
+	/**
+	 * 
+	 * A Humán különleges képessége, hogy a tornyok mindig csak az alapvetõ sebzésükkel hatnak rá, a varázskövek sebzéserõsítõ hatása nem érvényesül.
+	 * Emiatt definiáljuk felül az eredeti függvényt.
+	 *
+	 */
 	@Override
 	public boolean damage(int damage) {
 		health -= Tower.simpleDamage;
@@ -21,14 +32,26 @@ public class Human extends Enemy {
 			return false;
 	}
 
+	/**
+	 * 
+	 * A duplikáló függvény, amit a tornyok speciális lövedékei okoznak.
+	 * Felezi az életét, és egy szintén felezett erejû humánt hoz még létre, amit visszaad visszatérési értékként.
+	 *
+	 */
 	@Override
 	public Human duplicate() {
 		Human human = new Human();
-		int newhealth = health/2;
-		this.health = health/2;
-		human.setHealth(newhealth);
-		human.setCurrentRoad(currentRoad);
-		currentRoad.addEnemy(human);
+		int newhealth = health / 2;
+		if (newhealth > 0)	//a humán a felezõlövedéktõl nem hal meg, 1 életerõpontja mindenképp marad
+			this.health = newhealth;
+		else
+			this.health = 1;
+		if (newhealth > 0)	//az új humán sem fog halva születni
+			human.setHealth(newhealth);
+		else
+			human.setHealth(1);
+		human.setCurrentRoad(currentRoad);	//az új humán az aktuális útra kerül
+		currentRoad.addEnemy(human);	
 		return human;
 	}
 	

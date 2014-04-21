@@ -8,22 +8,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
+/**
+ * 
+ * A pályát reprezentáló osztály, tartalmazza a térképet, a rajta lévõ ellenfeleket, az építményeket. 
+ * Felelõs a pályával kapcsolatos feladatok kezeléséért, mint például a felhasználó által kért építkezés, varázsköelhelyezés, vagy pedig az ellenfelek léptetése, toronyok lövései.
+ *
+ */
 public class Map {
 	
-	private Block[][] map;
+	private Block[][] map;	//maga a térkép
 	
-	private List<Tower> towers;
-	private List<Road> roads;
-	private List<Enemy> enemies;
+	private List<Tower> towers;		//felépített tornyok
+	private List<Road> roads;		//utak
+	private List<Enemy> enemies;	//még élõ ellenfelek
 	
-	private HashMap<Tower, List<Road>> towerRoads;
+	private HashMap<Tower, List<Road>> towerRoads;		//a tornyok által látott utak, tornyokhoz rendelve
 	
 	public static boolean RIGHT = false;
-	public static boolean DUPLICATE = false;
-	public static boolean FOG = false;
+	public static boolean DUPLICATE = false;	//éppen duplikáló lövedéket lõnek-e a tornyok
+	public static boolean FOG = false;		//van-e éppen köd a pályán
 	
-	private Road firstRoad;
-	private Road finalRoad;
+	private Road firstRoad;		//a kezdõút, ahova az ellenfelek belépnek
+	private Road finalRoad;		//a Végzet Hegye, az ellenfelek úticélja
 
 	
 	public Map() {
@@ -37,40 +43,59 @@ public class Map {
 		towerRoads = new HashMap<Tower, List<Road>>();
 	}
 	
-	public void createTower(int blockId){							
-		
+	/**
+	 * 
+	 * Torony építése megadott block-ra.
+	 * Visszatérési értéke mutatja, hogy sikerült-e tornyot építeni.
+	 *
+	 */
+	public boolean createTower (int blockId) {
 		List<Integer> tempCoordinate = blockIdToCoordinate(blockId);
 		Integer first = tempCoordinate.get(0);
 		Integer second = tempCoordinate.get(1);
 		
-		int new_id = map[first][second].block_id;
+		if (!map[first][second].isRoad()) {	//útra nem akarunk tornyot építeni
+			int new_id = map[first][second].block_id;
+			map[first][second] = new Tower();		//létrehozunk egy tornyot az adott mezõn
+			Tower tower = (Tower) map[first][second];
+			tower.block_id = new_id;	//fontos, hogy a blokkok azonosítója konzisztens maradjon
+			towers.add(tower);		//a tornyot a listánkhoz vesszük
+			setHashMap(blockId);	//be kell állítanunk a torony által látott utakat
+			
+			return true;
+		}
 		
-		map[first][second] = new Tower();
-		Tower tower = (Tower) map[first][second];
-		tower.block_id = new_id;
-		towers.add(tower);
-		setHashMap(blockId);
-		
+		return false;
 	}
 	
-	public void createTrap(int roadId){
+	/**
+	 * 
+	 * Akadály építése megadott útra.
+	 *
+	 */
+	public void createTrap (int roadId) {
 		for (int i = 0; i < roads.size(); i++) {
 			if (roads.get(i).road_id == roadId) {
-				roads.get(i).setTrap();
+				roads.get(i).setTrap();		//beállítjuk, hogy felépült az útra az akadály
 			}
 		}
 	}
 	
+	/**
+	 * 
+	 * BlockID alapján koordinátapárt kiszámoló függvény.
+	 *
+	 */
 	private List<Integer> blockIdToCoordinate(int blockId) {
 		List<Integer> tempCoordinate = new ArrayList<Integer>();
-		if(map != null) {
+		if (map != null) {
 			int widthId = map[0].length;
-			if((blockId%widthId) == 0) {
-				tempCoordinate.add((blockId/widthId)-1);
-				tempCoordinate.add(widthId-1);
+			if ((blockId % widthId) == 0) {
+				tempCoordinate.add((blockId / widthId) - 1);
+				tempCoordinate.add(widthId - 1);
 			} else {
-				tempCoordinate.add((blockId/widthId));
-				tempCoordinate.add((blockId%widthId)-1);
+				tempCoordinate.add((blockId / widthId));
+				tempCoordinate.add((blockId % widthId) - 1);
 			}
 		} else {
 			tempCoordinate.add(-1);
@@ -79,14 +104,20 @@ public class Map {
 		return tempCoordinate;
 	}
 	
+	/**
+	 * 
+	 * Amennyiben köd szállt a pályára, a tornyok látköre módosul.
+	 * A függvény feladata, hogy ilyen esetben kiszámolja, hogy a torony mely utakat fogja látni.
+	 *
+	 */
 	private List<Road> fogSight(Tower tower) {
-		
 		List<Road> tempRoads = new ArrayList<Road>();
 		int radius = tower.getRadius() - 1;
 		List<Integer> tempCoordinate = blockIdToCoordinate(tower.block_id);
 		Integer first = tempCoordinate.get(0);
 		Integer second = tempCoordinate.get(1);
 		
+		//algoritmus a torony által látott utak felderítésére
 		for (int i = first-radius; i < first+radius+1; i++) {
 			for (int j = second-radius; j < second+radius+1; j++) {
 				if(i >= 0 && i < map.length) {
@@ -102,16 +133,21 @@ public class Map {
 		return tempRoads;
 	}
 	
+	/**
+	 * 
+	 * Függvény, mely megmondja, hogy az adott blokkon lévõ torony mely utakat látja, és ezekkel az utakkal frissíti az utakat a tornyokhoz rendelõ hashmapet.
+	 *
+	 */
 	private void setHashMap(int blockId) {
-		
 		List<Road> tempRoads = new ArrayList<Road>();
 		List<Integer> tempCoordinate = blockIdToCoordinate(blockId);
 		Integer first = tempCoordinate.get(0);
 		Integer second = tempCoordinate.get(1);
 		
 		Tower tempTower = (Tower) map[first][second];
-		int radius = tempTower.getRadius();
+		int radius = tempTower.getRadius();		//a torony látótávolságát le kell kérnünk, mert lehet, hogy látásnövelõ varázskõ van benne
 		
+		//algoritmus a torony által látott utak felderítésére
 		for (int i = first-radius; i < first+radius+1; i++) {
 			for (int j = second-radius; j < second+radius+1; j++) {
 				if(i >= 0 && i < map.length) {
@@ -123,11 +159,18 @@ public class Map {
 				}
 			}
 		}
+		
 		towerRoads.put(tempTower, tempRoads);
 	}
 	
+	/**
+	 * 
+	 * A függvény feladata, hogy végigmenjen a tornyokon, és mindegyikkel tüzeljen egyet. 
+	 * Figyeli, hogy van-e köd, vagy érvényben van-e a duplikáló lövedék hatása.
+	 * Emellett megmondja, hogy hány ellenfelet öltek meg a tornyok, és ezzel vissza is tér.
+	 *
+	 */
 	public int shootingTowers() {
-		
 		System.out.println("Lövések:");	
 		
 		int killedEnemies = 0;
@@ -136,34 +179,38 @@ public class Map {
 			Tower tempTower = towers.get(i);
 			
 			List<Road> roads;
-			if(!FOG){
-				roads = towerRoads.get(tempTower);
-			}else{
-				roads = this.fogSight(tempTower);			
+			if (!FOG) {
+				roads = towerRoads.get(tempTower);	//megnézzük, hogy melyik utakat látja a torony
+			} else {
+				roads = this.fogSight(tempTower);	//van köd, ilyekor más utakat lát a torony		
 			}
 			
-			
-			if(!DUPLICATE){
+			if (!DUPLICATE) {
 				boolean isDied = tempTower.shoot(roads);
-				if(isDied)
+				if (isDied)
 					killedEnemies++;
-			}else{
+			} else {
 				Enemy newEnemy = tempTower.duplicateShoot(roads);
 				if(newEnemy != null){
-					enemies.add(newEnemy);
+					enemies.add(newEnemy);	//ha történt duplikálás, akkor frissítenünk kell az ellenféllistát
 				}
 			}
 		}
 
 		if(killedEnemies > 0) {
-			refreshEnemies();
+			refreshEnemies();		//ha halt meg ellenfél, akkor frossítenünk kell az ellenféllistát
 		}
 		
 		return killedEnemies;
 	}
 
+	/**
+	 * 
+	 * A függvény feladata, hogy minden ellenfél mozgatását elvégezze.
+	 * Visszatérési értéke akkor igaz, ha az ellenfelek elérték a Végzet Hegyét.
+	 *
+	 */
 	public boolean moveEnemies() {
-		
 		boolean isFinal = false;
 		
 		System.out.println("Lépések:");
@@ -176,9 +223,9 @@ public class Map {
 				return true;
 			}
 			
-			if(tempEnemy.getClass() == Elf.class) {
+			if (tempEnemy.getClass() == Elf.class) {		//az elfek különlegessége a fürgeségük, õk kettõt is léphetnek
 				isFinal = tempEnemy.move();
-				if(isFinal) {
+				if (isFinal) {
 					return true;
 				}
 			}
@@ -187,52 +234,62 @@ public class Map {
 		return isFinal;
 	}
 	
-	public void placeGem(MagicGem magicGem, int id, boolean tmp) {
+	/**
+	 * 
+	 * A függvény feladata, hogy adott építménybe helyezzen egy megadott varázskövet.
+	 * A visszatérési réték jelzi, hogy sikerült-e berakni a követ.
+	 *
+	 */
+	public boolean placeGem(MagicGem magicGem, int id, boolean tmp) {
 		/*
-		 * a tmp változóra csak a szkeletonban van szükség, ezzel jelezzük, hogy melyik teszteset hívódik meg:
+		 * a tmp változóra csak a prototpusban van szükség, ezzel jelezzük, hogy melyik teszteset hívódik meg:
 		 * a kõ elhelyezése toronyba (=false), vagy a kõ elhelyezése akadályba (=true)
 		 */ 	
+		boolean placed = false;
+		
 		if (tmp) {
 			for (int i = 0; i < roads.size(); i++) {
 				if (roads.get(i).road_id == id) {
-					roads.get(i).placeGem(magicGem);
+					placed = roads.get(i).placeGem(magicGem);
 				}
 			}
 				
 		} else {
 			for (int i = 0; i < towers.size(); i++) {
 				if (towers.get(i).tower_id == id) {
-					
 					Tower tempTower = towers.get(i);
 
-					if(tempTower.getGem() == null){
-						
-						if(magicGem.getType() == Type.RANGE_EXPANDER){
-							tempTower.placeGem(magicGem);
-							towerRoads.remove(tempTower);
-							setHashMap(tempTower.block_id);
-						}else{
-							tempTower.placeGem(magicGem);
-						}
-						break;
+					if (magicGem.getType() == Type.RANGE_EXPANDER) {	//ha látótávolságot növelõ kõrõl van szó, akkor frissítenünk kell a torony által látott utak listáját
+						placed = tempTower.placeGem(magicGem);
+						towerRoads.remove(tempTower);
+						setHashMap(tempTower.block_id);
+					} else {
+						placed = tempTower.placeGem(magicGem);
 					}
+					
+					break;
 				}
 			}
 		}
+		
+		return placed;
 	}
-		
+	
+	/**
+	 * 
+	 * A függvény feladata, hogy adott építménybõl kivegye a benne lépvõ varázskövet, és azt visszatérési értékként adja vissza.
+	 *
+	 */
 	public MagicGem removeGem(int id) {
-		
 		MagicGem gem = null;
 		
 		for (int i = 0; i < towers.size(); i++) {
 			Tower tempTower = towers.get(i);
 			if (tempTower.tower_id == id) {
-				
 				gem = tempTower.removeGem();
 				
-				if (gem != null && gem.getType() == Type.RANGE_EXPANDER) {
-					towerRoads.remove(tempTower);
+				if (gem != null && gem.getType() == Type.RANGE_EXPANDER) {	//ha látótávolságot növelõ követ vettünk ki, akkor a torony által látott utak listáját is modosítanunk kell
+					towerRoads.remove(tempTower);	
 					setHashMap(tempTower.block_id);
 				}
 				break;
@@ -242,12 +299,22 @@ public class Map {
 		return gem;
 	}
 	
+	/**
+	 * 
+	 * Adott ellenség játékba kerüléséhez szükséges tevékenységeket elvégzõ függvény.
+	 *
+	 */
 	public void initEnemy(Enemy enemy) {
 		enemies.add(enemy);
 		firstRoad.addEnemy(enemy);
 		enemy.setCurrentRoad(firstRoad);
 	}
 	
+	/**
+	 * 
+	 * A halott ellenfeleket kiveszi a listából, frissítve azt.
+	 *
+	 */
 	public void refreshEnemies() {
 		for (int i = 0; i < enemies.size(); i++) {
 			if(enemies.get(i).getHealth() < 0) {
@@ -256,6 +323,11 @@ public class Map {
 		}	
 	}
 	
+	/**
+	 * 
+	 * Adott fileból inicializálja a pályát.
+	 *
+	 */
 	public void initMap(String path) throws IOException {
 		enemies = new ArrayList<Enemy>();
 		towers = new ArrayList<Tower>();

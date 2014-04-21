@@ -1,5 +1,10 @@
 package game;
 
+/**
+ * 
+ * A varázskövek lehetséges típusai egy felsorolásban.
+ *
+ */
 public enum Type {
 	
 	RANGE_EXPANDER,		//távolságnövelõ
