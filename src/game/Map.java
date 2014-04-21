@@ -78,6 +78,29 @@ public class Map {
 		return tempCoordinate;
 	}
 	
+	private List<Road> fogSight(Tower tower) {
+		
+		List<Road> tempRoads = new ArrayList<Road>();
+		int radius = tower.getRadius() - 1;
+		List<Integer> tempCoordinate = blockIdToCoordinate(tower.block_id);
+		Integer first = tempCoordinate.get(0);
+		Integer second = tempCoordinate.get(1);
+		
+		for (int i = first-radius; i < first+radius+1; i++) {
+			for (int j = second-radius; j < second+radius+1; j++) {
+				if(i >= 0 && i < map.length) {
+					if(j >= 0 && j < map[i].length) {
+						if(map[i][j].isRoad()){
+							tempRoads.add((Road) map[i][j]);
+						}
+					}
+				}
+			}
+		}
+		
+		return tempRoads;
+	}
+	
 	private void setHashMap(int blockId) {
 		
 		List<Road> tempRoads = new ArrayList<Road>();
@@ -115,8 +138,7 @@ public class Map {
 			if(!FOG){
 				roads = towerRoads.get(tempTower);
 			}else{
-				
-				roads = towerRoads.get(tempTower);				// EZT KELL MEGCSINÁLNI!!!!!!!
+				roads = this.fogSight(tempTower);			
 			}
 			
 			
@@ -185,11 +207,9 @@ public class Map {
 					if(tempTower.getGem() == null){
 						
 						if(magicGem.getType() == Type.RANGE_EXPANDER){
-							//System.out.println(towerRoads.get(tempTower));
 							tempTower.placeGem(magicGem);
 							towerRoads.remove(tempTower);
 							setHashMap(tempTower.block_id);
-							//System.out.println(towerRoads.get(tempTower));
 						}else{
 							tempTower.placeGem(magicGem);
 						}
@@ -211,12 +231,8 @@ public class Map {
 				gem = tempTower.removeGem();
 				
 				if (gem != null && gem.getType() == Type.RANGE_EXPANDER) {
-					
-					//System.out.println(towerRoads.get(tempTower));
-					
 					towerRoads.remove(tempTower);
 					setHashMap(tempTower.block_id);
-					//System.out.println(towerRoads.get(tempTower));
 				}
 				break;
 			}
@@ -267,22 +283,18 @@ public class Map {
 				int value = Character.getNumericValue(s.charAt(j));
 				if (value == 0) {
 					map[i][j] = new Block();
-					//System.out.println("0");
 				} else if (value == 1) {
 					map[i][j] = new Road();
-					//System.out.println("1");
 				} else if (value == 2) {
 					Road firstRoad = new Road();
 					firstRoad.setFirst();
 					map[i][j] = firstRoad;
 					this.firstRoad = firstRoad;
-					//System.out.println("2");
 				} else if (value == 3) {
 					Road finalRoad = new Road();
 					finalRoad.setFinal();
 					map[i][j] = finalRoad;
 					this.finalRoad = finalRoad;
-					//System.out.println("3");
 				}
 			}
 		}		
@@ -333,10 +345,6 @@ public class Map {
 				}
 			}
 		}
-		/*
-		for (int i = 0; i < roads.size(); i++) {
-			System.out.println(roads.get(i).toString());
-		}*/
 		
 	}
 

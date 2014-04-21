@@ -18,22 +18,12 @@ public class Road extends Block {
 	public int road_id;
 	
 	public Road() {
-		
 		isTrap = false;
 		isFinal = false;
 		isFinal = false;
 		gem = null;
 		nextRoad2 = null;
 		
-		enemies = new ArrayList<Enemy>();
-		
-		road_id = r_id;
-		r_id++;
-	}
-	
-	public Road(boolean isTrap) {
-		
-		this.isTrap = isTrap;
 		enemies = new ArrayList<Enemy>();
 		
 		road_id = r_id;

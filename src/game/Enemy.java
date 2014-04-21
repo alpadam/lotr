@@ -15,9 +15,10 @@ public abstract class Enemy {
 	public boolean move(){
 		
 		if (trappedValue == 0) {
-			currentRoad.removeEnemy(this);
 			
+			currentRoad.removeEnemy(this);
 			currentRoad = currentRoad.getNext(Map.RIGHT);
+			
 			if(currentRoad != null){
 				
 				currentRoad.addEnemy(this);

@@ -1,8 +1,10 @@
+createEnemy hobbit
 buildTower 25
-buyGem rangeExpander
-listInventory
-gemToTower rangeExpander 1
 listTowers
-removeGem 1
-listInventory
-listTowers
+listRoads
+move JOBB
+shoot OFF OFF
+listEnemies
+shoot ON OFF
+listEnemies
+

@@ -11,17 +11,18 @@ public class Controller {
 	private static int trapPrice = 10;
 	private static int gemPrice = 5;
 	public static int killedEnemyReward = 10;
+	
+	public static boolean gameOver = false;
 
 	private Map map;
 	private Player player;
 	private int killedEnemies;
 	private int sumOfEnemies;
 
-	public Controller(int testNumber) {
+	public Controller() {
 
 		map = new Map();
 		player = new Player();
-
 		sumOfEnemies = 0;
 	}
 
@@ -120,6 +121,7 @@ public class Controller {
 		
 		map = new Map();
 		player = new Player();
+		gameOver = false;
 
 		sumOfEnemies = 0;
 		
@@ -159,6 +161,8 @@ public class Controller {
 						}
 						parancskezeles(row);
 					}
+					
+					System.out.println("Válasszon a 'teszt' vagy 'game' üzemmód közül!");
 
 				} catch (IOException io) {
 					System.out.println("Rossz fájlnév!");
@@ -172,10 +176,16 @@ public class Controller {
 
 				while (true) {
 					String row2 = in.readLine();
-					if (row2 == null)
+					if (row2 == null){
 						break;
-
+					}
 					parancskezeles(row2);
+					if(gameOver){
+						System.out.println("A játék véget ért! Sajnos nem nyert!");
+						System.out.println("Válasszon a 'teszt' vagy 'game' üzemmód közül!");
+						break;
+					}
+					
 				}
 
 			} else {
@@ -229,7 +239,7 @@ public class Controller {
 				
 				if (commandSplit.length == 1) {
 					Map.RIGHT = false;
-					map.moveEnemies();
+					gameOver = map.moveEnemies();
 					break;
 				}
 
@@ -237,13 +247,13 @@ public class Controller {
 					case "JOBB":
 						Map.RIGHT = true;
 						System.out.println("jobbra mozgás");
-						map.moveEnemies();
+						gameOver = map.moveEnemies();
 						break;
 	
 					case "BAL":
 						Map.RIGHT = false;
 						System.out.println("balra mozgás");
-						map.moveEnemies();
+						gameOver = map.moveEnemies();
 						break;
 	
 					default:
@@ -429,7 +439,6 @@ public class Controller {
 				for (int i = 0; i < player.getInventory().size(); i++) {
 					MagicGem tempGem = player.getInventory().get(i);
 					System.out.println("Varázskõ#" + tempGem.getGemID() + "\t" + tempGem);
-					
 				}
 
 				break;
@@ -471,7 +480,7 @@ public class Controller {
 				System.out.println("Pálya:");
 				Block[][] tempBlock = map.getMap();
 				for (int i = 0; i < tempBlock.length; i++) {
-					if(i != 0) //txt-be íráskor legyen itt enter, hogy pályaként nézzen ki
+					if(i != 0) 
 						System.out.println("\n");
 					for (int j = 0; j < tempBlock[i].length; j++) {
 						System.out.println("Block#" + tempBlock[i][j].getBlockID() + " ");
