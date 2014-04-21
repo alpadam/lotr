@@ -49,7 +49,7 @@ public class Map {
 		Tower tower = (Tower) map[first][second];
 		tower.block_id = new_id;
 		towers.add(tower);
-		setHashMap(tempCoordinate);
+		setHashMap(blockId);
 	}
 	
 	public void createTrap(int roadId){
@@ -78,12 +78,14 @@ public class Map {
 		return tempCoordinate;
 	}
 	
-	private void setHashMap(List<Integer> tempCoordinate) {
+	private void setHashMap(int blockId) {
 		
 		List<Road> tempRoads = new ArrayList<Road>();
+		List<Integer> tempCoordinate = blockIdToCoordinate(blockId);
 		Integer first = tempCoordinate.get(0);
 		Integer second = tempCoordinate.get(1);
 		
+		System.out.println(first + " " + second);
 		Tower tempTower = (Tower) map[first][second];
 		int radius = tempTower.getRadius();
 		
@@ -177,21 +179,11 @@ public class Map {
 					if(tempTower.getGem() == null){
 						
 						if(magicGem.getType() == Type.RANGE_EXPANDER){
-							int radius = tempTower.getRadius();
-							
-							//MEG KELL ÍRNI, MERT FOS!
-							/*for (int i = first-radius-1; i < first+radius; i++) {
-								for (int j = second-radius; j < second+radius+1; j++) {
-									if(i >= 0 && i < map.length) {
-										if(j >= 0 && j < map[i].length) {
-											if(map[i][j].isRoad()){
-												tempRoads.add((Road) map[i][j]);
-											}
-										}
-									}
-								}
-							}
-							towerRoads.put(tempTower, tempRoads);*/
+							System.out.println(towerRoads.get(tempTower));
+							tempTower.placeGem(magicGem);
+							towerRoads.remove(tempTower);
+							setHashMap(tempTower.getBlockID());
+							System.out.println(towerRoads.get(tempTower));
 						}
 					
 						towers.get(i).placeGem(magicGem);
@@ -210,22 +202,11 @@ public class Map {
 				
 				if (gem != null && gem.getType() == Type.RANGE_EXPANDER) {
 					Tower tempTower = towers.get(i);
-					
-					int radius = tempTower.getRadius();
-					
-					//MEG KELL ÍRNI, MERT FOS!
-					/*for (int i = first-radius-1; i < first+radius; i++) {
-						for (int j = second-radius; j < second+radius+1; j++) {
-							if(i >= 0 && i < map.length) {
-								if(j >= 0 && j < map[i].length) {
-									if(map[i][j].isRoad()){
-										tempRoads.add((Road) map[i][j]);
-									}	
-								}
-							}
-						}
-					}
-					towerRoads.put(tempTower, tempRoads);*/
+					System.out.println(towerRoads.get(tempTower));
+					tempTower.removeGem();
+					towerRoads.remove(tempTower);
+					setHashMap(tempTower.getBlockID());
+					System.out.println(towerRoads.get(tempTower));
 				}
 			}
 		}

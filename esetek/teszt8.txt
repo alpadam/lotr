@@ -1,0 +1,4 @@
+buildTower 10
+buyGem rangeExpander
+gemToTower rangeExpander 1
+removeGem 1

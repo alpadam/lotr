@@ -34,7 +34,7 @@ public class Tower extends Block {
 			
 			switch (magicGem.getType()) {
 				case RANGE_EXPANDER:
-					radius = 3;
+					radius = radius + 3;
 					System.out.println("RangeExpander varázskõ Torony#" + t_id + "-ban/ben elhelyezve.");
 				break;
 				case DAMAGE_INCREASER:
@@ -63,7 +63,7 @@ public class Tower extends Block {
 			else if (gem.getType() == Type.SHOOTING_INCREASER)
 				damage = simpleDamage;
 			else if (gem.getType() == Type.RANGE_EXPANDER)
-				radius = 2;
+				radius = radius - 3;
 		}
 			
 		gem = null;
@@ -148,6 +148,10 @@ public class Tower extends Block {
 	
 	public int getRadius(){
 		return radius;
+	}
+	
+	public void setRadius(int radius) {
+		this.radius = radius;
 	}
 	
 	public MagicGem getGem(){
