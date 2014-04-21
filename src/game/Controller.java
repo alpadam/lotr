@@ -337,8 +337,8 @@ public class Controller {
 				}
 				try {
 					int hol = Integer.parseInt(commandSplit[1]);
-
 					this.buildTower(hol);
+					
 				} catch (NumberFormatException e) {
 					System.out.println("Nem jó azonsító!");
 					break;
