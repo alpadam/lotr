@@ -25,9 +25,17 @@ public class Human extends Enemy {
 	public Human duplicate() {
 		Human human = new Human();
 		int newhealth = health/2;
+		this.health = health/2;
 		human.setHealth(newhealth);
 		human.setCurrentRoad(currentRoad);
+		currentRoad.addEnemy(human);
 		return human;
+	}
+	
+	@Override
+	public String toString() {
+		return "\t"+"Enemy#"+ enemy_id + "\t Human.class" + "\t" + "Életerõ:"+ health
+				+"\t" + "Road:" + "Road#" + currentRoad.getRoadID();
 	}
 
 }

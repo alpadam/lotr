@@ -6,11 +6,9 @@ public abstract class Enemy {
 	protected Road currentRoad;
 	protected int trappedValue;
 	
-	
-	public static int id = 1;		// megkülönböztetni az ellenségeket - Zsoca
+	public static int id = 1;		// megkülönböztetni az ellenségeket
 	public int enemy_id;			// Enemy szinten különböztetjük meg, nem típus szinten
 
-	
 	
 	public abstract Enemy duplicate();
 	
@@ -20,21 +18,29 @@ public abstract class Enemy {
 			currentRoad.removeEnemy(this);
 			
 			currentRoad = currentRoad.getNext(Map.RIGHT);
-			currentRoad.addEnemy(this);
-			
-			if(currentRoad.isTrap()){
+			if(currentRoad != null){
 				
-				trappedValue++;
+				currentRoad.addEnemy(this);
 				
-				if(currentRoad.getGemType() != null){
+				if(currentRoad.isTrap()){
+					
 					trappedValue++;
+					
+					if(currentRoad.getGemType() != null){
+						trappedValue++;
+					}
 				}
 			}
+			
+			System.out.println("Ellenség#" + this.enemy_id  + " lépett Road#" + currentRoad.road_id + "-ra/re " + 
+					"Történt végsõ útra lépés: " + currentRoad.isFinal());
 			
 			return currentRoad.isFinal();
 			
 		}else{
 			trappedValue--;
+			
+			System.out.println("Ellenség#" + this.enemy_id  + " csapdába esett Road#" + currentRoad.road_id + "-n ");
 			return false;
 		}
 	}

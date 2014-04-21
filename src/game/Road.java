@@ -116,9 +116,14 @@ public class Road extends Block {
 	@Override
 	public String toString() {
 		try {
-			if(road_id == 3)
-				return "Utolsó út";
-			return "road" + road_id + "szomszedai: " + nextRoad.road_id  + ", " + nextRoad2;
+			if(nextRoad == null){
+				return "road" + road_id + " végsõ út";
+			}else if(nextRoad2 == null){
+				return "road" + road_id + "szomszedai: " + nextRoad.road_id  + ", " + "null";
+			}else{
+				return "road" + road_id + "szomszedai: " + nextRoad.road_id  + ", " + nextRoad2.road_id;
+			}
+			
 		} catch(NullPointerException e) {
 			return null;
 		}

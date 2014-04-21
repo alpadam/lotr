@@ -44,7 +44,7 @@ public class Controller {
 		if (player.getMagic() >= trapPrice) {
 			map.createTrap(roadId);
 			player.substractMagic(trapPrice);
-			System.out.println("Akadály " + roadId + " helyen létrehozva.");
+			System.out.println("Akadály Road#" + roadId + " helyen létrehozva.");
 		}
 		else {
 			System.out.println("Akadály építése sikertelen.");
@@ -80,7 +80,7 @@ public class Controller {
 	}
 
 	public void placeGem(Type type, int id, boolean tmp) {
-		/*
+		/* this.placeGem ??!?!?!?!?
 		 * a tmp változóra csak a szkeletonban van szükség, ezzel jelezzük, hogy melyik teszteset hívódik meg:
 		 * a kõ elhelyezése toronyba (=false), vagy a kõ elhelyezése akadályba (=true)
 		 */ 
@@ -94,25 +94,21 @@ public class Controller {
 				switch (gem.getType()) {
 
 				case RANGE_EXPANDER:
-					this.placeGem(Type.RANGE_EXPANDER, id, false);
-					System.out.println("Range Expander gem elhelyezve "
-							+ id + " toronyba");
+					map.placeGem(gem, id, false);
+					System.out.println("RangeExpander varázskõ Torony#" + id + "-ban/ben elhelyezve.");
 					break;
 				case DAMAGE_INCREASER:
 					this.placeGem(Type.DAMAGE_INCREASER, id, false);
-					System.out.println("damage Increaser gem elhelyezve "
-							+ id + " toronyba");
+					System.out.println("DamageIncreaser varázskõ Torony#" + id + "-ban/ben elhelyezve.");
 					break;
 				case SHOOTING_INCREASER:
 					this.placeGem(Type.SHOOTING_INCREASER, id, false);
-					System.out.println("Shooting Increaser gem elhelyezve "
-							+ id + " toronyba");
+					System.out.println("ShootingIncreaser varázskõ Torony#" + id + "-ban/ben elhelyezve.");
 					break;
 
 				default:
 					System.out.println("Nincs ilyen gem típus!");
 					break;
-
 				}
 			}
 		}
@@ -255,7 +251,6 @@ public class Controller {
 
 				if (commandSplit.length == 1) {
 					Map.RIGHT = false;
-					System.out.println("Lépés:");
 					map.moveEnemies();
 					break;
 				}
@@ -315,15 +310,7 @@ public class Controller {
 						System.out.println("Nem megfelelõ argumnetum!");
 					}
 
-					 try {
-						map.shootingTowers();
-					} catch (InstantiationException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (IllegalAccessException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					 map.shootingTowers();
 				}
 
 				break;
@@ -462,20 +449,11 @@ public class Controller {
 
 			case "simulate":
 				
-				System.out.println("simulálás - lépés, lövés");
-				map.moveEnemies();
-				int killedEnemies = 0;
-				try {
-					killedEnemies = map.shootingTowers();
-				} catch (InstantiationException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (IllegalAccessException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				System.out.println("Szimulálás: \t");
+				map.moveEnemies();							//Lépés
+				int killedEnemies = map.shootingTowers();	//Lövés
 				
-				player.addMagic(killedEnemies);
+				player.addMagic(killedEnemies);				// megölt ellenfelek után járó extra magic
 				break;
 
 			case "listInventory":
@@ -490,24 +468,18 @@ public class Controller {
 				break;
 
 			case "listEnemies":
-
+				
 				System.out.println("Az Enemy lista:");
 				for (int i = 0; i < map.getEnemies().size(); i++) {
-					
-					Enemy e = map.getEnemies().get(i);
-					System.out.println("\t"+"Enemy#"+ e.getEnemyID() + "\t"
-							+ e.getClass().toString() + "\t" + "Életerõ:"+ e.getHealth()
-							+"\t" + "Road:" + "Road#" + e.getCurrentRoad().getRoadID());
+					System.out.println(map.getEnemies().get(i));
 				}
 				break;
 
 			case "listTowers":
-
+				
 				System.out.println("Torony lista:");
 				for (int i = 0; i < map.getTowers().size(); i++) {
-					Tower t = map.getTowers().get(i);
-					System.out.println("Tower#" + t.getTowerID() + "\t" + "gem: " + t.getGem());
-					
+					System.out.println(map.getTowers().get(i));
 				}
 				break;
 

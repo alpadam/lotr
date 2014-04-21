@@ -10,7 +10,6 @@ public class Tower extends Block {
 	private int damage;
 	private int radius;
 	
-	
 	public static int id = 1;		// csak a szkeleton miatt
 	public int tower_id;
 	
@@ -56,10 +55,6 @@ public class Tower extends Block {
 		return gem.getType();
 	}
 	
-	public MagicGem getGem(){
-		return gem;
-	}
-	
 	public boolean shoot(List<Road> roads){
 		
 		boolean died = false;
@@ -74,18 +69,23 @@ public class Tower extends Block {
 				Enemy tempEnemy = enemies.get(0);						//ezt még módosítani kell egy véletlenszerû algoritmusra
 				
 				died = tempEnemy.damage(damage);
+				
+				System.out.println("Torony#" + tower_id + " lõtt Ellenség#" + tempEnemy.enemy_id + "-ra/re!");
 
 				if(died){
 					tempRoad.removeEnemy(tempEnemy);
 				}
 				return died;
 			}
+			
+			
+			
 		}
 
 		return died;
 	}
 	
-	public Enemy duplicateShoot(List<Road> roads) throws InstantiationException, IllegalAccessException{
+	public Enemy duplicateShoot(List<Road> roads) {
 		
 		for(int i = 0; i < roads.size(); i++){
 
@@ -95,13 +95,22 @@ public class Tower extends Block {
 			if(enemies.size() > 0){
 				
 				Enemy tempEnemy = enemies.get(0);						//ezt még módosítani kell egy véletlenszerû algoritmusra
+				
+				System.out.println("Torony#" + tower_id + " lõtt Ellenség#" + tempEnemy.enemy_id + "-ra/re kettészedõ lövedékkel!");
 				Enemy newEnemy = tempEnemy.duplicate();
+				System.out.println("Új ellenség: " + newEnemy);
+				
 				return newEnemy;
 			}
 		}
 		
 		return null;
 		
+	}
+	
+	@Override
+	public String toString() {
+		return "Tower#" + tower_id + "\t" + "gem: " + gem + " Helye: Block#" + block_id;
 	}
 	
 	@Override
@@ -115,5 +124,9 @@ public class Tower extends Block {
 	
 	public int getRadius(){
 		return radius;
+	}
+	
+	public MagicGem getGem(){
+		return gem;
 	}
 }

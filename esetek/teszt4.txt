@@ -1,4 +1,4 @@
-createEnemy elf
+createEnemy hobbit
 listEnemies
 buildTower 6
 simulate

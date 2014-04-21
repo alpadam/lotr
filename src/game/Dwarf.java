@@ -8,7 +8,7 @@ package game;
 public class Dwarf extends Enemy {
 	
 	public Dwarf() {
-		health = 50;
+		health = 60;
 		trappedValue = 0;
 		
 		enemy_id = id;
@@ -21,9 +21,17 @@ public class Dwarf extends Enemy {
 	public Dwarf duplicate() {
 		Dwarf dwarf = new Dwarf();
 		int newhealth = health/2;
+		this.health = health/2;
 		dwarf.setHealth(newhealth);
 		dwarf.setCurrentRoad(currentRoad);
+		currentRoad.addEnemy(dwarf);
 		return dwarf;
+	}
+	
+	@Override
+	public String toString() {
+		return "\t"+"Enemy#"+ enemy_id + "\t Dwarf.class" + "\t" + "Életerõ:"+ health
+				+"\t" + "Road:" + "Road#" + currentRoad.getRoadID();
 	}
 
 }

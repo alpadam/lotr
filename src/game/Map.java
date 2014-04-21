@@ -94,9 +94,9 @@ public class Map {
 		towerRoads.put(tempTower, tempRoads);
 	}
 	
-	public int shootingTowers() throws InstantiationException, IllegalAccessException {
+	public int shootingTowers() {
 		
-		System.out.println("Lövés:");	
+		System.out.println("Lövések:");	
 		
 		int killedEnemies = 0;
 		
@@ -116,7 +116,6 @@ public class Map {
 					enemies.add(newEnemy);
 				}
 			}
-			
 		}
 
 		if(killedEnemies > 0) {
@@ -129,6 +128,8 @@ public class Map {
 	public boolean moveEnemies() {
 		
 		boolean isFinal = false;
+		
+		System.out.println("Lépések:");
 		
 		for (int i = 0; i < enemies.size(); i++) {
 			Enemy tempEnemy = enemies.get(i);
@@ -167,7 +168,6 @@ public class Map {
 					
 					Tower tempTower = towers.get(i);
 					if(tempTower.getGem() == null){
-						
 						if(magicGem.getType() == Type.RANGE_EXPANDER){
 							
 							int radius = tempTower.getRadius();
@@ -279,6 +279,10 @@ public class Map {
 					roads.add(tempRoad);
 					
 					if (!tempRoad.isFinal()){
+						
+						if((i == map.length-1) && (j == map[i].length-1)) {
+							break;
+						}
 						
 						if ( (i == map.length-1) ){
 							if (map[i][j+1].isRoad() ) {

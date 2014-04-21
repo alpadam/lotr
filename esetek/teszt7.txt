@@ -1,4 +1,4 @@
-createEnemy elf
+createEnemy dwarf
 listMap
 listRoads
 move JOBB
