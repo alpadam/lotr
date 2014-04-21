@@ -315,7 +315,15 @@ public class Controller {
 						System.out.println("Nem megfelelõ argumnetum!");
 					}
 
-					 map.shootingTowers();
+					 try {
+						map.shootingTowers();
+					} catch (InstantiationException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IllegalAccessException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 
 				break;
@@ -456,7 +464,16 @@ public class Controller {
 				
 				System.out.println("simulálás - lépés, lövés");
 				map.moveEnemies();
-				int killedEnemies = map.shootingTowers();
+				int killedEnemies = 0;
+				try {
+					killedEnemies = map.shootingTowers();
+				} catch (InstantiationException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IllegalAccessException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				
 				player.addMagic(killedEnemies);
 				break;

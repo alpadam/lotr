@@ -94,7 +94,7 @@ public class Map {
 		towerRoads.put(tempTower, tempRoads);
 	}
 	
-	public int shootingTowers() {
+	public int shootingTowers() throws InstantiationException, IllegalAccessException {
 		
 		System.out.println("Lövés:");	
 		

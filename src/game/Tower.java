@@ -85,7 +85,7 @@ public class Tower extends Block {
 		return died;
 	}
 	
-	public Enemy duplicateShoot(List<Road> roads){
+	public Enemy duplicateShoot(List<Road> roads) throws InstantiationException, IllegalAccessException{
 		
 		for(int i = 0; i < roads.size(); i++){
 
@@ -95,17 +95,8 @@ public class Tower extends Block {
 			if(enemies.size() > 0){
 				
 				Enemy tempEnemy = enemies.get(0);						//ezt még módosítani kell egy véletlenszerû algoritmusra
-				try {
-					Enemy newEnemy = tempEnemy.getClass().newInstance();
-					Road currentRoad = tempEnemy.getCurrentRoad();
-					currentRoad.addEnemy(newEnemy);
-					newEnemy.setCurrentRoad(currentRoad);
-					return newEnemy;
-				} catch (InstantiationException e) {
-					System.out.println("Duplicate hiba");
-				} catch (IllegalAccessException e) {
-					System.out.println("Duplicate hiba");
-				}
+				Enemy newEnemy = tempEnemy.duplicate();
+				return newEnemy;
 			}
 		}
 		
