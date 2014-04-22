@@ -45,9 +45,7 @@ public class Player {
 		return null;
 	}
 	
-	public int getMagic() {							
-		return magic;
-	}
+	
 	
 	/**
 	 * 
@@ -71,5 +69,8 @@ public class Player {
 	public List<MagicGem> getInventory() {
 		return inventory;
 	}
-
+	
+	public int getMagic() {							
+		return magic;
+	}
 }

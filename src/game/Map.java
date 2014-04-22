@@ -317,7 +317,7 @@ public class Map {
 	 */
 	public void refreshEnemies() {
 		for (int i = 0; i < enemies.size(); i++) {
-			if(enemies.get(i).getHealth() < 0) {
+			if(enemies.get(i).getHealth() <= 0) {
 				enemies.remove(i);
 			}
 		}	

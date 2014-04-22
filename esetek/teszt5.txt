@@ -1,3 +1,5 @@
+listRoads
+listMap
 buildTower 6
 buildTower 7
 buildTower 8

@@ -18,9 +18,9 @@ import java.io.PrintWriter;
  */
 public class Controller {
 	
-	private static int towerPrice = 20;	//torony ára statikus változó, így könnyen finomhangolható
-	private static int trapPrice = 10;	//akadály ára
-	private static int gemPrice = 5;	//varázskõ ára
+	private static int towerPrice = 20;			//torony ára statikus változó, így könnyen finomhangolható
+	private static int trapPrice = 10;			//akadály ára
+	private static int gemPrice = 5;			//varázskõ ára
 	public static int killedEnemyReward = 10;	//megölt ellenfelekért járó bónusz mágia
 	
 	public static boolean gameOver = false;
@@ -160,6 +160,12 @@ public class Controller {
 		map = new Map();
 		player = new Player();
 		gameOver = false;
+		
+		Block.b_id = 1;
+		Road.r_id = 1;
+		Tower.t_id = 1;
+		MagicGem.id = 1;
+		Enemy.id = 1;
 
 		sumOfEnemies = 0;
 		
@@ -477,7 +483,8 @@ public class Controller {
 				break;
 
 			case "listInventory":
-				System.out.println("Inventory:");
+				System.out.println("Inventory:  magic-->" + player.getMagic());
+				
 				for (int i = 0; i < player.getInventory().size(); i++) {
 					MagicGem tempGem = player.getInventory().get(i);
 					System.out.println("Varázskõ#" + tempGem.getGemID() + "\t" + tempGem);
