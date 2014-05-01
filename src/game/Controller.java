@@ -187,14 +187,14 @@ public class Controller {
 
 			if (line.equals("teszt")) {		//elõlre definiált tesztesetet akarunk futtatni
 				try {
-					System.out.println("Pálya fájl: '<név>':");
-					String mapFile = "esetek/" + in.readLine() + ".txt";
+					System.out.println("Pálya fájl: '<név>'.txt:");
+					String mapFile =in.readLine();
 					map = new Map();
 					player = new Player();
 					map.initMap(mapFile);	//map inicializálása
 
-					System.out.println("Parancs fájl: '<név>':");
-					String commandFile = "esetek/" + in.readLine() + ".txt";
+					System.out.println("Parancs fájl: '<név>'.txt:");
+					String commandFile = in.readLine();
 					BufferedReader fileReader = new BufferedReader(
 							new FileReader(commandFile));
 					
@@ -210,6 +210,7 @@ public class Controller {
 					
 					System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
 					
+					System.out.println("Az eredmény az output.txt-be íródott ki!");
 					System.out.println("Válasszon a 'teszt' vagy 'game' üzemmód közül!");
 
 				} catch (IOException io) {
