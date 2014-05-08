@@ -2,13 +2,13 @@ package game;
 
 import java.io.BufferedReader;
 import java.io.FileDescriptor;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
-import java.io.PrintWriter;
+
+import javax.swing.JPanel;
 
 /**
  * 
@@ -16,7 +16,7 @@ import java.io.PrintWriter;
  * A felhasználó ezen keresztül kommunikál a mappal, de a felhasználón kívüli mûködést (léptetést) is ez a vezérlõ osztál irányítja. 
  *
  */
-public class Controller {
+public class Controller extends JPanel implements Runnable {
 	
 	private static int towerPrice = 20;			//torony ára statikus változó, így könnyen finomhangolható
 	private static int trapPrice = 10;			//akadály ára
@@ -176,73 +176,77 @@ public class Controller {
 	 * A folyamatos futásért felelõs függvény. 
 	 *
 	 */
-	public void run() throws IOException {
+	public void run() {
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 		String line = "";
-
-		while (!line.equals("exit")) {
-			line = in.readLine();
+		
+		try{
 			
-			newGame();							// kinullázzuk az eddigieket
-
-			if (line.equals("teszt")) {		//elõlre definiált tesztesetet akarunk futtatni
-				try {
-					System.out.println("Pálya fájl: '<név>'.txt:");
-					String mapFile =in.readLine();
-					map = new Map();
-					player = new Player();
-					map.initMap(mapFile);	//map inicializálása
-
-					System.out.println("Parancs fájl: '<név>'.txt:");
-					String commandFile = in.readLine();
-					BufferedReader fileReader = new BufferedReader(
-							new FileReader(commandFile));
-					
-					System.setOut(new PrintStream(new FileOutputStream("output.txt")));
-					while (true) {
-						String row = fileReader.readLine();
-						if (row == null) {
-							fileReader.close();
-							break;
+			while (!line.equals("exit")) {
+				line = in.readLine();
+				
+				newGame();							// kinullázzuk az eddigieket
+	
+				if (line.equals("teszt")) {		//elõlre definiált tesztesetet akarunk futtatni
+					try {
+						System.out.println("Pálya fájl: '<név>'.txt:");
+						String mapFile =in.readLine();
+						map = new Map();
+						player = new Player();
+						map.initMap(mapFile);	//map inicializálása
+	
+						System.out.println("Parancs fájl: '<név>'.txt:");
+						String commandFile = in.readLine();
+						BufferedReader fileReader = new BufferedReader(
+								new FileReader(commandFile));
+						
+						System.setOut(new PrintStream(new FileOutputStream("output.txt")));
+						while (true) {
+							String row = fileReader.readLine();
+							if (row == null) {
+								fileReader.close();
+								break;
+							}
+							parancskezeles(row);
 						}
-						parancskezeles(row);
+						
+						System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
+						
+						System.out.println("Az eredmény az output.txt-be íródott ki!");
+						System.out.println("Válasszon a 'teszt' vagy 'game' üzemmód közül!");
+	
+					} catch (IOException io) {
+						System.out.println("Rossz fájlnév!");
 					}
+	
+				} else if (line.equals("game")) {	//a parancsokat manuálisan adjuk meg, mintha játszanánk
+					System.out.println("Parancsok:");
+					System.out.println("Pálya betöltése: defaultMap.txt-bõl");	//elõlre definiált a pálya
+					map.initMap("defaultMap.txt"); 
 					
 					System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
 					
-					System.out.println("Az eredmény az output.txt-be íródott ki!");
-					System.out.println("Válasszon a 'teszt' vagy 'game' üzemmód közül!");
-
-				} catch (IOException io) {
-					System.out.println("Rossz fájlnév!");
-				}
-
-			} else if (line.equals("game")) {	//a parancsokat manuálisan adjuk meg, mintha játszanánk
-				System.out.println("Parancsok:");
-				System.out.println("Pálya betöltése: defaultMap.txt-bõl");	//elõlre definiált a pálya
-				map.initMap("defaultMap.txt"); 
-				
-				System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
-				
-				while (true) {
-					String row2 = in.readLine();
-					if (row2 == null) {
-						break;
+					while (true) {
+						String row2 = in.readLine();
+						if (row2 == null) {
+							break;
+						}
+						parancskezeles(row2);
+						if (gameOver) {
+							System.out.println("A játék véget ért! Sajnos nem nyert!");
+							System.out.println("Válasszon a 'teszt' vagy 'game' üzemmód közül!");
+							break;
+						}
+						
 					}
-					parancskezeles(row2);
-					if (gameOver) {
-						System.out.println("A játék véget ért! Sajnos nem nyert!");
-						System.out.println("Válasszon a 'teszt' vagy 'game' üzemmód közül!");
-						break;
-					}
-					
+	
+				} else {
+					System.out.println("'teszt' illetve 'game' közül választhat!");
 				}
-
-			} else {
-				System.out.println("'teszt' illetve 'game' közül választhat!");
 			}
-
-		}
+			}catch(IOException e){
+				System.out.println("asd");
+			}
 	}
 
 	/**
