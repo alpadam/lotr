@@ -24,9 +24,6 @@ public class Application extends JFrame implements Runnable, ActionListener  {
 	// Menü
 	private JPanel menuPanel;
 	
-	
-	
-	
 	public Application() {
 		
 		menu = true;

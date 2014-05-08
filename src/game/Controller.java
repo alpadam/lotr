@@ -1,5 +1,7 @@
 package game;
 
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.BufferedReader;
 import java.io.FileDescriptor;
 import java.io.FileOutputStream;
@@ -16,7 +18,7 @@ import javax.swing.JPanel;
  * A felhasználó ezen keresztül kommunikál a mappal, de a felhasználón kívüli mûködést (léptetést) is ez a vezérlõ osztál irányítja. 
  *
  */
-public class Controller extends JPanel implements Runnable {
+public class Controller extends JPanel implements Runnable, MouseListener {
 	
 	private static int towerPrice = 20;			//torony ára statikus változó, így könnyen finomhangolható
 	private static int trapPrice = 10;			//akadály ára
@@ -576,6 +578,37 @@ public class Controller extends JPanel implements Runnable {
 				break;
 			}
 		}
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

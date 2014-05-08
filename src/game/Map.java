@@ -16,7 +16,7 @@ import java.util.Vector;
  */
 public class Map {
 	
-	private Block[][] map;	//maga a térkép
+	private Block[][] map;	      	//maga a térkép
 	
 	private List<Tower> towers;		//felépített tornyok
 	private List<Road> roads;		//utak
