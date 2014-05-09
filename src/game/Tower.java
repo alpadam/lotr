@@ -19,8 +19,6 @@ public class Tower extends Block {
 	public static int t_id = 1;		//ez a változó tartja számon a már kiosztott toronyazonosítók számát
 	public int tower_id;		//a torony egyéni azonosítója
 	
-	public TowerView towerView;
-	
 	public Tower() {
 		block_id-=1;
 		
@@ -31,8 +29,7 @@ public class Tower extends Block {
 		damage = simpleDamage;		//így könnyen finomhangolható a játékegyensúly
 		radius = 2;		//a torony alapból 2 távolságra "lát el"
 		
-		
-		towerView = new TowerView(this);
+		blockView = new TowerView(this);
 	}
 	
 	/**
@@ -141,9 +138,6 @@ public class Tower extends Block {
 				
 				return died;
 			}
-			
-			
-			
 		}
 
 		return died;

@@ -59,7 +59,7 @@ public class Map {
 	public void refreshRoads(Graphics g) {
 		for (int i = 0; i < roads.size(); i++) {
 			Road tempRoad = roads.get(i);
-			tempRoad.roadView.draw(g);
+			tempRoad.blockView.draw(g);
 		}
 	}
 	
@@ -310,12 +310,12 @@ public class Map {
 	 * A visszatérési réték jelzi, hogy sikerült-e berakni a követ.
 	 *
 	 */
-	public boolean placeGem(MagicGem magicGem, int id, boolean tmp) {
+	/*public boolean placeGem(MagicGem magicGem, int id, boolean tmp) {
 		/*
 		 * a tmp változóra csak a prototpusban van szükség, ezzel jelezzük, hogy melyik teszteset hívódik meg:
 		 * a kõ elhelyezése toronyba (=false), vagy a kõ elhelyezése akadályba (=true)
 		 */ 	
-		boolean placed = false;
+		/*boolean placed = false;
 		
 		if (tmp) {
 			for (int i = 0; i < roads.size(); i++) {
@@ -343,6 +343,34 @@ public class Map {
 		}
 		
 		return placed;
+	}*/
+	
+	/**
+	 * 
+	 * A függvény feladata, hogy adott építménybe helyezzen egy megadott varázskövet.
+	 * A visszatérési réték jelzi, hogy sikerült-e berakni a követ.
+	 *
+	 */
+	public boolean placeGem(MagicGem magicGem, int x, int y) {
+		/*
+		 * a tmp változóra csak a prototpusban van szükség, ezzel jelezzük, hogy melyik teszteset hívódik meg:
+		 * a kõ elhelyezése toronyba (=false), vagy a kõ elhelyezése akadályba (=true)
+		 */ 	
+		boolean placed = false;
+		
+		if (map[x][y].isRoad()) {
+			placed = ((Road)map[x][y]).placeGem(magicGem);
+		} else if (map[x][y].isTower()) {
+			if (magicGem.getType() == Type.RANGE_EXPANDER) {	//ha látótávolságot növelõ kõrõl van szó, akkor frissítenünk kell a torony által látott utak listáját
+				placed = ((Tower)map[x][y]).placeGem(magicGem);
+				towerRoads.remove(map[x][y]);
+				setHashMap(map[x][y].block_id);
+			} else {
+				placed = ((Tower)map[x][y]).placeGem(magicGem);
+			}
+		}
+		
+		return placed;
 	}
 	
 	/**
@@ -350,7 +378,7 @@ public class Map {
 	 * A függvény feladata, hogy adott építménybõl kivegye a benne lépvõ varázskövet, és azt visszatérési értékként adja vissza.
 	 *
 	 */
-	public MagicGem removeGem(int id) {
+	/*public MagicGem removeGem(int id) {
 		MagicGem gem = null;
 		
 		for (int i = 0; i < towers.size(); i++) {
@@ -363,6 +391,27 @@ public class Map {
 					setHashMap(tempTower.block_id);
 				}
 				break;
+			}
+		}
+		
+		return gem;
+	}*/
+	
+	/**
+	 * 
+	 * A függvény feladata, hogy adott koordinátán lévõ építménybõl kivegye a benne lépvõ varázskövet, és azt visszatérési értékként adja vissza.
+	 *
+	 */
+	public MagicGem removeGem(int x, int y) {
+		MagicGem gem = null;
+		
+		if (map[x][y].isTower()) {
+			Tower tempTower = (Tower)map[x][y];
+			gem = tempTower.removeGem();
+			
+			if (gem != null && gem.getType() == Type.RANGE_EXPANDER) {	//ha látótávolságot növelõ követ vettünk ki, akkor a torony által látott utak listáját is modosítanunk kell
+				towerRoads.remove(tempTower);	
+				setHashMap(tempTower.block_id);
 			}
 		}
 		

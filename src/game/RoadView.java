@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.List;
 
-public class RoadView implements View {
+public class RoadView extends BlockView {
 	
 	private Road road;
 	
@@ -24,7 +24,10 @@ public class RoadView implements View {
 		g.fillRect(road.getX(), road.getY(), Block.blockSize, Block.blockSize);
 		
 		if (road.isTrap()) {
-			g.setColor(Color.RED);
+			if (road.getGemType() == Type.MOVEMENT_DECREASER)
+				g.setColor(Color.BLACK);
+			else 
+				g.setColor(Color.RED);
 			g.drawLine(road.getX(), road.getY(), road.getX()+Block.blockSize-1, road.getY()+Block.blockSize-1);
 			g.drawLine(road.getX()+Block.blockSize-1, road.getY(), road.getX(), road.getY()+Block.blockSize-1);
 		} 

@@ -1,7 +1,5 @@
 package game;
 
-import java.awt.Graphics;
-
 /**
  * 
  * Az Enemy osztályból leszármazó osztály, amely az Elf fajú ellenfeleket reprezentálja.

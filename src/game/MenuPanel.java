@@ -1,7 +1,6 @@
 package game;
 
 import java.awt.Component;
-import java.awt.Container;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;

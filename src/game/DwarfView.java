@@ -6,11 +6,9 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 
 public class DwarfView implements EnemyView {
-	private ImageIcon imgicon;
-	private BufferedImage bf;
+	static private BufferedImage bf;
 	
 	private Dwarf dwarf;
 

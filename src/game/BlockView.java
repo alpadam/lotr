@@ -11,15 +11,14 @@ public class BlockView implements View {
 		this.block = block;
 	}
 	
+	public BlockView() {
+		
+	}
 	
 	@Override
 	public void draw(Graphics g) {
-		
-		
 		g.setColor(Color.GREEN);
 		g.fillRect(block.getX(), block.getY(), Block.blockSize, Block.blockSize);
-		
-
 	}
 	
 

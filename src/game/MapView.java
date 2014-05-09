@@ -25,12 +25,7 @@ public class MapView implements View {
 				
 				Block tempBlock = blocks[i][j];
 				
-				if(tempBlock.isRoad()){
-					((Road) tempBlock).roadView.draw(g);
-				}else{
-					tempBlock.view.draw(g);
-				}
-				
+				tempBlock.blockView.draw(g);
 			}
 		}
 		

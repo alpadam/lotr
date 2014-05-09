@@ -136,19 +136,19 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 
 		sumOfEnemies++;	//eddigi ellenfelek számát növeljük
 	}
-
+	
 	/**
 	 * 
 	 * Kõ behelyezése építménybe, legyen szó toronyról vagy akadályról.
 	 * Értesíti a map-ot a kõ behelyezésének szándékáról.
 	 *
 	 */
-	public void placeGem(Type type, int id, boolean tmp) {
+	/*public void placeGem(Type type, int id, boolean tmp) {
 		/* 
 		 * a tmp változóra csak a prototípusban van szükség, ezzel jelezzük, hogy melyik teszteset hívódik meg:
 		 * a kõ elhelyezése toronyba (=false), vagy a kõ elhelyezése akadályba (=true)
 		 */ 
-		MagicGem gem = player.getGem(type);	//lekérjük az adott típusú követ a játékostól
+		/*MagicGem gem = player.getGem(type);	//lekérjük az adott típusú követ a játékostól
 		
 		if (gem != null) {	//csak akkor tudunk mit kezdeni, ha tényleg volt ilyen köve a játékosnak
 			boolean placed = map.placeGem(gem, id, tmp);
@@ -161,6 +161,24 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 			else
 				System.out.println("Varázskõ elhelyezése sikertelen Torony#" + id + "-n.");
 		}
+	}*/
+	
+	/**
+	 * 
+	 * Kõ behelyezése építménybe, legyen szó toronyról vagy akadályról.
+	 * Értesíti a map-ot a kõ behelyezésének szándékáról.
+	 *
+	 */
+	public void placeGem(Type type, int x, int y) {
+		MagicGem gem = player.getGem(type);	//lekérjük az adott típusú követ a játékostól
+		
+		if (gem != null) {	//csak akkor tudunk mit kezdeni, ha tényleg volt ilyen köve a játékosnak
+			boolean placed = map.placeGem(gem, x, y);
+			if (!placed)
+				player.addGem(gem); 	//ha nem sikerült beraknunk a követ, akkor azt a játékos visszakapja
+			else
+				map.getMap()[x][y].blockView.draw(this.getGraphics());
+		}
 	}
 
 	/**
@@ -168,7 +186,7 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 	 * Kõ kivétele toronyból, továbbadja a kérést a map felé.
 	 *
 	 */
-	public void removeGem(int id) {
+	/*public void removeGem(int id) {
 		MagicGem gem = map.removeGem(id);
 
 		if (gem != null) {
@@ -177,6 +195,20 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 		}
 		else {
 			System.out.println("Nem sikerült varázskövet kivenni Torony#" + id + " építménybõl");
+		}
+	}*/
+	
+	/**
+	 * 
+	 * Kõ kivétele toronyból, továbbadja a kérést a map felé.
+	 *
+	 */
+	public void removeGem(int x, int y) {
+		MagicGem gem = map.removeGem(x, y);
+
+		if (gem != null) {
+			player.addGem(gem);	//ha sikerrel vettük ki a követ, akkor azt aodaadja a játékosnak
+			map.getMap()[x][y].blockView.draw(this.getGraphics());
 		}
 	}
 
@@ -463,13 +495,13 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 					switch (commandSplit[1]) {
 
 					case "rangeExpander":
-						this.placeGem(Type.RANGE_EXPANDER, toronyazonosito, false);
+						//this.placeGem(Type.RANGE_EXPANDER, toronyazonosito, false);
 						break;
 					case "damageIncreaser":
-						this.placeGem(Type.DAMAGE_INCREASER, toronyazonosito, false);
+						//this.placeGem(Type.DAMAGE_INCREASER, toronyazonosito, false);
 						break;
 					case "shootingIncreaser":
-						this.placeGem(Type.SHOOTING_INCREASER, toronyazonosito, false);
+						//this.placeGem(Type.SHOOTING_INCREASER, toronyazonosito, false);
 						break;
 
 					default:
@@ -493,7 +525,7 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 				try {
 					int roadazonosito = Integer.parseInt(commandSplit[1]);
 
-					this.placeGem(Type.MOVEMENT_DECREASER, roadazonosito, true);
+					//this.placeGem(Type.MOVEMENT_DECREASER, roadazonosito, true);
 				} catch (NumberFormatException e) {
 					System.out.println("Nem jó azonsító!");
 				}
@@ -538,7 +570,7 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 				}
 				try {
 					int toronyazonosito = Integer.parseInt(commandSplit[1]);
-					this.removeGem(toronyazonosito);
+					//this.removeGem(toronyazonosito);
 					
 				} catch (NumberFormatException e) {
 					System.out.println("Nem jó azonsító!");
@@ -666,11 +698,11 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 		
 			
 		if (this.buildTower(indexX, indexY)) {
-			((Tower) m[indexY][indexX]).towerView.draw(this.getGraphics());
+			m[indexY][indexX].blockView.draw(this.getGraphics());
 		}
 		
 		if (this.buildTrap(indexX, indexY)) {
-			((Road) m[indexY][indexX]).roadView.draw(this.getGraphics());
+			m[indexY][indexX].blockView.draw(this.getGraphics());
 		}
 		
 		

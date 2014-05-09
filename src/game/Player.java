@@ -12,7 +12,6 @@ public class Player {
 	
 	private List<MagicGem> inventory;	//a játékos eszköztára, azaz a tulajdonában lévõ varázskövek
 	private int magic;		//a játékos aktuális varázsereje
-
 	
 	public Player() {
 		this.magic = 100;							
@@ -44,8 +43,6 @@ public class Player {
 		}
 		return null;
 	}
-	
-	
 	
 	/**
 	 * 

@@ -16,13 +16,13 @@ public class Block {
 	protected int x;
 	protected int y;
 	
-	public BlockView view;
+	public BlockView blockView;
 	
 	public Block() {
 		block_id = b_id;
 		b_id++;
 		
-		view = new BlockView(this);
+		blockView = new BlockView(this);
 		
 	}
 	
