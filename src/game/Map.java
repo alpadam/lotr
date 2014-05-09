@@ -1,5 +1,6 @@
 package game;
 
+import java.awt.Graphics;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -52,6 +53,19 @@ public class Map {
 	
 	/**
 	 * 
+	 * Újrarajzolja az utakat.
+	 *
+	 */
+	public void refreshRoads(Graphics g) {
+		for (int i = 0; i < roads.size(); i++) {
+			Road tempRoad = roads.get(i);
+			tempRoad.roadView.draw(g);
+		}
+	}
+	
+	
+	/**
+	 * 
 	 * Torony építése megadott block-ra.
 	 * Visszatérési értéke mutatja, hogy sikerült-e tornyot építeni.
 	 *
@@ -75,7 +89,12 @@ public class Map {
 		return false;
 	}
 	
-	
+	/**
+	 * 
+	 * Torony építése megadott koordinátákra.
+	 * Visszatérési értéke mutatja, hogy sikerült-e tornyot építeni.
+	 *
+	 */
 	public boolean createTower (int x, int y) {
 		
 		if (!map[y][x].isRoad()) {	//útra nem akarunk tornyot építeni
@@ -98,15 +117,15 @@ public class Map {
 	
 	/**
 	 * 
-	 * Akadály építése megadott útra.
+	 * Akadály építése megadott koordinátákra.
 	 *
 	 */
-	public void createTrap (int roadId) {
-		for (int i = 0; i < roads.size(); i++) {
-			if (roads.get(i).road_id == roadId) {
-				roads.get(i).setTrap();		//beállítjuk, hogy felépült az útra az akadály
-			}
+	public boolean createTrap (int x, int y) {
+		if (map[y][x].isRoad() && !((Road)map[y][x]).isTrap()) {	//csak útra építhetünk, oda, ami még nem akadály
+			((Road)map[y][x]).setTrap();
+			return true;
 		}
+		return false;
 	}
 	
 	/**
@@ -261,7 +280,7 @@ public class Map {
 	 * Visszatérési értéke akkor igaz, ha az ellenfelek elérték a Végzet Hegyét.
 	 *
 	 */
-	public boolean moveEnemies() {
+	public boolean moveEnemies(Graphics g) {
 		boolean isFinal = false;
 		
 		System.out.println("Lépések:");
@@ -368,7 +387,7 @@ public class Map {
 	 */
 	public void refreshEnemies() {
 		for (int i = 0; i < enemies.size(); i++) {
-			if(enemies.get(i).getHealth() <= 0) {
+			if (enemies.get(i).getHealth() <= 0) {
 				enemies.remove(i);
 			}
 		}	

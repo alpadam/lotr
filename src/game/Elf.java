@@ -1,14 +1,13 @@
 package game;
 
+import java.awt.Graphics;
+
 /**
  * 
  * Az Enemy osztályból leszármazó osztály, amely az Elf fajú ellenfeleket reprezentálja.
  *
  */
 public class Elf extends Enemy {
-	
-	public ElfView elfView;
-	
 	
 	public Elf() {
 		health = 50;
@@ -17,9 +16,7 @@ public class Elf extends Enemy {
 		enemy_id = id;
 		id++;
 		
-		elfView = new ElfView(this);
-		
-		
+		enemyView = new ElfView(this);
 		
 		System.out.println("Az Elf#"+ enemy_id + " ellenség létrejött!");
 	}

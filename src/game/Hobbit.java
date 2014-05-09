@@ -1,5 +1,7 @@
 package game;
 
+import java.awt.Graphics;
+
 /**
  * 
  * Az Enemy osztályból leszármazó osztály, amely a Hobbit fajú ellenfeleket reprezentálja.
@@ -13,6 +15,8 @@ public class Hobbit extends Enemy {
 		
 		enemy_id = id;
 		id++;
+		
+		enemyView = new HobbitView(this);
 		
 		System.out.println("A Hobbit#"+ enemy_id + " ellenség létrejött!");
 	}

@@ -1,13 +1,34 @@
 package game;
 
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
-public class DwarfView implements View {
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+
+public class DwarfView implements EnemyView {
+	private ImageIcon imgicon;
+	private BufferedImage bf;
+	
+	private Dwarf dwarf;
+
+	public DwarfView(Dwarf dwarf) {
+		this.dwarf = dwarf;
+		
+		try {
+			bf = ImageIO.read(new File("dwarfimage.png"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 
 	@Override
 	public void draw(Graphics g) {
-		// TODO Auto-generated method stub
-
+		g.drawImage(bf, dwarf.getCurrentRoad().getX(), dwarf.getCurrentRoad().getY(), Block.blockSize, Block.blockSize, null);
+		
 	}
-
 }

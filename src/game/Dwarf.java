@@ -1,5 +1,7 @@
 package game;
 
+import java.awt.Graphics;
+
 /**
  * 
  * Az Enemy osztályból leszármazó osztály, amely a Dwarf (Törpe) fajú ellenfeleket reprezentálja.
@@ -13,6 +15,8 @@ public class Dwarf extends Enemy {
 		
 		enemy_id = id;
 		id++;
+		
+		enemyView = new DwarfView(this);
 		
 		System.out.println("A Dwarf#"+ enemy_id + " ellenség létrejött!");
 	}

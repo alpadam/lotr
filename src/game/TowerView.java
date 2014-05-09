@@ -15,7 +15,7 @@ public class TowerView implements View {
 	@Override
 	public void draw(Graphics g) {
 		g.setColor(Color.GRAY);
-		g.fillOval(tower.getX(), tower.getY(), Block.blockSize, Block.blockSize);
+		g.fillOval(tower.getX(), tower.getY(), Block.blockSize-1, Block.blockSize-1);
 	}
 	
 	public void drawShooting(Graphics g){

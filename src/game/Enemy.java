@@ -14,6 +14,8 @@ public abstract class Enemy {
 	public static int id = 1;		//ez a változó tartja számon a már kiosztott ellenfélazonosítók számát
 	public int enemy_id;			//az ellenfél egyéni azonosítója
 	
+	public EnemyView enemyView;
+	
 	public abstract Enemy duplicate();
 	
 	/**
@@ -41,8 +43,8 @@ public abstract class Enemy {
 				}
 			}
 			
-			System.out.println("Ellenség#" + this.enemy_id  + " lépett Road#" + currentRoad.road_id + "-ra/re " + 
-					"Történt végsõ útra lépés: " + currentRoad.isFinal());
+			/*System.out.println("Ellenség#" + this.enemy_id  + " lépett Road#" + currentRoad.road_id + "-ra/re " + 
+					"Történt végsõ útra lépés: " + currentRoad.isFinal());*/
 			
 			return currentRoad.isFinal();		//visszaadjuk, hogy elért-e a Végzet Hegyét
 			

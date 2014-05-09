@@ -1,15 +1,34 @@
 package game;
 
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
-public class HobbitView implements View {
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+
+public class HobbitView implements EnemyView {
+	private ImageIcon imgicon;
+	private BufferedImage bf;
 	
 	private Hobbit hobbit;
-	
-	@Override
-	public void draw(Graphics g) {
-		// TODO Auto-generated method stub
 
+	public HobbitView(Hobbit hobbit) {
+		this.hobbit = hobbit;
+		
+		try {
+			bf = ImageIO.read(new File("hobbitimage.png"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
+	@Override
+	public void draw(Graphics g) {
+		g.drawImage(bf, hobbit.getCurrentRoad().getX(), hobbit.getCurrentRoad().getY(), Block.blockSize, Block.blockSize, null);
+		
+	}
 }

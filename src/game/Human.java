@@ -1,5 +1,7 @@
 package game;
 
+import java.awt.Graphics;
+
 /**
  * 
  * Az Enemy osztályból leszármazó osztály, amely a Humán fajú ellenfeleket reprezentálja.
@@ -13,6 +15,8 @@ public class Human extends Enemy {
 		
 		enemy_id = id;
 		id++;
+		
+		enemyView = new HumanView(this);
 		
 		System.out.println("A Human#"+ enemy_id + " ellenség létrejött!");
 	}

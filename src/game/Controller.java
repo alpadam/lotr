@@ -76,7 +76,7 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 	
 	public boolean buildTower (int x, int y) {
 		if (player.getMagic() >= towerPrice) {			//van-e elég mágiája a játékosnak
-			boolean built = map.createTower(x,y);
+			boolean built = map.createTower(x, y);
 			if (built) {
 				player.substractMagic(towerPrice);			//levonjuk a megfelelõ mágiát
 				return true;
@@ -99,14 +99,21 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 	 * Akadály építését végzõ függvényt. Értesíti a map-ot az akadály építésének szándékáról.
 	 *
 	 */
-	public void buildTrap(int roadId) {
+	public boolean buildTrap(int x, int y) {
 		if (player.getMagic() >= trapPrice) {	//van-e elég mágiája a játékosnak
-			map.createTrap(roadId);
-			player.substractMagic(trapPrice);	//levonjuk a megfelelõ mágiát
-			System.out.println("Akadály Road#" + roadId + " helyen létrehozva.");
+			boolean built = map.createTrap(x, y);
+			if (built) {
+				player.substractMagic(trapPrice);			//levonjuk a megfelelõ mágiát
+				return true;
+				
+			} else {
+				System.out.println("Akadály építése sikertelen.");
+				return false;
+			}
 		}
 		else {
 			System.out.println("Akadály építése sikertelen.");
+			return false;
 		}
 	}
 	
@@ -353,7 +360,7 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 			case "move":
 				if (commandSplit.length == 1) {
 					Map.RIGHT = false;
-					gameOver = map.moveEnemies();
+					gameOver = map.moveEnemies(this.getGraphics());
 					break;
 				}
 
@@ -361,13 +368,13 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 					case "JOBB":
 						Map.RIGHT = true;
 						System.out.println("jobbra mozgás");
-						gameOver = map.moveEnemies();
+						gameOver = map.moveEnemies(this.getGraphics());
 						break;
 	
 					case "BAL":
 						Map.RIGHT = false;
 						System.out.println("balra mozgás");
-						gameOver = map.moveEnemies();
+						gameOver = map.moveEnemies(this.getGraphics());
 						break;
 	
 					default:
@@ -423,7 +430,7 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 				try {
 					int id = Integer.parseInt(commandSplit[1]);
 
-					this.buildTrap(id);
+					//this.buildTrap(id);
 				} catch (NumberFormatException e) {
 					System.out.println("Nem jó azonsító!");
 					break;
@@ -540,7 +547,7 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 
 			case "simulate":
 				System.out.println("Szimulálás: \t");
-				map.moveEnemies();							//Lépés
+				map.moveEnemies(this.getGraphics());							//Lépés
 				int killedEnemies = map.shootingTowers();	//Lövés
 				
 				player.addMagic(killedEnemies);				// megölt ellenfelek után járó extra magic
@@ -658,8 +665,12 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 		System.out.println(m[indexY][indexX].isRoad());
 		
 			
-		if( this.buildTower(indexX, indexY)){
+		if (this.buildTower(indexX, indexY)) {
 			((Tower) m[indexY][indexX]).towerView.draw(this.getGraphics());
+		}
+		
+		if (this.buildTrap(indexX, indexY)) {
+			((Road) m[indexY][indexX]).roadView.draw(this.getGraphics());
 		}
 		
 		
@@ -673,10 +684,18 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 	public void mousePressed(MouseEvent arg0) {}
 	@Override
 	public void mouseReleased(MouseEvent arg0) {}
-
+	
+	static boolean b = true; //ez csak azért van itt hogy csak egy ellenfelet hozzon létre
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
+		if (b) {
+			this.createEnemy(Hobbit.class);
+			b = false;
+		}
+		map.refreshRoads(this.getGraphics());
+		map.moveEnemies(this.getGraphics());
+		map.shootingTowers();
 		System.out.println("Timer vagyok!");
 		
 	}
