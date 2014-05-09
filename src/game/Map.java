@@ -16,6 +16,10 @@ import java.util.Vector;
  */
 public class Map {
 	
+	
+	public MapView mapView;
+	
+	
 	private Block[][] map;	      	//maga a térkép
 	
 	private List<Tower> towers;		//felépített tornyok
@@ -33,6 +37,9 @@ public class Map {
 
 	
 	public Map() {
+		
+		mapView = new MapView(this);
+		
 		enemies = new ArrayList<Enemy>();
 		towers = new ArrayList<Tower>();
 		roads = new ArrayList<Road>();
@@ -67,6 +74,27 @@ public class Map {
 		
 		return false;
 	}
+	
+	
+	public boolean createTower (int x, int y) {
+		
+		if (!map[y][x].isRoad()) {	//útra nem akarunk tornyot építeni
+			
+			int tempX = map[y][x].getX();
+			int tempY = map[y][x].getY();
+			map[y][x] = new Tower();		//létrehozunk egy tornyot az adott mezõn
+			Tower tower = (Tower) map[y][x];
+			tower.setX(tempX);
+			tower.setY(tempY);
+			towers.add(tower);		//a tornyot a listánkhoz vesszük
+			setHashMap(y,x);	//be kell állítanunk a torony által látott utakat
+			
+			return true;
+		}
+		
+		return false;
+	}
+	
 	
 	/**
 	 * 
@@ -143,6 +171,29 @@ public class Map {
 		List<Integer> tempCoordinate = blockIdToCoordinate(blockId);
 		Integer first = tempCoordinate.get(0);
 		Integer second = tempCoordinate.get(1);
+		
+		Tower tempTower = (Tower) map[first][second];
+		int radius = tempTower.getRadius();		//a torony látótávolságát le kell kérnünk, mert lehet, hogy látásnövelõ varázskõ van benne
+		
+		//algoritmus a torony által látott utak felderítésére
+		for (int i = first-radius; i < first+radius+1; i++) {
+			for (int j = second-radius; j < second+radius+1; j++) {
+				if(i >= 0 && i < map.length) {
+					if(j >= 0 && j < map[i].length) {
+						if(map[i][j].isRoad()){
+							tempRoads.add((Road) map[i][j]);
+						}
+					}
+				}
+			}
+		}
+		
+		towerRoads.put(tempTower, tempRoads);
+	}
+	
+	private void setHashMap(int first, int second) {
+		
+		List<Road> tempRoads = new ArrayList<Road>();
 		
 		Tower tempTower = (Tower) map[first][second];
 		int radius = tempTower.getRadius();		//a torony látótávolságát le kell kérnünk, mert lehet, hogy látásnövelõ varázskõ van benne
@@ -355,12 +406,17 @@ public class Map {
 				br.close();
 		}
 		
+		int tempX = 0;
+		int tempY = 0;
+		
 		map = new Block[lines.size()][];
-		for (int i = 0; i < lines.size(); i++) {
+		for (int i = 0; i < lines.size(); i++,tempY += Block.blockSize) {
+			tempX = 0;
 			s = lines.get(i);
 			map[i] = new Block[s.length()];
-			for (int j = 0; j < s.length(); j++) {
+			for (int j = 0; j < s.length(); j++ , tempX += Block.blockSize) {
 				int value = Character.getNumericValue(s.charAt(j));
+				
 				if (value == 0) {
 					map[i][j] = new Block();
 				} else if (value == 1) {
@@ -376,6 +432,9 @@ public class Map {
 					map[i][j] = finalRoad;
 					this.finalRoad = finalRoad;
 				}
+				
+				map[i][j].setX(tempX);
+				map[i][j].setY(tempY);
 			}
 		}	
 		

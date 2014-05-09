@@ -1,6 +1,7 @@
 package game;
 
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
@@ -57,8 +58,19 @@ public class MenuPanel extends JPanel implements ActionListener {
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
 		
+		String event = e.getActionCommand();
+		
+		if (event.equals("Új játék")) {
+			
+			app.changeToGame();
+			
+		}else if(event.equals("Kilépés")){
+			System.exit(0);
+		}else if(event.equals("Ranglista")){
+			
+		}
+
 	}
 	
 	

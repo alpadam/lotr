@@ -1,5 +1,7 @@
 package game;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.BufferedReader;
@@ -11,6 +13,7 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 /**
  * 
@@ -18,7 +21,9 @@ import javax.swing.JPanel;
  * A felhasználó ezen keresztül kommunikál a mappal, de a felhasználón kívüli mûködést (léptetést) is ez a vezérlõ osztál irányítja. 
  *
  */
-public class Controller extends JPanel implements Runnable, MouseListener {
+public class Controller extends JPanel implements Runnable, MouseListener, ActionListener {
+	
+	Application app;
 	
 	private static int towerPrice = 20;			//torony ára statikus változó, így könnyen finomhangolható
 	private static int trapPrice = 10;			//akadály ára
@@ -31,11 +36,18 @@ public class Controller extends JPanel implements Runnable, MouseListener {
 	private Player player;
 	private int killedEnemies;
 	private int sumOfEnemies;
+	
+	private Timer timer;
 
-	public Controller() {
+	public Controller(Application app) {
+		
+		this.app = app;
 		map = new Map();
 		player = new Player();
 		sumOfEnemies = 0;
+		
+		timer = new Timer(600,this);
+		timer.setInitialDelay(600);
 	}
 
 	public Map getMap() {
@@ -47,7 +59,7 @@ public class Controller extends JPanel implements Runnable, MouseListener {
 	 * Torony építését végzõ függvényt. Értesíti a map-ot a torony építésének szándékáról.
 	 *
 	 */
-	public void buildTower (int blockId) {
+	/*public void buildTower (int blockId) {
 		if ((player.getMagic() >= towerPrice) && (blockId < Block.b_id)) {	//van-e elég mágiája a játékosnak
 			boolean built = map.createTower(blockId);
 			if (built) {
@@ -60,7 +72,27 @@ public class Controller extends JPanel implements Runnable, MouseListener {
 		else {
 			System.out.println("Torony építése sikertelen.");
 		}
+	}*/
+	
+	public boolean buildTower (int x, int y) {
+		if (player.getMagic() >= towerPrice) {			//van-e elég mágiája a játékosnak
+			boolean built = map.createTower(x,y);
+			if (built) {
+				player.substractMagic(towerPrice);			//levonjuk a megfelelõ mágiát
+				return true;
+				
+			} else {
+				System.out.println("Torony építése sikertelen.");
+				return false;
+			}
+		}
+		else {
+			System.out.println("Torony építése sikertelen, nincs elég mágia");
+			return false;
+		}
 	}
+	
+	
 
 	/**
 	 * 
@@ -179,7 +211,33 @@ public class Controller extends JPanel implements Runnable, MouseListener {
 	 *
 	 */
 	public void run() {
-		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+		
+		map = new Map();
+		player = new Player();
+		this.addMouseListener(this);
+		
+		
+		try {
+			map.initMap("defaultMap.txt");		//map inicializálása
+		} catch (IOException e) {
+			System.out.println("Hiba a pályaolvasásnál!");
+		}
+		
+		map.mapView.draw(this.getGraphics());
+		
+		timer.start();
+		
+	}
+
+		
+		
+		
+		
+		
+		
+		
+		
+		/*BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 		String line = "";
 		
 		try{
@@ -248,8 +306,7 @@ public class Controller extends JPanel implements Runnable, MouseListener {
 			}
 			}catch(IOException e){
 				System.out.println("asd");
-			}
-	}
+			}*/
 
 	/**
 	 * 
@@ -380,7 +437,7 @@ public class Controller extends JPanel implements Runnable, MouseListener {
 				}
 				try {
 					int hol = Integer.parseInt(commandSplit[1]);
-					this.buildTower(hol);
+					//this.buildTower(hol);
 					
 				} catch (NumberFormatException e) {
 					System.out.println("Nem jó azonsító!");
@@ -581,33 +638,46 @@ public class Controller extends JPanel implements Runnable, MouseListener {
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent arg0) {
-		// TODO Auto-generated method stub
+	public void mouseClicked(MouseEvent event) {
+		
+		int clickX = event.getX();
+		int clickY = event.getY();
+		
+		int indexX = clickX / Block.blockSize;
+		int indexY = clickY / Block.blockSize;
+		
+		
+		System.out.println(event.getX());
+		System.out.println(event.getY());
+		System.out.println(indexX);
+		System.out.println(indexY);
+		
+		Block[][] m = map.getMap();
+		
+		
+		System.out.println(m[indexY][indexX].isRoad());
+		
+			
+		if( this.buildTower(indexX, indexY)){
+			((Tower) m[indexY][indexX]).towerView.draw(this.getGraphics());
+		}
 		
 		
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void mouseEntered(MouseEvent arg0) {}
+	@Override
+	public void mouseExited(MouseEvent arg0) {}
+	@Override
+	public void mousePressed(MouseEvent arg0) {}
+	@Override
+	public void mouseReleased(MouseEvent arg0) {}
 
 	@Override
-	public void mouseExited(MouseEvent arg0) {
-		// TODO Auto-generated method stub
+	public void actionPerformed(ActionEvent e) {
 		
-	}
-
-	@Override
-	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
+		System.out.println("Timer vagyok!");
 		
 	}
 

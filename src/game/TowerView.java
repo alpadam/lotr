@@ -1,14 +1,21 @@
 package game;
 
+import java.awt.Color;
 import java.awt.Graphics;
 
 public class TowerView implements View {
 	
 	private Tower tower;
-
+	
+	public TowerView(Tower t) {
+		tower = t;
+	}
+	
+	
 	@Override
 	public void draw(Graphics g) {
-		// TODO Auto-generated method stub
+		g.setColor(Color.GRAY);
+		g.fillOval(tower.getX(), tower.getY(), Block.blockSize, Block.blockSize);
 	}
 	
 	public void drawShooting(Graphics g){

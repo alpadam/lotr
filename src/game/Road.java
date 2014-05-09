@@ -23,12 +23,17 @@ public class Road extends Block {
 	public static int r_id = 1;		//ez a változó tartja számon a már kiosztott útazonosítók számát
 	public int road_id;		//az út egyéni azonosítója
 	
+	public RoadView roadView;
+	
+	
 	public Road() {
 		isTrap = false;
 		isFinal = false;
 		isFinal = false;
 		gem = null;
 		nextRoad2 = null;
+		
+		roadView = new RoadView(this);
 		
 		enemies = new ArrayList<Enemy>();
 		

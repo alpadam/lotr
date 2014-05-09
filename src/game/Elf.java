@@ -7,12 +7,19 @@ package game;
  */
 public class Elf extends Enemy {
 	
+	public ElfView elfView;
+	
+	
 	public Elf() {
 		health = 50;
 		trappedValue = 0;
 		
 		enemy_id = id;
 		id++;
+		
+		elfView = new ElfView(this);
+		
+		
 		
 		System.out.println("Az Elf#"+ enemy_id + " ellenség létrejött!");
 	}
