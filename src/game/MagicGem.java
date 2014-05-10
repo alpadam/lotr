@@ -6,7 +6,6 @@ package game;
  *
  */
 public class MagicGem {
-	
 	private Type type; 		//a varázskõ típusa
 	
 	public static int id = 1;	//ez a változó tartja számon a már kiosztott varázskõazonosítók számát

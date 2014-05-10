@@ -11,7 +11,6 @@ import java.util.List;
  *
  */
 public class Road extends Block {
-
 	private List<Enemy> enemies;	//az úton tartózkodó ellenfelek
 	private boolean isTrap;		//van-e akadály az úton
 	private boolean isFinal;	//ez az ellenfelek által elérhetõ végsõ út-e, azaz a Végzet Hegye

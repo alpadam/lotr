@@ -26,7 +26,6 @@ public class Hobbit extends Enemy {
 	 */
 	@Override
 	public boolean move() {
-		
 		currentRoad.removeEnemy(this);
 		currentRoad = currentRoad.getNext(Map.RIGHT);
 		currentRoad.addEnemy(this);		//egyszerûen továbblép, nem érdeklik az akadályok

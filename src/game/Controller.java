@@ -1,18 +1,13 @@
 package game;
 
 import java.awt.BorderLayout;
-import java.awt.Container;
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.BufferedReader;
-import java.io.FileDescriptor;
-import java.io.FileOutputStream;
-import java.io.FileReader;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
 import java.util.List;
 import java.util.Random;
 
@@ -23,6 +18,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JSeparator;
 import javax.swing.Timer;
 
 /**
@@ -48,14 +44,13 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 	private Player player;
 	private boolean gameOver = false;
 	
-	
 	private Timer timer;
 	
+
+	private BufferedImage image = new BufferedImage(1000, 600, BufferedImage.TYPE_INT_ARGB);
+
+	
 	private JPanel controlPanel;
-	private JRadioButton radio1;
-	private JRadioButton radio2;
-	private JRadioButton radio3;
-	private JRadioButton radio4;
 	
 	private JButton buyGem;
 	private JRadioButton rangeExpander;
@@ -73,7 +68,11 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 	
 	private JRadioButton removeGem;
 	
-	
+	private JLabel magic;
+	private JLabel rangeExpanders;
+	private JLabel damageIncreasers;
+	private JLabel shootingIncreasers;
+	private JLabel movementDecreasers;
 
 	public Controller(Application app) {
 		
@@ -103,33 +102,31 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 		placeShootingIncreaser = new JRadioButton("Tüzelést gyorsító kõ lerak");
 		placeMovementDecreaser = new JRadioButton("Mozgás lassító kõ lerak");
 		
+		magic = new JLabel();
+		rangeExpanders = new JLabel();
+		damageIncreasers = new JLabel();
+		shootingIncreasers = new JLabel();
+		movementDecreasers = new JLabel();
+		
 		removeGem = new JRadioButton("Kõ kivétel");
 		
 		buyGem.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent arg0) {
-		    	
 		    	if(buyGem.isEnabled()){
-		    		
 		    		if(rangeExpander.isSelected()){
 		    			System.out.println("RANGEEXPANDER VÁSÁR");
 		    			buyGem(Type.RANGE_EXPANDER);	
-		    		}
-		    		else if(damageIncreaser.isSelected()){
+		    		} else if(damageIncreaser.isSelected()){
 		    			System.out.println("damageIncreaser VÁSÁR");
 		    			buyGem(Type.DAMAGE_INCREASER);
-		    		}
-		    		else if(shootingIncreaser.isSelected()){
+		    		} else if(shootingIncreaser.isSelected()){
 		    			System.out.println("SHOOTING VÁSÁR");
 		    			buyGem(Type.SHOOTING_INCREASER);
-		    			
 		    		} else if(movementDecreaser.isSelected()){
 		    			System.out.println("MOVEMENT VÁSÁR");
 		    			buyGem(Type.MOVEMENT_DECREASER);
 		    		}
-		    		
-		    		
 		    	}
-		    		
 		    }
 		});
 		
@@ -160,10 +157,24 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 		controlPanel.add(placeShootingIncreaser);
 		controlPanel.add(placeMovementDecreaser);
 		controlPanel.add(removeGem);
-		
+		controlPanel.add(new JSeparator());
+		controlPanel.add(magic);
+		controlPanel.add(rangeExpanders);
+		controlPanel.add(damageIncreasers);
+		controlPanel.add(shootingIncreasers);
+		controlPanel.add(movementDecreasers);
+
 		this.add(controlPanel, BorderLayout.LINE_END);
 	}
 
+	@Override
+	protected void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		if (image != null) {
+			g.drawImage(image, 0, 0, null);
+		}
+	}
+	
 	public Map getMap() {
 		return map;
 	}
@@ -193,7 +204,10 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 			boolean built = map.createTower(x, y);
 			if (built) {
 				player.substractMagic(towerPrice);			//levonjuk a megfelelõ mágiát
-				map.getMap()[y][x].blockView.draw(this.getGraphics());
+				Graphics g = image.getGraphics();
+				map.getMap()[y][x].blockView.draw(g);
+				g.dispose();
+			    repaint();
 				return true;
 				
 			} else {
@@ -206,8 +220,6 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 			return false;
 		}
 	}
-	
-	
 
 	/**
 	 * 
@@ -219,7 +231,10 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 			boolean built = map.createTrap(x, y);
 			if (built) {
 				player.substractMagic(trapPrice);			//levonjuk a megfelelõ mágiát
-				map.getMap()[y][x].blockView.draw(this.getGraphics());
+				Graphics g = image.getGraphics();
+				map.getMap()[y][x].blockView.draw(g);
+				g.dispose();
+			    repaint();
 				return true;
 				
 			} else {
@@ -239,7 +254,6 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 	 *
 	 */
 	public void createEnemy(Class<? extends Enemy> c) {
-
 		if (c == Elf.class) {
 			map.initEnemy(new Elf());
 		} else if (c == Hobbit.class) {
@@ -292,8 +306,12 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 			boolean placed = map.placeGem(gem, x, y);
 			if (!placed)
 				player.addGem(gem); 	//ha nem sikerült beraknunk a követ, akkor azt a játékos visszakapja
-			else
-				map.getMap()[y][x].blockView.draw(this.getGraphics());
+			else {
+				Graphics g = image.getGraphics();
+				map.getMap()[y][x].blockView.draw(g);
+				g.dispose();
+			    repaint();
+			}
 		}
 	}
 
@@ -324,7 +342,10 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 
 		if (gem != null) {
 			player.addGem(gem);	//ha sikerrel vettük ki a követ, akkor azt odaadja a játékosnak
-			map.getMap()[y][x].blockView.draw(this.getGraphics());
+			Graphics g = image.getGraphics();
+			map.getMap()[y][x].blockView.draw(g);
+			g.dispose();
+		    repaint();
 		}
 	}
 
@@ -359,10 +380,9 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 		sumOfEnemies = 0;
 	}
 	
-	
-	public void endGame(){
-		
-		if(gameOver) {
+	public void endGame() {
+		timer.stop();
+		if (gameOver) {
 			JOptionPane.showMessageDialog(this, "Sajnos nem nyert!");
 		} else {
 			JOptionPane.showMessageDialog(this, "Gratulálunk, nyert!");
@@ -370,8 +390,6 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 		
 		app.changeToMenu();
 	}
-	
-	
 
 	/**
 	 * 
@@ -379,29 +397,25 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 	 *
 	 */
 	public void run() {
-		
 		map = new Map();
 		player = new Player();
 		this.addMouseListener(this);
 		
-		
 		try {
 			map.initMap("defaultMap.txt");		//map inicializálása
+			
+			Graphics g = image.getGraphics();
+			map.mapView.draw(g);
+			g.dispose();
+			
+		    repaint();
+		    
+			timer.start();
 		} catch (IOException e) {
 			System.out.println("Hiba a pályaolvasásnál!");
 		}
-		
-		map.mapView.draw(this.getGraphics());
-		
-		timer.start();
-		
 	}
-
-		
-		
-		
-		
-		
+			
 		
 		
 		
@@ -481,7 +495,7 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 	 * A bemeneti nyelvben specifikált parancsok értelmezéséért felelõs függvény. 
 	 *
 	 */
-	private void parancskezeles(String command) {
+	/*private void parancskezeles(String command) {
 		String[] commandSplit = command.split(" ");
 
 		if (commandSplit.length >= 1) { // csak akkor, ha valami szöveget
@@ -803,19 +817,17 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 				break;
 			}
 		}
-	}
+	}*/
 	
 	static boolean gem_temp = false;
 	
 	@Override
 	public void mouseClicked(MouseEvent event) {
-		
 		int clickX = event.getX();
 		int clickY = event.getY();
 		
 		int indexX = clickX / Block.blockSize;
 		int indexY = clickY / Block.blockSize;
-		
 		
 		System.out.println(event.getX());
 		System.out.println(event.getY());
@@ -824,33 +836,27 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 		
 		Block[][] m = map.getMap();
 		
-		
 		System.out.println(m[indexY][indexX].isRoad());
 		
-		
-		if(placeRangeExpander.isSelected()){
+		if (placeRangeExpander.isSelected()){
 			this.placeGem(Type.RANGE_EXPANDER, indexX, indexY);
-			
 		}
-		else if(placeShootingIncreaser.isSelected()){
+		else if (placeShootingIncreaser.isSelected()){
 			this.placeGem(Type.SHOOTING_INCREASER, indexX, indexY);
 			
-		}else if(placeDamageIncreaser.isSelected()){
+		} else if (placeDamageIncreaser.isSelected()){
 			this.placeGem(Type.DAMAGE_INCREASER, indexX, indexY);
 			
-		}else if(placeMovementDecreaser.isSelected()){
+		} else if (placeMovementDecreaser.isSelected()){
 			this.placeGem(Type.MOVEMENT_DECREASER, indexX, indexY);
 			
-		}else if(removeGem.isSelected()){
+		} else if (removeGem.isSelected()){
 			this.removeGem(indexX, indexY);
 		}
-		
 		
 		this.buildTower(indexX, indexY);
 
 		this.buildTrap(indexX, indexY);
-		
-		
 	}
 
 	@Override
@@ -862,16 +868,11 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 	@Override
 	public void mouseReleased(MouseEvent arg0) {}
 	
-	static boolean b = true; //ez csak azért van itt hogy csak egy ellenfelet hozzon létre
-	boolean x = true;
+	//static boolean b = true; //ez csak azért van itt hogy csak egy ellenfelet hozzon létre
+	//boolean x = true;
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
-	
-		
-		
-		
 		System.out.println("RoundCicle: " + roundCicle);
 		if ((roundCicle <= 5) || ((roundCicle > 20) && (roundCicle <= 25)) || ((roundCicle > 30) && (roundCicle <= 35)) || ((roundCicle > 40) && (roundCicle <= 45))) {
 			
@@ -880,8 +881,7 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 			
 			System.out.println(random);
 			
-			switch(random){
-			
+			switch (random) {
 				case 0: 
 					this.createEnemy(Elf.class);
 					break;
@@ -905,8 +905,7 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 			maxEnemies--;
 		}
 		roundCicle++;
-		
-		
+			
 		if (gameOver) {
 			this.endGame();
 		}
@@ -915,23 +914,32 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 			this.endGame();
 		}
 		
-		map.refreshRoads(this.getGraphics());	
+		Graphics g = image.getGraphics();
+		map.refreshRoads(g);
+		g.dispose();
+	    repaint();
+	    
 		gameOver = map.moveEnemies();
 			
 		List<Tower> towers= map.getTowers();
 
-		if(sumOfEnemies != 0) {
-			for(int i=0; i< towers.size(); i++){
-					((TowerView)towers.get(i).blockView).drawShooting(this.getGraphics());
-				}
+		if (sumOfEnemies != 0) {
+			for (int i=0; i< towers.size(); i++) {
+				g = image.getGraphics();
+				((TowerView)towers.get(i).blockView).drawShooting(g);
+				g.dispose();
+			    repaint();
+			}
 			int killedEnemies = map.shootingTowers();
 			player.addMagic(killedEnemies);
 		}
 		
-		this.getGraphics().drawString(new Integer(player.getMagic()).toString(), 400, 340);
-		this.getGraphics().drawString(new Integer(player.getNumberOfDamageIncreasers()).toString(), 500,340);
-		
+		magic.setText("Varázserõ: " + player.getMagic());
+		rangeExpanders.setText("Hatótáv növelõ kövek: " + player.getNumberOfGemTypes(Type.RANGE_EXPANDER));
+		damageIncreasers.setText("Sebzés növelõ kövek: " + player.getNumberOfGemTypes(Type.DAMAGE_INCREASER));
+		shootingIncreasers.setText("Tüzelés gyorsító kövek: " + player.getNumberOfGemTypes(Type.SHOOTING_INCREASER));
+		movementDecreasers.setText("Mozgás lassító kövek: " + player.getNumberOfGemTypes(Type.MOVEMENT_DECREASER));
 			
 	}
-		
+	
 }

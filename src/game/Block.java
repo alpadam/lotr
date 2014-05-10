@@ -7,7 +7,6 @@ package game;
  *
  */
 public class Block {
-	
 	public static int b_id = 1;		//ez a változó tartja számon a már kiosztott azonosítók számát
 	public int block_id;		//a blokk egyéni azonosítója
 	

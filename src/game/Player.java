@@ -9,7 +9,6 @@ import java.util.List;
  *
  */
 public class Player {
-	
 	private List<MagicGem> inventory;	//a játékos eszköztára, azaz a tulajdonában lévõ varázskövek
 	private int magic;		//a játékos aktuális varázsereje
 	
@@ -71,12 +70,11 @@ public class Player {
 		return magic;
 	}
 	
-	public int getNumberOfDamageIncreasers(){
+	public int getNumberOfGemTypes(Type type){
 		int number=0;
 		for (int i = 0; i < inventory.size(); i++) {
-			if(inventory.get(i).getType().equals(Type.DAMAGE_INCREASER))
+			if(inventory.get(i).getType().equals(type))
 				number++;
-			
 		}
 		
 		return number;

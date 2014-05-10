@@ -17,7 +17,6 @@ import java.util.Vector;
  *
  */
 public class Map {
-	
 	public MapView mapView;
 	
 	private Block[][] map;	      	//maga a térkép
@@ -34,10 +33,8 @@ public class Map {
 	
 	private Road firstRoad;		//a kezdõút, ahova az ellenfelek belépnek
 	private Road finalRoad;		//a Végzet Hegye, az ellenfelek úticélja
-
 	
 	public Map() {
-		
 		mapView = new MapView(this);
 		
 		enemies = new ArrayList<Enemy>();
@@ -95,9 +92,7 @@ public class Map {
 	 *
 	 */
 	public boolean createTower (int x, int y) {
-		
 		if (!map[y][x].isRoad() && !map[y][x].isTower()) {	//útra nem akarunk tornyot építeni
-			
 			int tempX = map[y][x].getX();
 			int tempY = map[y][x].getY();
 			map[y][x] = new Tower();		//létrehozunk egy tornyot az adott mezõn
@@ -105,7 +100,8 @@ public class Map {
 			tower.setX(tempX);
 			tower.setY(tempY);
 			towers.add(tower);		//a tornyot a listánkhoz vesszük
-			setHashMap(y,x);	//be kell állítanunk a torony által látott utakat
+			
+			setHashMap(x, y);	//be kell állítanunk a torony által látott utakat
 			
 			return true;
 		}
@@ -184,7 +180,7 @@ public class Map {
 	 * Függvény, mely megmondja, hogy az adott blokkon lévõ torony mely utakat látja, és ezekkel az utakkal frissíti az utakat a tornyokhoz rendelõ hashmapet.
 	 *
 	 */
-	private void setHashMap(int blockId) {
+	/*private void setHashMap(int blockId) {
 		List<Road> tempRoads = new ArrayList<Road>();
 		List<Integer> tempCoordinate = blockIdToCoordinate(blockId);
 		Integer first = tempCoordinate.get(0);
@@ -207,29 +203,30 @@ public class Map {
 		}
 		
 		towerRoads.put(tempTower, tempRoads);
-	}
+	}*/
 	
-	private void setHashMap(int first, int second) {
-		
-		List<Road> tempRoads = new ArrayList<Road>();
-		
-		Tower tempTower = (Tower) map[first][second];
-		int radius = tempTower.getRadius();		//a torony látótávolságát le kell kérnünk, mert lehet, hogy látásnövelõ varázskõ van benne
-		
-		//algoritmus a torony által látott utak felderítésére
-		for (int i = first-radius; i < first+radius+1; i++) {
-			for (int j = second-radius; j < second+radius+1; j++) {
-				if(i >= 0 && i < map.length) {
-					if(j >= 0 && j < map[i].length) {
-						if(map[i][j].isRoad()){
-							tempRoads.add((Road) map[i][j]);
+	private void setHashMap(int x, int y) {
+		if (map[y][x].isTower()) {
+			List<Road> tempRoads = new ArrayList<Road>();
+			
+			Tower tempTower = (Tower) map[y][x];
+			int radius = tempTower.getRadius();		//a torony látótávolságát le kell kérnünk, mert lehet, hogy látásnövelõ varázskõ van benne
+			
+			//algoritmus a torony által látott utak felderítésére
+			for (int i = y-radius; i < y+radius+1; i++) {
+				for (int j = x-radius; j < x+radius+1; j++) {
+					if (i >= 0 && i < map.length) {
+						if (j >= 0 && j < map[i].length) {
+							if(map[i][j].isRoad()){
+								tempRoads.add((Road) map[i][j]);
+							}
 						}
 					}
 				}
 			}
+			
+			towerRoads.put(tempTower, tempRoads);
 		}
-		
-		towerRoads.put(tempTower, tempRoads);
 	}
 	
 	/**
@@ -280,12 +277,11 @@ public class Map {
 	 *
 	 */
 	public boolean moveEnemies() {
-		
 		boolean isFinal = false;
 		
-		if(new Random().nextBoolean()){			// véletlenszerû az irány
+		if (new Random().nextBoolean()) {			// véletlenszerû az irány
 			RIGHT = true;
-		}else{
+		} else {
 			RIGHT = false;
 		}
 		
@@ -371,7 +367,7 @@ public class Map {
 			if (magicGem.getType() == Type.RANGE_EXPANDER) {	//ha látótávolságot növelõ kõrõl van szó, akkor frissítenünk kell a torony által látott utak listáját
 				placed = ((Tower)map[y][x]).placeGem(magicGem);
 				towerRoads.remove(map[y][x]);
-				setHashMap(map[y][x].block_id);
+				setHashMap(x, y);
 			} else {
 				placed = ((Tower)map[y][x]).placeGem(magicGem);
 			}
@@ -412,13 +408,13 @@ public class Map {
 	public MagicGem removeGem(int x, int y) {
 		MagicGem gem = null;
 		
-		if (map[x][y].isTower()) {
+		if (map[y][x].isTower()) {
 			Tower tempTower = (Tower)map[y][x];
 			gem = tempTower.removeGem();
 			
 			if (gem != null && gem.getType() == Type.RANGE_EXPANDER) {	//ha látótávolságot növelõ követ vettünk ki, akkor a torony által látott utak listáját is modosítanunk kell
 				towerRoads.remove(tempTower);	
-				setHashMap(tempTower.block_id);
+				setHashMap(x, y);
 			}
 		}
 		
@@ -445,7 +441,7 @@ public class Map {
 		for (int i = 0; i < enemies.size(); i++) {
 			if (enemies.get(i).getHealth() <= 0) {
 				enemies.remove(i);
-				Controller.sumOfEnemies--;
+				Controller.sumOfEnemies = enemies.size();
 			}
 		}	
 	}
@@ -470,15 +466,15 @@ public class Map {
 		Vector<String> lines;
 		String s;
 		BufferedReader br = null;
-		try{
+		try {
 			br = new BufferedReader(new FileReader(path));
 			lines = new Vector<String>();
 			
-			while((s = br.readLine()) != null) {
+			while ((s = br.readLine()) != null) {
 				lines.add(s);
 			}
-		}finally{
-			if(br != null)
+		} finally {
+			if (br != null)
 				br.close();
 		}
 		
@@ -536,8 +532,6 @@ public class Map {
 							} else {
 								break;
 							}
-							
-	
 						} else if ( (j == map[i].length-1) ) {
 							if (map[i+1][j].isRoad()) {
 								tempRoad.setNext((Road) map[i+1][j]);
@@ -545,14 +539,12 @@ public class Map {
 							} else {
 								break;
 							}
-							
-							
 						} else {
 							if(map[i+1][j].isRoad() && !map[i][j+1].isRoad()) { 
 								tempRoad.setNext((Road) map[i+1][j]);
-							} else if(map[i][j+1].isRoad() && !map[i+1][j].isRoad()) { 
+							} else if (map[i][j+1].isRoad() && !map[i+1][j].isRoad()) { 
 								tempRoad.setNext((Road) map[i][j+1]);
-							} else if(map[i][j+1].isRoad() && map[i+1][j].isRoad()) {
+							} else if (map[i][j+1].isRoad() && map[i+1][j].isRoad()) {
 								tempRoad.setNext((Road) map[i][j+1]);
 								tempRoad.setNext2((Road) map[i+1][j]);
 							}
@@ -562,7 +554,6 @@ public class Map {
 				}
 			}
 		}
-		
 	}
 
 	public Block[][] getMap() {

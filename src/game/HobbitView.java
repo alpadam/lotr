@@ -21,12 +21,10 @@ public class HobbitView implements EnemyView {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 	}
 
 	@Override
 	public void draw(Graphics g) {
 		g.drawImage(bf, hobbit.getCurrentRoad().getX(), hobbit.getCurrentRoad().getY(), Block.blockSize, Block.blockSize, null);
-		
 	}
 }

@@ -21,12 +21,10 @@ public class DwarfView implements EnemyView {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 	}
 
 	@Override
 	public void draw(Graphics g) {
-		g.drawImage(bf, dwarf.getCurrentRoad().getX(), dwarf.getCurrentRoad().getY(), Block.blockSize, Block.blockSize, null);
-		
+		g.drawImage(bf, dwarf.getCurrentRoad().getX(), dwarf.getCurrentRoad().getY(), Block.blockSize, Block.blockSize, null);	
 	}
 }

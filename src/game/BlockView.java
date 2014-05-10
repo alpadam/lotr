@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 public class BlockView implements View {
-	
 	private Block block;
 	
 	public BlockView() {

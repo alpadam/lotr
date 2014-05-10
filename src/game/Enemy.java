@@ -6,7 +6,6 @@ package game;
  *
  */
 public abstract class Enemy {
-	
 	protected int health; 	//ellenfél aktuális élete
 	protected Road currentRoad; 	//az az útelem, melyen az ellenfél tartózkodik
 	protected int trappedValue;		//megmutatja, hogy az ellenfél mennyi idõt tölt még akadályon, ha egyáltalán akadályon van
@@ -25,7 +24,6 @@ public abstract class Enemy {
 	 *
 	 */
 	public boolean move() {
-		
 		if (trappedValue == 0) {	//amennyiben nincs akadályon az ellenfél, vagy már kijutott belõle
 			
 			currentRoad.removeEnemy(this);		//ellép az aktuális útról

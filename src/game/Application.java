@@ -1,7 +1,6 @@
 package game;
 
 import java.awt.Container;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -17,7 +16,6 @@ public class Application extends JFrame implements Runnable  {
 	private JPanel menuPanel;
 	
 	public Application() {
-		
 		menu = true;
 		
 		menuPanel = new MenuPanel(this);
@@ -35,7 +33,7 @@ public class Application extends JFrame implements Runnable  {
 		this.setVisible(true);
 	}
 	
-	public void changeToGame(){
+	public void changeToGame() {
 		
 		Container container = this.getContentPane();
 		container.removeAll();
@@ -47,20 +45,16 @@ public class Application extends JFrame implements Runnable  {
 		new Thread(controller).start();
 	}
 	
-	public void changeToMenu(){
-		
+	public void changeToMenu() {
 		Container container = this.getContentPane();
 		container.removeAll();
 
 		container.add(menuPanel);
 		container.validate();
 		menuPanel.repaint();
-		
 	}
 	
-	
 	public static void main(String[] args)  {
-		
 		new Thread (new Application()).start();
 
 	}

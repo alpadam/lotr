@@ -9,7 +9,6 @@ import java.util.List;
  *
  */
 public class Tower extends Block {
-
 	public static int simpleDamage = 10;	//ez a változó tartja számon azt az értéket, ami egy minden fejlesztés nélküli torony alapsebzése, így az könnyen átírtható
 	
 	private MagicGem gem;	//a toronyba behelyezett varázskõ
@@ -105,7 +104,6 @@ public class Tower extends Block {
 	 *
 	 */
 	public Type getGemType(){
-		
 		if (gem == null) {
 			return null;
 		}
@@ -118,7 +116,6 @@ public class Tower extends Block {
 	 *
 	 */
 	public boolean shoot(List<Road> roads) {
-		
 		boolean died = false;	//kell egy visszatérési érték, ami megmondja, hogy a meglõtt ellenfél meghalt-e
 		
 		for (int i = 0; i < roads.size(); i++) {
@@ -149,7 +146,6 @@ public class Tower extends Block {
 	 *
 	 */
 	public Enemy duplicateShoot(List<Road> roads) {
-		
 		for (int i = 0; i < roads.size(); i++) {
 
 			Road tempRoad = roads.get(i);
