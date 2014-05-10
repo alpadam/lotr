@@ -1,5 +1,7 @@
 package game;
 
+import java.awt.BorderLayout;
+import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -14,8 +16,13 @@ import java.io.PrintStream;
 import java.util.List;
 import java.util.Random;
 
+import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.Timer;
 
 /**
@@ -44,6 +51,29 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 	
 	private Timer timer;
 	
+	private JPanel controlPanel;
+	private JRadioButton radio1;
+	private JRadioButton radio2;
+	private JRadioButton radio3;
+	private JRadioButton radio4;
+	
+	private JButton buyGem;
+	private JRadioButton rangeExpander;
+	private JRadioButton damageIncreaser;
+	private JRadioButton shootingIncreaser;
+	private JRadioButton movementDecreaser;
+	
+	private JLabel gemBuying;
+	private JLabel gemPlacing;
+	
+	private JRadioButton placeRangeExpander;
+	private JRadioButton placeDamageIncreaser;
+	private JRadioButton placeShootingIncreaser;
+	private JRadioButton placeMovementDecreaser;
+	
+	private JRadioButton removeGem;
+	
+	
 
 	public Controller(Application app) {
 		
@@ -53,6 +83,85 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 		
 		timer = new Timer(600,this);
 		//timer.setInitialDelay(5000);
+		
+		this.setLayout(new BorderLayout());
+		
+		controlPanel = new JPanel();
+		controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.Y_AXIS));
+		
+		gemBuying = new JLabel("Kõ vásár:");
+		gemPlacing = new JLabel("Kõ lerakás:");
+		
+		buyGem = new JButton("Vásárol");
+		rangeExpander = new JRadioButton("Hatótáv növelõ kõ");
+		damageIncreaser = new JRadioButton("Sebzés növelõ kõ");
+		shootingIncreaser = new JRadioButton("Tüzelést gyorsító kõ");
+		movementDecreaser = new JRadioButton("Mozgás lassító kõ");
+		
+		placeRangeExpander = new JRadioButton("Hatótáv növelõ kõ lerak");
+		placeDamageIncreaser = new JRadioButton("Sebzés növelõ kõ lerak");
+		placeShootingIncreaser = new JRadioButton("Tüzelést gyorsító kõ lerak");
+		placeMovementDecreaser = new JRadioButton("Mozgás lassító kõ lerak");
+		
+		removeGem = new JRadioButton("Kõ kivétel");
+		
+		buyGem.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent arg0) {
+		    	
+		    	if(buyGem.isEnabled()){
+		    		
+		    		if(rangeExpander.isSelected()){
+		    			System.out.println("RANGEEXPANDER VÁSÁR");
+		    			buyGem(Type.RANGE_EXPANDER);	
+		    		}
+		    		else if(damageIncreaser.isSelected()){
+		    			System.out.println("damageIncreaser VÁSÁR");
+		    			buyGem(Type.DAMAGE_INCREASER);
+		    		}
+		    		else if(shootingIncreaser.isSelected()){
+		    			System.out.println("SHOOTING VÁSÁR");
+		    			buyGem(Type.SHOOTING_INCREASER);
+		    			
+		    		} else if(movementDecreaser.isSelected()){
+		    			System.out.println("MOVEMENT VÁSÁR");
+		    			buyGem(Type.MOVEMENT_DECREASER);
+		    		}
+		    		
+		    		
+		    	}
+		    		
+		    }
+		});
+		
+		ButtonGroup gembuy = new ButtonGroup();
+		rangeExpander.setSelected(true);
+		gembuy.add(rangeExpander);
+		gembuy.add(damageIncreaser);
+		gembuy.add(shootingIncreaser);
+		gembuy.add(movementDecreaser);
+		
+		ButtonGroup placeGems = new ButtonGroup();
+		//placeRangeExpander.setSelected(true);
+		placeGems.add(placeRangeExpander);
+		placeGems.add(placeDamageIncreaser);
+		placeGems.add(placeShootingIncreaser);
+		placeGems.add(placeMovementDecreaser);
+		placeGems.add(removeGem);
+		
+		controlPanel.add(gemBuying);
+		controlPanel.add(rangeExpander);
+		controlPanel.add(damageIncreaser);
+		controlPanel.add(shootingIncreaser);
+		controlPanel.add(movementDecreaser);
+		controlPanel.add(buyGem);
+		controlPanel.add(gemPlacing);
+		controlPanel.add(placeRangeExpander);
+		controlPanel.add(placeDamageIncreaser);
+		controlPanel.add(placeShootingIncreaser);
+		controlPanel.add(placeMovementDecreaser);
+		controlPanel.add(removeGem);
+		
+		this.add(controlPanel, BorderLayout.LINE_END);
 	}
 
 	public Map getMap() {
@@ -719,6 +828,24 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 		System.out.println(m[indexY][indexX].isRoad());
 		
 		
+		if(placeRangeExpander.isSelected()){
+			this.placeGem(Type.RANGE_EXPANDER, indexX, indexY);
+			
+		}
+		else if(placeShootingIncreaser.isSelected()){
+			this.placeGem(Type.SHOOTING_INCREASER, indexX, indexY);
+			
+		}else if(placeDamageIncreaser.isSelected()){
+			this.placeGem(Type.DAMAGE_INCREASER, indexX, indexY);
+			
+		}else if(placeMovementDecreaser.isSelected()){
+			this.placeGem(Type.MOVEMENT_DECREASER, indexX, indexY);
+			
+		}else if(removeGem.isSelected()){
+			this.removeGem(indexX, indexY);
+		}
+		
+		
 		this.buildTower(indexX, indexY);
 
 		this.buildTrap(indexX, indexY);
@@ -741,6 +868,7 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
+	
 		
 		
 		
@@ -801,6 +929,7 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 		}
 		
 		this.getGraphics().drawString(new Integer(player.getMagic()).toString(), 400, 340);
+		this.getGraphics().drawString(new Integer(player.getNumberOfDamageIncreasers()).toString(), 500,340);
 		
 			
 	}

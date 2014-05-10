@@ -96,7 +96,7 @@ public class Map {
 	 */
 	public boolean createTower (int x, int y) {
 		
-		if (!map[y][x].isRoad()) {	//útra nem akarunk tornyot építeni
+		if (!map[y][x].isRoad() && !map[y][x].isTower()) {	//útra nem akarunk tornyot építeni
 			
 			int tempX = map[y][x].getX();
 			int tempY = map[y][x].getY();

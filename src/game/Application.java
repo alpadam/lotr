@@ -28,7 +28,7 @@ public class Application extends JFrame implements Runnable  {
 	@Override
 	public void run() {
 		this.setTitle("LordOfTheRings");
-		this.setSize(900, 600);
+		this.setSize(1000, 600);
 		this.setLocation(230, 40);
 		this.setResizable(false);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);

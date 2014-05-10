@@ -70,4 +70,15 @@ public class Player {
 	public int getMagic() {							
 		return magic;
 	}
+	
+	public int getNumberOfDamageIncreasers(){
+		int number=0;
+		for (int i = 0; i < inventory.size(); i++) {
+			if(inventory.get(i).getType().equals(Type.DAMAGE_INCREASER))
+				number++;
+			
+		}
+		
+		return number;
+	}
 }
