@@ -395,14 +395,14 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 		map = new Map();
 		player = new Player();
 		gameOver = false;
+		sumOfEnemies = 0;
+		maxEnemies = 21;
 		
 		Block.b_id = 1;
 		Road.r_id = 1;
 		Tower.t_id = 1;
 		MagicGem.id = 1;
 		Enemy.id = 1;
-
-		sumOfEnemies = 0;
 	}
 	
 	public void endGame() {
@@ -424,6 +424,9 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 	public void run() {
 		map = new Map();
 		player = new Player();
+		gameOver = false;
+		sumOfEnemies = 0;
+		maxEnemies = 21;
 		this.addMouseListener(this);
 		
 		try {
@@ -570,7 +573,7 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 			Map.FOG = false;
 			for (int i=0; i< towers.size(); i++) {
 				g = image.getGraphics();
-				((TowerView)towers.get(i).blockView).draw(g);
+				towers.get(i).blockView.draw(g);
 				g.dispose();
 			    repaint();
 			}
@@ -578,10 +581,17 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 
 		if (sumOfEnemies != 0) {
 			for (int i=0; i< towers.size(); i++) {
+				//g = image.getGraphics();
+				((TowerView)towers.get(i).blockView).drawShooting(this.getGraphics());
+			    //repaint();
+			    //g.dispose();
 				g = image.getGraphics();
-				((TowerView)towers.get(i).blockView).drawShooting(g);
-				g.dispose();
+				if (!Map.FOG)
+					towers.get(i).blockView.draw(g);
+				else
+					((TowerView)towers.get(i).blockView).fogOn(g);
 			    repaint();
+			    g.dispose();
 			}
 
 			if(duplicateRandom == 3) {

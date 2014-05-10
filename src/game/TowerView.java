@@ -33,20 +33,15 @@ public class TowerView extends BlockView {
 	}
 	
 	public void drawShooting(Graphics g){
-			/*
-			// ezt még át kell gondolni!
-			g.setColor(Color.WHITE);
+			g.setColor(Color.RED);
 			g.drawString("AIM!", tower.getX()+Block.blockSize/4, tower.getY()+Block.blockSize/4);
-		
+			
 			try {
-				Controller.timer.wait(400);
+				Thread.sleep(40);
 			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
-			//this.draw(g) helyett ezt javaslom, hogy a ködbe ne zavarjon be
-			g.setColor(Color.GRAY);				//újra kirajzoljuk, hogy eltûnjön a lövés
-			g.drawString("AIM!", tower.getX()+Block.blockSize/4, tower.getY()+Block.blockSize/4);	*/
 	}
 	
 	public void fogOn(Graphics g){
