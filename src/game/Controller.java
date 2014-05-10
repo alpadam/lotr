@@ -84,6 +84,7 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 			boolean built = map.createTower(x, y);
 			if (built) {
 				player.substractMagic(towerPrice);			//levonjuk a megfelelõ mágiát
+				map.getMap()[y][x].blockView.draw(this.getGraphics());
 				return true;
 				
 			} else {
@@ -109,6 +110,7 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 			boolean built = map.createTrap(x, y);
 			if (built) {
 				player.substractMagic(trapPrice);			//levonjuk a megfelelõ mágiát
+				map.getMap()[y][x].blockView.draw(this.getGraphics());
 				return true;
 				
 			} else {
@@ -182,7 +184,7 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 			if (!placed)
 				player.addGem(gem); 	//ha nem sikerült beraknunk a követ, akkor azt a játékos visszakapja
 			else
-				map.getMap()[x][y].blockView.draw(this.getGraphics());
+				map.getMap()[y][x].blockView.draw(this.getGraphics());
 		}
 	}
 
@@ -212,8 +214,8 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 		MagicGem gem = map.removeGem(x, y);
 
 		if (gem != null) {
-			player.addGem(gem);	//ha sikerrel vettük ki a követ, akkor azt aodaadja a játékosnak
-			map.getMap()[x][y].blockView.draw(this.getGraphics());
+			player.addGem(gem);	//ha sikerrel vettük ki a követ, akkor azt odaadja a játékosnak
+			map.getMap()[y][x].blockView.draw(this.getGraphics());
 		}
 	}
 
@@ -251,9 +253,9 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 	
 	public void endGame(){
 		
-		if(gameOver){
+		if(gameOver) {
 			JOptionPane.showMessageDialog(this, "Sajnos nem nyert!");
-		}else{
+		} else {
 			JOptionPane.showMessageDialog(this, "Gratulálunk, nyert!");
 		}
 		
@@ -717,13 +719,9 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 		System.out.println(m[indexY][indexX].isRoad());
 		
 		
-		if (this.buildTower(indexX, indexY)) {
-				m[indexY][indexX].blockView.draw(this.getGraphics());
-		}
+		this.buildTower(indexX, indexY);
 
-		if (this.buildTrap(indexX, indexY)) {
-			m[indexY][indexX].blockView.draw(this.getGraphics());
-		}
+		this.buildTrap(indexX, indexY);
 		
 		
 	}
@@ -747,7 +745,7 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 		
 		
 		System.out.println("RoundCicle: " + roundCicle);
-		if( (roundCicle <= 5) || ((roundCicle > 20) && (roundCicle <= 25)) || ((roundCicle > 30) && (roundCicle <= 35)) || ((roundCicle > 40) && (roundCicle <= 45))) {
+		if ((roundCicle <= 5) || ((roundCicle > 20) && (roundCicle <= 25)) || ((roundCicle > 30) && (roundCicle <= 35)) || ((roundCicle > 40) && (roundCicle <= 45))) {
 			
 			int random = (((new Random().nextInt()) % 4) + 4) % 4 ; // 0,1,2,3 számok generálása
 																	// negatív számokat ki kellett szedni belõle, ezért van az az eltolás
@@ -781,11 +779,11 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 		roundCicle++;
 		
 		
-		if(gameOver){
+		if (gameOver) {
 			this.endGame();
 		}
 		
-		if((sumOfEnemies == 0) && (maxEnemies == 0) ){
+		if ((sumOfEnemies == 0) && (maxEnemies == 0)) {
 			this.endGame();
 		}
 		
@@ -794,9 +792,7 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 			
 		List<Tower> towers= map.getTowers();
 
-		
-		
-		if(sumOfEnemies != 0){
+		if(sumOfEnemies != 0) {
 			for(int i=0; i< towers.size(); i++){
 					((TowerView)towers.get(i).blockView).drawShooting(this.getGraphics());
 				}

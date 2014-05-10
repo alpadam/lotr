@@ -413,7 +413,7 @@ public class Map {
 		MagicGem gem = null;
 		
 		if (map[x][y].isTower()) {
-			Tower tempTower = (Tower)map[x][y];
+			Tower tempTower = (Tower)map[y][x];
 			gem = tempTower.removeGem();
 			
 			if (gem != null && gem.getType() == Type.RANGE_EXPANDER) {	//ha látótávolságot növelõ követ vettünk ki, akkor a torony által látott utak listáját is modosítanunk kell
