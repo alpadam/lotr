@@ -35,7 +35,7 @@ public class RoadView extends BlockView {
 		List<Enemy> enemies = road.getEnemies();
 		
 		for (int i = 0; i < enemies.size(); i++) {
-			enemies.get(i).enemyView.draw(g);;
+			enemies.get(i).enemyView.draw(g);
 		}
 	}
 

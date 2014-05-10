@@ -21,8 +21,6 @@ public class Application extends JFrame implements Runnable  {
 		menu = true;
 		
 		menuPanel = new MenuPanel(this);
-		controller = new Controller(this);
-		
 		
 		this.add(menuPanel);
 	}
@@ -41,13 +39,24 @@ public class Application extends JFrame implements Runnable  {
 		
 		Container container = this.getContentPane();
 		container.removeAll();
-
+		
+		controller = new Controller(this);
 		container.add(controller);
 		container.validate();
 		
 		new Thread(controller).start();
 	}
 	
+	public void changeToMenu(){
+		
+		Container container = this.getContentPane();
+		container.removeAll();
+
+		container.add(menuPanel);
+		container.validate();
+		menuPanel.repaint();
+		
+	}
 	
 	
 	public static void main(String[] args)  {

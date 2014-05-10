@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 import java.util.Vector;
 
 /**
@@ -17,9 +18,7 @@ import java.util.Vector;
  */
 public class Map {
 	
-	
 	public MapView mapView;
-	
 	
 	private Block[][] map;	      	//maga a térkép
 	
@@ -70,7 +69,7 @@ public class Map {
 	 * Visszatérési értéke mutatja, hogy sikerült-e tornyot építeni.
 	 *
 	 */
-	public boolean createTower (int blockId) {
+	/*public boolean createTower (int blockId) {
 		List<Integer> tempCoordinate = blockIdToCoordinate(blockId);
 		Integer first = tempCoordinate.get(0);
 		Integer second = tempCoordinate.get(1);
@@ -87,7 +86,7 @@ public class Map {
 		}
 		
 		return false;
-	}
+	}*/
 	
 	/**
 	 * 
@@ -280,10 +279,18 @@ public class Map {
 	 * Visszatérési értéke akkor igaz, ha az ellenfelek elérték a Végzet Hegyét.
 	 *
 	 */
-	public boolean moveEnemies(Graphics g) {
+	public boolean moveEnemies() {
+		
 		boolean isFinal = false;
 		
+		if(new Random().nextBoolean()){			// véletlenszerû az irány
+			RIGHT = true;
+		}else{
+			RIGHT = false;
+		}
+		
 		System.out.println("Lépések:");
+		System.out.println("Irány: " + RIGHT);
 		
 		for (int i = 0; i < enemies.size(); i++) {
 			Enemy tempEnemy = enemies.get(i);
@@ -358,15 +365,15 @@ public class Map {
 		 */ 	
 		boolean placed = false;
 		
-		if (map[x][y].isRoad()) {
-			placed = ((Road)map[x][y]).placeGem(magicGem);
-		} else if (map[x][y].isTower()) {
+		if (map[y][x].isRoad()) {
+			placed = ((Road)map[y][x]).placeGem(magicGem);
+		} else if (map[y][x].isTower()) {
 			if (magicGem.getType() == Type.RANGE_EXPANDER) {	//ha látótávolságot növelõ kõrõl van szó, akkor frissítenünk kell a torony által látott utak listáját
-				placed = ((Tower)map[x][y]).placeGem(magicGem);
-				towerRoads.remove(map[x][y]);
-				setHashMap(map[x][y].block_id);
+				placed = ((Tower)map[y][x]).placeGem(magicGem);
+				towerRoads.remove(map[y][x]);
+				setHashMap(map[y][x].block_id);
 			} else {
-				placed = ((Tower)map[x][y]).placeGem(magicGem);
+				placed = ((Tower)map[y][x]).placeGem(magicGem);
 			}
 		}
 		
@@ -438,6 +445,7 @@ public class Map {
 		for (int i = 0; i < enemies.size(); i++) {
 			if (enemies.get(i).getHealth() <= 0) {
 				enemies.remove(i);
+				Controller.sumOfEnemies--;
 			}
 		}	
 	}

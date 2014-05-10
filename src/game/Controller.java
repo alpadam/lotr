@@ -11,7 +11,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.util.List;
+import java.util.Random;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -27,27 +30,29 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 	
 	private static int towerPrice = 20;			//torony ára statikus változó, így könnyen finomhangolható
 	private static int trapPrice = 10;			//akadály ára
-	private static int gemPrice = 5;			//varázskõ ára
+	private static int gemPrice = 10;			//varázskõ ára
 	public static int killedEnemyReward = 10;	//megölt ellenfelekért járó bónusz mágia
 	
-	public static boolean gameOver = false;
-
+	public static int sumOfEnemies = 0;
+	private static int maxEnemies = 21;
+	private int roundCicle = 0;
+	
 	private Map map;
 	private Player player;
-	private int killedEnemies;
-	private int sumOfEnemies;
+	private boolean gameOver = false;
+	
 	
 	private Timer timer;
+	
 
 	public Controller(Application app) {
 		
 		this.app = app;
 		map = new Map();
 		player = new Player();
-		sumOfEnemies = 0;
 		
 		timer = new Timer(600,this);
-		timer.setInitialDelay(600);
+		//timer.setInitialDelay(5000);
 	}
 
 	public Map getMap() {
@@ -241,8 +246,21 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 		Enemy.id = 1;
 
 		sumOfEnemies = 0;
-		
 	}
+	
+	
+	public void endGame(){
+		
+		if(gameOver){
+			JOptionPane.showMessageDialog(this, "Sajnos nem nyert!");
+		}else{
+			JOptionPane.showMessageDialog(this, "Gratulálunk, nyert!");
+		}
+		
+		app.changeToMenu();
+	}
+	
+	
 
 	/**
 	 * 
@@ -392,7 +410,7 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 			case "move":
 				if (commandSplit.length == 1) {
 					Map.RIGHT = false;
-					gameOver = map.moveEnemies(this.getGraphics());
+					gameOver = map.moveEnemies();
 					break;
 				}
 
@@ -400,13 +418,13 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 					case "JOBB":
 						Map.RIGHT = true;
 						System.out.println("jobbra mozgás");
-						gameOver = map.moveEnemies(this.getGraphics());
+						gameOver = map.moveEnemies();
 						break;
 	
 					case "BAL":
 						Map.RIGHT = false;
 						System.out.println("balra mozgás");
-						gameOver = map.moveEnemies(this.getGraphics());
+						gameOver = map.moveEnemies();
 						break;
 	
 					default:
@@ -579,7 +597,7 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 
 			case "simulate":
 				System.out.println("Szimulálás: \t");
-				map.moveEnemies(this.getGraphics());							//Lépés
+				map.moveEnemies();							//Lépés
 				int killedEnemies = map.shootingTowers();	//Lövés
 				
 				player.addMagic(killedEnemies);				// megölt ellenfelek után járó extra magic
@@ -675,7 +693,9 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 			}
 		}
 	}
-
+	
+	static boolean gem_temp = false;
+	
 	@Override
 	public void mouseClicked(MouseEvent event) {
 		
@@ -696,11 +716,11 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 		
 		System.out.println(m[indexY][indexX].isRoad());
 		
-			
-		if (this.buildTower(indexX, indexY)) {
-			m[indexY][indexX].blockView.draw(this.getGraphics());
-		}
 		
+		if (this.buildTower(indexX, indexY)) {
+				m[indexY][indexX].blockView.draw(this.getGraphics());
+		}
+
 		if (this.buildTrap(indexX, indexY)) {
 			m[indexY][indexX].blockView.draw(this.getGraphics());
 		}
@@ -718,18 +738,75 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 	public void mouseReleased(MouseEvent arg0) {}
 	
 	static boolean b = true; //ez csak azért van itt hogy csak egy ellenfelet hozzon létre
+	boolean x = true;
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (b) {
-			this.createEnemy(Hobbit.class);
-			b = false;
-		}
-		map.refreshRoads(this.getGraphics());
-		map.moveEnemies(this.getGraphics());
-		map.shootingTowers();
-		System.out.println("Timer vagyok!");
 		
-	}
+		
+		
+		
+		System.out.println("RoundCicle: " + roundCicle);
+		if( (roundCicle <= 5) || ((roundCicle > 20) && (roundCicle <= 25)) || ((roundCicle > 30) && (roundCicle <= 35)) || ((roundCicle > 40) && (roundCicle <= 45))) {
+			
+			int random = (((new Random().nextInt()) % 4) + 4) % 4 ; // 0,1,2,3 számok generálása
+																	// negatív számokat ki kellett szedni belõle, ezért van az az eltolás
+			
+			System.out.println(random);
+			
+			switch(random){
+			
+				case 0: 
+					this.createEnemy(Elf.class);
+					break;
+					
+				case 1:
+					this.createEnemy(Hobbit.class);
+					break;
 
+				case 2: 
+					this.createEnemy(Dwarf.class);
+					break;
+
+				case 3:
+					this.createEnemy(Human.class);
+					break;
+					
+				default: 
+					break;
+			}
+			
+			maxEnemies--;
+		}
+		roundCicle++;
+		
+		
+		if(gameOver){
+			this.endGame();
+		}
+		
+		if((sumOfEnemies == 0) && (maxEnemies == 0) ){
+			this.endGame();
+		}
+		
+		map.refreshRoads(this.getGraphics());	
+		gameOver = map.moveEnemies();
+			
+		List<Tower> towers= map.getTowers();
+
+		
+		
+		if(sumOfEnemies != 0){
+			for(int i=0; i< towers.size(); i++){
+					((TowerView)towers.get(i).blockView).drawShooting(this.getGraphics());
+				}
+			int killedEnemies = map.shootingTowers();
+			player.addMagic(killedEnemies);
+		}
+		
+		this.getGraphics().drawString(new Integer(player.getMagic()).toString(), 400, 340);
+		
+			
+	}
+		
 }
