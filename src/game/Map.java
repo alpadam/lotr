@@ -361,9 +361,11 @@ public class Map {
 		 */ 	
 		boolean placed = false;
 		
-		if (map[y][x].isRoad()) {
-			placed = ((Road)map[y][x]).placeGem(magicGem);
-		} else if (map[y][x].isTower()) {
+		if (map[y][x].isRoad() && magicGem.getType() == Type.MOVEMENT_DECREASER) {
+			Road tempRoad = ((Road)map[y][x]);
+			if (tempRoad.isTrap()) 
+				placed = tempRoad.placeGem(magicGem);
+		} else if (map[y][x].isTower() && magicGem.getType() != Type.MOVEMENT_DECREASER) {
 			if (magicGem.getType() == Type.RANGE_EXPANDER) {	//ha látótávolságot növelõ kõrõl van szó, akkor frissítenünk kell a torony által látott utak listáját
 				placed = ((Tower)map[y][x]).placeGem(magicGem);
 				towerRoads.remove(map[y][x]);
@@ -416,6 +418,11 @@ public class Map {
 				towerRoads.remove(tempTower);	
 				setHashMap(x, y);
 			}
+		} else if (map[y][x].isRoad()) {
+			Road tempRoad = (Road)map[y][x];
+			if (tempRoad.getGemType() != null) {
+				gem = tempRoad.removeGem();
+			}
 		}
 		
 		return gem;
@@ -449,6 +456,7 @@ public class Map {
 	/**
 	 * 
 	 * Adott fileból inicializálja a pályát.
+	 * @throws IOException 
 	 *
 	 */
 	public void initMap(String path) throws IOException {
@@ -474,8 +482,7 @@ public class Map {
 				lines.add(s);
 			}
 		} finally {
-			if (br != null)
-				br.close();
+			br.close();
 		}
 		
 		int tempX = 0;

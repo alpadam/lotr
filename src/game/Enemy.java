@@ -24,34 +24,32 @@ public abstract class Enemy {
 	 *
 	 */
 	public boolean move() {
-		if (trappedValue == 0) {	//amennyiben nincs akadályon az ellenfél, vagy már kijutott belõle
-			
-			currentRoad.removeEnemy(this);		//ellép az aktuális útról
-			currentRoad = currentRoad.getNext(Map.RIGHT);		//lekérjük a következõ utat
-			
-			if (currentRoad != null) {
-				currentRoad.addEnemy(this);		//a kövektezõ útra ér
+		if (!currentRoad.isFinal()) {
+			if (trappedValue == 0) {	//amennyiben nincs akadályon az ellenfél, vagy már kijutott belõle
 				
-				if (currentRoad.isTrap()) {		//amennyiben akadályra lépett, akkor a megfelelõ változó változik
-					trappedValue++;
+				currentRoad.removeEnemy(this);		//ellép az aktuális útról
+				currentRoad = currentRoad.getNext(Map.RIGHT);		//lekérjük a következõ utat
+				
+				if (currentRoad != null) {
+					currentRoad.addEnemy(this);		//a kövektezõ útra ér
 					
-					if (currentRoad.getGemType() != null) {	//ha az akadályon erõsítõ varázskõ van, akkor tovább marad az akadályon, így tovább nõ az érték
+					if (currentRoad.isTrap()) {		//amennyiben akadályra lépett, akkor a megfelelõ változó változik
 						trappedValue++;
+						
+						if (currentRoad.getGemType() != null) {	//ha az akadályon erõsítõ varázskõ van, akkor tovább marad az akadályon, így tovább nõ az érték
+							trappedValue++;
+						}
 					}
 				}
+			} else {
+				trappedValue--;		//ha akadálon volt, akkor próbál kiszabadulni belõle, a megfelelõ érték egyel csökken
+				
+				System.out.println("Ellenség#" + this.enemy_id  + " csapdába esett Road#" + currentRoad.road_id + "-n ");
+				return false;		//mivel ilyenkor nem mozgott tovább, biztosan nem érte el a Végzet Hegyét
 			}
-			
-			/*System.out.println("Ellenség#" + this.enemy_id  + " lépett Road#" + currentRoad.road_id + "-ra/re " + 
-					"Történt végsõ útra lépés: " + currentRoad.isFinal());*/
-			
-			return currentRoad.isFinal();		//visszaadjuk, hogy elért-e a Végzet Hegyét
-			
-		} else {
-			trappedValue--;		//ha akadálon volt, akkor próbál kiszabadulni belõle, a megfelelõ érték egyel csökken
-			
-			System.out.println("Ellenség#" + this.enemy_id  + " csapdába esett Road#" + currentRoad.road_id + "-n ");
-			return false;		//mivel ilyenkor nem mozgott tovább, biztosan nem érte el a Végzet Hegyét
 		}
+		
+		return currentRoad.isFinal();
 	}
 	
 	public void setHealth(int health){

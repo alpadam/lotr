@@ -83,7 +83,19 @@ public class Road extends Block {
 	}
 	
 	public MagicGem removeGem(){
-		return gem;
+		MagicGem g = null;
+		
+		if (gem != null) {
+			try {
+				g = (MagicGem) gem.clone();	//klónozzuk az aktuális varázskövet, felkészülünk az esetleges kivételre
+			} catch (CloneNotSupportedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		gem = null;
+		
+		return g;
 	}
 	
 	public void setFinal(){

@@ -26,12 +26,11 @@ public class Hobbit extends Enemy {
 	 */
 	@Override
 	public boolean move() {
-		currentRoad.removeEnemy(this);
-		currentRoad = currentRoad.getNext(Map.RIGHT);
-		currentRoad.addEnemy(this);		//egyszerûen továbblép, nem érdeklik az akadályok
-		
-		System.out.println("Ellenség#" + enemy_id  + " lépett Road#" + currentRoad.road_id + "-ra/re " + 
-				"Történt végsõ útra lépés: " + currentRoad.isFinal());
+		if (!currentRoad.isFinal()) {
+			currentRoad.removeEnemy(this);
+			currentRoad = currentRoad.getNext(Map.RIGHT);
+			currentRoad.addEnemy(this);		//egyszerûen továbblép, nem érdeklik az akadályok
+		}
 		
 		return currentRoad.isFinal();
 	}

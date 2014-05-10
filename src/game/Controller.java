@@ -10,7 +10,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.List;
 import java.util.Random;
-
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -46,9 +45,7 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 	
 	private Timer timer;
 	
-
 	private BufferedImage image = new BufferedImage(1000, 600, BufferedImage.TYPE_INT_ARGB);
-
 	
 	private JPanel controlPanel;
 	
@@ -81,15 +78,15 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 		player = new Player();
 		
 		timer = new Timer(600,this);
-		//timer.setInitialDelay(5000);
+		timer.setInitialDelay(5000);
 		
 		this.setLayout(new BorderLayout());
 		
 		controlPanel = new JPanel();
 		controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.Y_AXIS));
 		
-		gemBuying = new JLabel("Kõ vásár:");
-		gemPlacing = new JLabel("Kõ lerakás:");
+		gemBuying = new JLabel("Varázskõ vásárlás:");
+		gemPlacing = new JLabel("Varázskõ lerakás:");
 		
 		buyGem = new JButton("Vásárol");
 		rangeExpander = new JRadioButton("Hatótáv növelõ kõ");
@@ -204,6 +201,7 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 			boolean built = map.createTower(x, y);
 			if (built) {
 				player.substractMagic(towerPrice);			//levonjuk a megfelelõ mágiát
+				magic.setText("Varázserõ: " + player.getMagic());
 				Graphics g = image.getGraphics();
 				map.getMap()[y][x].blockView.draw(g);
 				g.dispose();
@@ -214,8 +212,7 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 				System.out.println("Torony építése sikertelen.");
 				return false;
 			}
-		}
-		else {
+		} else {
 			System.out.println("Torony építése sikertelen, nincs elég mágia");
 			return false;
 		}
@@ -231,6 +228,7 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 			boolean built = map.createTrap(x, y);
 			if (built) {
 				player.substractMagic(trapPrice);			//levonjuk a megfelelõ mágiát
+				magic.setText("Varázserõ: " + player.getMagic());
 				Graphics g = image.getGraphics();
 				map.getMap()[y][x].blockView.draw(g);
 				g.dispose();
@@ -313,6 +311,8 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 			    repaint();
 			}
 		}
+		
+		refreshGemLabels();
 	}
 
 	/**
@@ -347,6 +347,8 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 			g.dispose();
 		    repaint();
 		}
+		
+		refreshGemLabels();
 	}
 
 	/**
@@ -359,13 +361,23 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 			MagicGem gem = new MagicGem(type);
 			player.addGem(gem);		//a játékos eszköztárához kerül a kõ
 			player.substractMagic(gemPrice);	//a megfelelõ összeg levonásra kerül a mágiából
+			magic.setText("Varázserõ: " + player.getMagic());
 			System.out.println(type + " varázskõ megvásárolva.");
 		}
 		else {
 			System.out.println("Nem sikerült megvásárolni a varázskövet.");
 		}
+		
+		refreshGemLabels();
 	}
 
+	public void refreshGemLabels() {
+		rangeExpanders.setText("Hatótáv növelõ kövek: " + player.getNumberOfGemTypes(Type.RANGE_EXPANDER));
+		damageIncreasers.setText("Sebzés növelõ kövek: " + player.getNumberOfGemTypes(Type.DAMAGE_INCREASER));
+		shootingIncreasers.setText("Tüzelés gyorsító kövek: " + player.getNumberOfGemTypes(Type.SHOOTING_INCREASER));
+		movementDecreasers.setText("Mozgás lassító kövek: " + player.getNumberOfGemTypes(Type.MOVEMENT_DECREASER));
+	}
+	
 	public void newGame() {
 		map = new Map();
 		player = new Player();
@@ -407,88 +419,18 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 			Graphics g = image.getGraphics();
 			map.mapView.draw(g);
 			g.dispose();
-			
 		    repaint();
+		    magic.setText("Varázserõ: " + player.getMagic());
+		    refreshGemLabels();
 		    
 			timer.start();
 		} catch (IOException e) {
 			System.out.println("Hiba a pályaolvasásnál!");
 		}
 	}
-			
-		
-		
-		
-		/*BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-		String line = "";
-		
-		try{
-			
-			while (!line.equals("exit")) {
-				line = in.readLine();
-				
-				newGame();							// kinullázzuk az eddigieket
 	
-				if (line.equals("teszt")) {		//elõlre definiált tesztesetet akarunk futtatni
-					try {
-						System.out.println("Pálya fájl: '<név>'.txt:");
-						String mapFile =in.readLine();
-						map = new Map();
-						player = new Player();
-						map.initMap(mapFile);	//map inicializálása
 	
-						System.out.println("Parancs fájl: '<név>'.txt:");
-						String commandFile = in.readLine();
-						BufferedReader fileReader = new BufferedReader(
-								new FileReader(commandFile));
-						
-						System.setOut(new PrintStream(new FileOutputStream("output.txt")));
-						while (true) {
-							String row = fileReader.readLine();
-							if (row == null) {
-								fileReader.close();
-								break;
-							}
-							parancskezeles(row);
-						}
-						
-						System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
-						
-						System.out.println("Az eredmény az output.txt-be íródott ki!");
-						System.out.println("Válasszon a 'teszt' vagy 'game' üzemmód közül!");
 	
-					} catch (IOException io) {
-						System.out.println("Rossz fájlnév!");
-					}
-	
-				} else if (line.equals("game")) {	//a parancsokat manuálisan adjuk meg, mintha játszanánk
-					System.out.println("Parancsok:");
-					System.out.println("Pálya betöltése: defaultMap.txt-bõl");	//elõlre definiált a pálya
-					map.initMap("defaultMap.txt"); 
-					
-					System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
-					
-					while (true) {
-						String row2 = in.readLine();
-						if (row2 == null) {
-							break;
-						}
-						parancskezeles(row2);
-						if (gameOver) {
-							System.out.println("A játék véget ért! Sajnos nem nyert!");
-							System.out.println("Válasszon a 'teszt' vagy 'game' üzemmód közül!");
-							break;
-						}
-						
-					}
-	
-				} else {
-					System.out.println("'teszt' illetve 'game' közül választhat!");
-				}
-			}
-			}catch(IOException e){
-				System.out.println("asd");
-			}*/
 
 	/**
 	 * 
@@ -840,16 +782,12 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 		
 		if (placeRangeExpander.isSelected()){
 			this.placeGem(Type.RANGE_EXPANDER, indexX, indexY);
-		}
-		else if (placeShootingIncreaser.isSelected()){
+		} else if (placeShootingIncreaser.isSelected()){
 			this.placeGem(Type.SHOOTING_INCREASER, indexX, indexY);
-			
 		} else if (placeDamageIncreaser.isSelected()){
 			this.placeGem(Type.DAMAGE_INCREASER, indexX, indexY);
-			
 		} else if (placeMovementDecreaser.isSelected()){
 			this.placeGem(Type.MOVEMENT_DECREASER, indexX, indexY);
-			
 		} else if (removeGem.isSelected()){
 			this.removeGem(indexX, indexY);
 		}
@@ -932,14 +870,8 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 			}
 			int killedEnemies = map.shootingTowers();
 			player.addMagic(killedEnemies);
+			magic.setText("Varázserõ: " + player.getMagic());
 		}
-		
-		magic.setText("Varázserõ: " + player.getMagic());
-		rangeExpanders.setText("Hatótáv növelõ kövek: " + player.getNumberOfGemTypes(Type.RANGE_EXPANDER));
-		damageIncreasers.setText("Sebzés növelõ kövek: " + player.getNumberOfGemTypes(Type.DAMAGE_INCREASER));
-		shootingIncreasers.setText("Tüzelés gyorsító kövek: " + player.getNumberOfGemTypes(Type.SHOOTING_INCREASER));
-		movementDecreasers.setText("Mozgás lassító kövek: " + player.getNumberOfGemTypes(Type.MOVEMENT_DECREASER));
-			
 	}
 	
 }

@@ -34,7 +34,6 @@ public class Application extends JFrame implements Runnable  {
 	}
 	
 	public void changeToGame() {
-		
 		Container container = this.getContentPane();
 		container.removeAll();
 		
