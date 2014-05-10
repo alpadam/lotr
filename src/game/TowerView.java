@@ -14,9 +14,13 @@ public class TowerView extends BlockView {
 	@Override
 	public void draw(Graphics g) {
 		
-		System.out.println("TORONYÚJRA");
+		if(Map.FOG){
+			g.setColor(Color.WHITE);
+		}else{
+			g.setColor(Color.GRAY);
+		}
 		
-		g.setColor(Color.GRAY);
+		
 		g.fillOval(tower.getX(), tower.getY(), Block.blockSize-1, Block.blockSize-1);
 		
 		Type gemType = tower.getGemType();
@@ -39,13 +43,11 @@ public class TowerView extends BlockView {
 			try {
 				Thread.sleep(40);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 	}
 	
-	public void fogOn(Graphics g){
-		System.out.println("FOGON");
+	/*public void fogOn(Graphics g){
 		g.setColor(Color.WHITE);
 		g.fillOval(tower.getX(), tower.getY(), Block.blockSize-1, Block.blockSize-1);
 		
@@ -59,6 +61,6 @@ public class TowerView extends BlockView {
 			g.setColor(Color.BLUE);
 		}
 		g.fillOval(tower.getX()+Block.blockSize/4, tower.getY()+Block.blockSize/4, Block.blockSize/2, Block.blockSize/2);
-	}
+	}*/
 	
 }

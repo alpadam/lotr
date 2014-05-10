@@ -1,16 +1,13 @@
 package game;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.DuplicateFormatFlagsException;
 import java.util.List;
 import java.util.Random;
 
@@ -42,6 +39,7 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 	public static int sumOfEnemies = 0;
 	private static int maxEnemies = 21;
 	private int roundCicle = 0;
+	
 	private int fogOn = 0; 
 	private int fogOff = 0; 
 	
@@ -85,8 +83,8 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 		map = new Map();
 		player = new Player();
 		
-		timer = new Timer(600, this);
-		timer.setInitialDelay(5000);
+		timer = new Timer(750, this);
+		timer.setInitialDelay(8000);
 		
 		this.setLayout(new BorderLayout());
 		
@@ -184,30 +182,12 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 		}
 	}
 	
-	public Map getMap() {
-		return map;
-	}
 
 	/**
 	 * 
 	 * Torony építését végzõ függvényt. Értesíti a map-ot a torony építésének szándékáról.
 	 *
 	 */
-	/*public void buildTower (int blockId) {
-		if ((player.getMagic() >= towerPrice) && (blockId < Block.b_id)) {	//van-e elég mágiája a játékosnak
-			boolean built = map.createTower(blockId);
-			if (built) {
-				player.substractMagic(towerPrice);	//levonjuk a megfelelõ mágiát
-				System.out.println("Torony " + "Block#" + blockId + " helyen létrehozva.");
-			} else {
-				System.out.println("Torony építése sikertelen.");
-			}
-		}
-		else {
-			System.out.println("Torony építése sikertelen.");
-		}
-	}*/
-	
 	public boolean buildTower (int x, int y) {
 		if (player.getMagic() >= towerPrice) {			//van-e elég mágiája a játékosnak
 			boolean built = map.createTower(x, y);
@@ -284,32 +264,6 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 	 * Értesíti a map-ot a kõ behelyezésének szándékáról.
 	 *
 	 */
-	/*public void placeGem(Type type, int id, boolean tmp) {
-		/* 
-		 * a tmp változóra csak a prototípusban van szükség, ezzel jelezzük, hogy melyik teszteset hívódik meg:
-		 * a kõ elhelyezése toronyba (=false), vagy a kõ elhelyezése akadályba (=true)
-		 */ 
-		/*MagicGem gem = player.getGem(type);	//lekérjük az adott típusú követ a játékostól
-		
-		if (gem != null) {	//csak akkor tudunk mit kezdeni, ha tényleg volt ilyen köve a játékosnak
-			boolean placed = map.placeGem(gem, id, tmp);
-			if (!placed)
-				player.addGem(gem); 	//ha nem sikerült beraknunk a követ, akkor azt a játékos visszakapja
-		}
-		else {
-			if (tmp)
-				System.out.println("Varázskõ elhelyezése sikertelen Road#" + id + "-n.");
-			else
-				System.out.println("Varázskõ elhelyezése sikertelen Torony#" + id + "-n.");
-		}
-	}*/
-	
-	/**
-	 * 
-	 * Kõ behelyezése építménybe, legyen szó toronyról vagy akadályról.
-	 * Értesíti a map-ot a kõ behelyezésének szándékáról.
-	 *
-	 */
 	public void placeGem(Type type, int x, int y) {
 		MagicGem gem = player.getGem(type);	//lekérjük az adott típusú követ a játékostól
 		
@@ -328,22 +282,6 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 		refreshGemLabels();
 	}
 
-	/**
-	 * 
-	 * Kõ kivétele toronyból, továbbadja a kérést a map felé.
-	 *
-	 */
-	/*public void removeGem(int id) {
-		MagicGem gem = map.removeGem(id);
-
-		if (gem != null) {
-			player.addGem(gem);	//ha sikerrel vettük ki a követ, akkor azt aodaadja a játékosnak
-			System.out.println("Torony#" + id + " építménybõl varázskõ kivéve.");
-		}
-		else {
-			System.out.println("Nem sikerült varázskövet kivenni Torony#" + id + " építménybõl");
-		}
-	}*/
 	
 	/**
 	 * 
@@ -434,13 +372,14 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 			
 			Graphics g = image.getGraphics();
 			map.mapView.draw(g);
-			System.out.println("TALANEZ");
 			g.dispose();
 		    repaint();
+		    
 		    magic.setText("Varázserõ: " + player.getMagic());
 		    refreshGemLabels();
 		    
 			timer.start();
+			
 		} catch (IOException e) {
 			System.out.println("Hiba a pályaolvasásnál!");
 		}
@@ -461,10 +400,10 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 		int indexX = clickX / Block.blockSize;
 		int indexY = clickY / Block.blockSize;
 		
-		System.out.println(event.getX());
+		/*System.out.println(event.getX());
 		System.out.println(event.getY());
 		System.out.println(indexX);
-		System.out.println(indexY);
+		System.out.println(indexY);*/
 		
 		Block[][] m = map.getMap();
 		
@@ -496,25 +435,19 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 	@Override
 	public void mouseReleased(MouseEvent arg0) {}
 	
-	//static boolean b = true; //ez csak azért van itt hogy csak egy ellenfelet hozzon létre
-	//boolean x = true;
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		fogOn = (((new Random().nextInt()) % 10) + 10) % 10 ; 
+		
+		fogOn = (((new Random().nextInt()) % 20) + 20) % 20 ; 
 		fogOff++;
 		
-		int duplicateRandom = (((new Random().nextInt()) % 10) + 10) % 10 ; 
+		ellensegszam.setText("Ellenségek száma: " + sumOfEnemies);
 		
-		ellensegszam.setText("Ellensegek szama: " + sumOfEnemies);
-		System.out.println("RoundCicle: " + roundCicle);
 		if ((roundCicle <= 5) || ((roundCicle > 20) && (roundCicle <= 25)) || ((roundCicle > 30) && (roundCicle <= 35)) || ((roundCicle > 40) && (roundCicle <= 45))) {
 			
 			int random = (((new Random().nextInt()) % 4) + 4) % 4 ; // 0,1,2,3 számok generálása
 																	// negatív számokat ki kellett szedni belõle, ezért van az az eltolás
-			
-			System.out.println(random);
-			
 			switch (random) {
 				case 0: 
 					this.createEnemy(Elf.class);
@@ -540,21 +473,17 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 		}
 		roundCicle++;
 		
-			
-		if (gameOver) {
-			this.endGame();
-		}
+		
+		Graphics g = image.getGraphics();
+		map.refreshRoads(g);
+		g.dispose();
+		repaint();
+		
 		
 		if ((sumOfEnemies == 0) && (maxEnemies == 0)) {
 			this.endGame();
 		}
 		
-		Graphics g = image.getGraphics();
-		map.refreshRoads(g);
-		g.dispose();
-	    repaint();
-	    
-		gameOver = map.moveEnemies();
 			
 		List<Tower> towers= map.getTowers();
 		
@@ -563,7 +492,7 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 			fogOff = 0;
 			for (int i=0; i < towers.size(); i++) {
 				g = image.getGraphics();
-				((TowerView)towers.get(i).blockView).fogOn(g);
+				((TowerView)towers.get(i).blockView).draw(g);
 				g.dispose();
 			    repaint();
 			}
@@ -578,22 +507,25 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 			    repaint();
 			}
 		}
-
+		
 		if (sumOfEnemies != 0) {
 			for (int i=0; i< towers.size(); i++) {
-				//g = image.getGraphics();
 				((TowerView)towers.get(i).blockView).drawShooting(this.getGraphics());
-			    //repaint();
-			    //g.dispose();
+				
+				
 				g = image.getGraphics();
-				if (!Map.FOG)
-					towers.get(i).blockView.draw(g);
-				else
-					((TowerView)towers.get(i).blockView).fogOn(g);
-			    repaint();
-			    g.dispose();
+				
+				
+				//if (!Map.FOG)
+					//towers.get(i).blockView.draw(g);
+				//else
+					//((TowerView)towers.get(i).blockView).fogOn(g);
+			    //repaint();
+			   // g.dispose();
 			}
-
+			
+			
+			int duplicateRandom = (((new Random().nextInt()) % 10) + 10) % 10 ; 
 			if(duplicateRandom == 3) {
 				Map.DUPLICATE = true;
 			} else {
@@ -605,6 +537,23 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 			magic.setText("Varázserõ: " + player.getMagic());
 			
 		}
+		
+		
+		
+		gameOver = map.moveEnemies();
+		
+		map.refreshRoads(g);
+		g.dispose();
+		repaint();
+		
+		if (gameOver) {
+			this.endGame();
+		}
+		
+	}
+	
+	public Map getMap() {
+		return map;
 	}
 	
 }
