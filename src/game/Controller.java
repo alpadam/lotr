@@ -119,16 +119,12 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 		    public void actionPerformed(ActionEvent arg0) {
 		    	if(buyGem.isEnabled()){
 		    		if(rangeExpander.isSelected()){
-		    			System.out.println("RANGEEXPANDER VÁSÁR");
 		    			buyGem(Type.RANGE_EXPANDER);	
 		    		} else if(damageIncreaser.isSelected()){
-		    			System.out.println("damageIncreaser VÁSÁR");
 		    			buyGem(Type.DAMAGE_INCREASER);
 		    		} else if(shootingIncreaser.isSelected()){
-		    			System.out.println("SHOOTING VÁSÁR");
 		    			buyGem(Type.SHOOTING_INCREASER);
 		    		} else if(movementDecreaser.isSelected()){
-		    			System.out.println("MOVEMENT VÁSÁR");
 		    			buyGem(Type.MOVEMENT_DECREASER);
 		    		}
 		    	}
@@ -229,12 +225,10 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 				return true;
 				
 			} else {
-				System.out.println("Akadály építése sikertelen.");
 				return false;
 			}
 		}
 		else {
-			System.out.println("Akadály építése sikertelen.");
 			return false;
 		}
 	}
@@ -313,11 +307,8 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 			player.addGem(gem);		//a játékos eszköztárához kerül a kõ
 			player.substractMagic(gemPrice);	//a megfelelõ összeg levonásra kerül a mágiából
 			magic.setText("Varázserõ: " + player.getMagic());
-			System.out.println(type + " varázskõ megvásárolva.");
 		}
-		else {
-			System.out.println("Nem sikerült megvásárolni a varázskövet.");
-		}
+		
 		
 		refreshGemLabels();
 	}
@@ -397,16 +388,12 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 		int clickX = event.getX();
 		int clickY = event.getY();
 		
-		
 		if(clickX > 800 || clickY > 550 )	{
 			return;
 		}
-			
 		
 		int indexX = clickX / Block.blockSize;
 		int indexY = clickY / Block.blockSize;
-		
-		Block[][] m = map.getMap();
 		
 		if (placeRangeExpander.isSelected()){
 			this.placeGem(Type.RANGE_EXPANDER, indexX, indexY);
@@ -438,7 +425,7 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
-		fogOn = (((new Random().nextInt()) % 20) + 20) % 20 ; 
+		fogOn = (((new Random().nextInt()) % 25) + 25) % 25; 
 		fogOff++;
 		
 		ellensegszam.setText("Ellenségek száma: " + sumOfEnemies);
@@ -470,6 +457,7 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 			
 			maxEnemies--;
 		}
+		
 		roundCicle++;
 		
 		
@@ -486,7 +474,6 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 		List<Tower> towers= map.getTowers();
 		
 		if(fogOn == 3) {
-			System.out.println("LEERESZKEDETT A KÖD");
 			Map.FOG = true;
 			fogOff = 0;
 			for (int i=0; i < towers.size(); i++) {
@@ -507,23 +494,16 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 			}
 		}
 		
+		
 		if (sumOfEnemies != 0) {
 			for (int i=0; i< towers.size(); i++) {
-				((TowerView)towers.get(i).blockView).drawShooting(this.getGraphics());
 				
+				((TowerView)towers.get(i).blockView).drawShooting(this.getGraphics());
 				g = image.getGraphics();
 				
-				
-				//if (!Map.FOG)
-					//towers.get(i).blockView.draw(g);
-				//else
-					//((TowerView)towers.get(i).blockView).fogOn(g);
-			    //repaint();
-			   // g.dispose();
 			}
 			
-			
-			int duplicateRandom = (((new Random().nextInt()) % 10) + 10) % 10 ; 
+			int duplicateRandom = (((new Random().nextInt()) % 20) + 20) % 20; 
 			if(duplicateRandom == 3) {
 				Map.DUPLICATE = true;
 			} else {
@@ -538,19 +518,22 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 		
 		gameOver = map.moveEnemies();
 		
-		g = image.getGraphics();
 		map.refreshRoads(g);
 		g.dispose();
 		repaint();
 		
 		if (gameOver) {
+			
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}
+			
 			this.endGame();
 		}
 		
 	}
-	
-	
-	
 	
 	
 	public Map getMap() {

@@ -17,7 +17,6 @@ public class HobbitView implements EnemyView {
 		try {
 			bf = ImageIO.read(new File("hobbitimage.png"));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

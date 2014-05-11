@@ -17,7 +17,6 @@ public class DwarfView implements EnemyView {
 		try {
 			bf = ImageIO.read(new File("dwarfimage.png"));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

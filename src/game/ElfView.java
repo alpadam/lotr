@@ -17,7 +17,6 @@ public class ElfView implements EnemyView {
 		try {
 			bf = ImageIO.read(new File("elfimage.png"));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

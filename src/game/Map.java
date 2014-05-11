@@ -187,10 +187,13 @@ public class Map {
 				int indexX = tempTower.getX() / Block.blockSize;
 				int indexY = tempTower.getY() / Block.blockSize;
 				roads = this.fogSight(indexX, indexY);	//van köd, ilyekor más utakat lát a torony		
-			} 
+			}
+			
+			
+			
+			
 			
 			if (!DUPLICATE) {
-				System.out.println("BELELÉPSZ ? ");
 				boolean isDied = tempTower.shoot(roads);
 				if (isDied)
 					killedEnemies++;
@@ -384,8 +387,6 @@ public class Map {
 					this.finalRoad = finalRoad;
 				}
 				
-				System.out.println("Beallitott X: " + tempX);
-				System.out.println("Beallitott Y: " + tempY);
 				
 				map[i][j].setX(tempX);
 				map[i][j].setY(tempY);

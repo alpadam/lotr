@@ -20,7 +20,7 @@ public class RoadView extends BlockView {
 		if (road.isFinal()) {
 			g.setColor(Color.CYAN);
 		} else {
-			g.setColor(Color.YELLOW);
+			g.setColor(Color.YELLOW);		
 		}
 		
 		

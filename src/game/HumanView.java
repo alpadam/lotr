@@ -17,7 +17,6 @@ public class HumanView implements EnemyView {
 		try {
 			bf = ImageIO.read(new File("humanimage.png"));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

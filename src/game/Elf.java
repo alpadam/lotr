@@ -8,7 +8,7 @@ package game;
 public class Elf extends Enemy {
 	
 	public Elf() {
-		health = 50;
+		health = 30;
 		trappedValue = 0;
 		
 		enemy_id = id;
