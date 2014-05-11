@@ -1,6 +1,8 @@
 package game;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.util.List;
 
@@ -21,15 +23,22 @@ public class RoadView extends BlockView {
 			g.setColor(Color.YELLOW);
 		}
 		
-		g.fillRect(road.getX(), road.getY(), Block.blockSize, Block.blockSize);
+		
+		int x = road.getX();
+		int y = road.getY();
+		
+		
+		g.fillRect(x, y, Block.blockSize, Block.blockSize);
 		
 		if (road.isTrap()) {
-			if (road.getGemType() == Type.MOVEMENT_DECREASER)
+			if (road.getGemType() == Type.MOVEMENT_DECREASER){
 				g.setColor(Color.BLACK);
-			else 
+			}else{
 				g.setColor(Color.RED);
-			g.drawLine(road.getX(), road.getY(), road.getX()+Block.blockSize-1, road.getY()+Block.blockSize-1);
-			g.drawLine(road.getX()+Block.blockSize-1, road.getY(), road.getX(), road.getY()+Block.blockSize-1);
+			}
+				
+			g.drawLine(x, y, x + Block.blockSize-1, y + Block.blockSize-1);
+			g.drawLine(x + Block.blockSize-1, y, x, y + Block.blockSize-1);
 		} 
 		
 		List<Enemy> enemies = road.getEnemies();

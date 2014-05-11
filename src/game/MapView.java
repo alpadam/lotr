@@ -15,8 +15,8 @@ public class MapView implements View {
 		
 		for (int i = 0; i < blocks.length; i++){
 			for (int j = 0; j < blocks[i].length; j++){
-				Block tempBlock = blocks[i][j];
 				
+				Block tempBlock = blocks[i][j];
 				tempBlock.blockView.draw(g);
 			}
 		}

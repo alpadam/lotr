@@ -20,8 +20,11 @@ public class TowerView extends BlockView {
 			g.setColor(Color.GRAY);
 		}
 		
+		int x = tower.getX();
+		int y = tower.getY();
 		
-		g.fillOval(tower.getX(), tower.getY(), Block.blockSize-1, Block.blockSize-1);
+		
+		g.fillOval(x, y, Block.blockSize-1, Block.blockSize-1);
 		
 		Type gemType = tower.getGemType();
 		
@@ -33,7 +36,7 @@ public class TowerView extends BlockView {
 			g.setColor(Color.BLUE);
 		}
 		
-		g.fillOval(tower.getX()+Block.blockSize/4, tower.getY()+Block.blockSize/4, Block.blockSize/2, Block.blockSize/2);
+		g.fillOval(x + Block.blockSize/4, y + Block.blockSize/4, Block.blockSize/2, Block.blockSize/2);
 	}
 	
 	public void drawShooting(Graphics g){
@@ -46,21 +49,5 @@ public class TowerView extends BlockView {
 				e.printStackTrace();
 			}
 	}
-	
-	/*public void fogOn(Graphics g){
-		g.setColor(Color.WHITE);
-		g.fillOval(tower.getX(), tower.getY(), Block.blockSize-1, Block.blockSize-1);
-		
-		Type gemType = tower.getGemType();
-		
-		if (gemType == Type.DAMAGE_INCREASER) {
-			g.setColor(Color.RED);
-		} else if (gemType == Type.RANGE_EXPANDER) {
-			g.setColor(Color.ORANGE);
-		} else if (gemType == Type.SHOOTING_INCREASER) {
-			g.setColor(Color.BLUE);
-		}
-		g.fillOval(tower.getX()+Block.blockSize/4, tower.getY()+Block.blockSize/4, Block.blockSize/2, Block.blockSize/2);
-	}*/
 	
 }

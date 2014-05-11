@@ -31,7 +31,7 @@ public class Map {
 	public static boolean DUPLICATE = false;	//éppen duplikáló lövedéket lõnek-e a tornyok
 	public static boolean FOG = false;		//van-e éppen köd a pályán
 	
-	private Road firstRoad;		//a kezdõút, ahova az ellenfelek belépnek
+	public Road firstRoad;		//a kezdõút, ahova az ellenfelek belépnek
 	private Road finalRoad;		//a Végzet Hegye, az ellenfelek úticélja
 	
 	public Map() {
@@ -99,7 +99,7 @@ public class Map {
 		}
 		return false;
 	}
-	
+
 	
 	/**
 	 * 
@@ -209,6 +209,7 @@ public class Map {
 		return killedEnemies;
 	}
 
+	
 	/**
 	 * 
 	 * A függvény feladata, hogy minden ellenfél mozgatását elvégezze.
@@ -241,9 +242,9 @@ public class Map {
 				}
 			}
 		}
-		
 		return isFinal;
 	}
+	
 	
 	/**
 	 * 
@@ -437,6 +438,8 @@ public class Map {
 		}
 	}
 
+	
+	
 	public Block[][] getMap() {
 		return map;
 	}

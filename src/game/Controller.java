@@ -83,7 +83,7 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 		map = new Map();
 		player = new Player();
 		
-		timer = new Timer(750, this);
+		timer = new Timer(600, this);
 		timer.setInitialDelay(8000);
 		
 		this.setLayout(new BorderLayout());
@@ -143,7 +143,7 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 		gembuy.add(movementDecreaser);
 		
 		ButtonGroup placeGems = new ButtonGroup();
-		//placeRangeExpander.setSelected(true);
+		placeRangeExpander.setSelected(true);
 		placeGems.add(placeRangeExpander);
 		placeGems.add(placeDamageIncreaser);
 		placeGems.add(placeShootingIncreaser);
@@ -397,17 +397,16 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 		int clickX = event.getX();
 		int clickY = event.getY();
 		
+		
+		if(clickX > 800 || clickY > 550 )	{
+			return;
+		}
+			
+		
 		int indexX = clickX / Block.blockSize;
 		int indexY = clickY / Block.blockSize;
 		
-		/*System.out.println(event.getX());
-		System.out.println(event.getY());
-		System.out.println(indexX);
-		System.out.println(indexY);*/
-		
 		Block[][] m = map.getMap();
-		
-		System.out.println(m[indexY][indexX].isRoad());
 		
 		if (placeRangeExpander.isSelected()){
 			this.placeGem(Type.RANGE_EXPANDER, indexX, indexY);
@@ -479,7 +478,6 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 		g.dispose();
 		repaint();
 		
-		
 		if ((sumOfEnemies == 0) && (maxEnemies == 0)) {
 			this.endGame();
 		}
@@ -513,7 +511,6 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 			for (int i=0; i< towers.size(); i++) {
 				((TowerView)towers.get(i).blockView).drawShooting(this.getGraphics());
 				
-				
 				g = image.getGraphics();
 				
 				
@@ -539,10 +536,9 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 			
 		}
 		
-		
-		
 		gameOver = map.moveEnemies();
 		
+		g = image.getGraphics();
 		map.refreshRoads(g);
 		g.dispose();
 		repaint();
@@ -552,6 +548,10 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 		}
 		
 	}
+	
+	
+	
+	
 	
 	public Map getMap() {
 		return map;
