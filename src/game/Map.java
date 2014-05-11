@@ -47,6 +47,7 @@ public class Map {
 		towerRoads = new HashMap<Tower, List<Road>>();
 	}
 	
+
 	/**
 	 * 
 	 * Újrarajzolja az utakat.
@@ -62,36 +63,12 @@ public class Map {
 	
 	/**
 	 * 
-	 * Torony építése megadott block-ra.
-	 * Visszatérési értéke mutatja, hogy sikerült-e tornyot építeni.
-	 *
-	 */
-	/*public boolean createTower (int blockId) {
-		List<Integer> tempCoordinate = blockIdToCoordinate(blockId);
-		Integer first = tempCoordinate.get(0);
-		Integer second = tempCoordinate.get(1);
-		
-		if (!map[first][second].isRoad()) {	//útra nem akarunk tornyot építeni
-			int new_id = map[first][second].block_id;
-			map[first][second] = new Tower();		//létrehozunk egy tornyot az adott mezõn
-			Tower tower = (Tower) map[first][second];
-			tower.block_id = new_id;	//fontos, hogy a blokkok azonosítója konzisztens maradjon
-			towers.add(tower);		//a tornyot a listánkhoz vesszük
-			setHashMap(blockId);	//be kell állítanunk a torony által látott utakat
-			
-			return true;
-		}
-		
-		return false;
-	}*/
-	
-	/**
-	 * 
 	 * Torony építése megadott koordinátákra.
 	 * Visszatérési értéke mutatja, hogy sikerült-e tornyot építeni.
 	 *
 	 */
 	public boolean createTower (int x, int y) {
+		
 		if (!map[y][x].isRoad() && !map[y][x].isTower()) {	//útra nem akarunk tornyot építeni
 			int tempX = map[y][x].getX();
 			int tempY = map[y][x].getY();
@@ -123,28 +100,6 @@ public class Map {
 		return false;
 	}
 	
-	/**
-	 * 
-	 * BlockID alapján koordinátapárt kiszámoló függvény.
-	 *
-	 */
-	private List<Integer> blockIdToCoordinate(int blockId) {
-		List<Integer> tempCoordinate = new ArrayList<Integer>();
-		if (map != null) {
-			int widthId = map[0].length;
-			if ((blockId % widthId) == 0) {
-				tempCoordinate.add((blockId / widthId) - 1);
-				tempCoordinate.add(widthId - 1);
-			} else {
-				tempCoordinate.add((blockId / widthId));
-				tempCoordinate.add((blockId % widthId) - 1);
-			}
-		} else {
-			tempCoordinate.add(-1);
-		}
-		
-		return tempCoordinate;
-	}
 	
 	/**
 	 * 
@@ -152,63 +107,44 @@ public class Map {
 	 * A függvény feladata, hogy ilyen esetben kiszámolja, hogy a torony mely utakat fogja látni.
 	 *
 	 */
-	private List<Road> fogSight(Tower tower) {
-		List<Road> tempRoads = new ArrayList<Road>();
-		int radius = tower.getRadius() - 1;
-		List<Integer> tempCoordinate = blockIdToCoordinate(tower.block_id);
-		Integer first = tempCoordinate.get(0);
-		Integer second = tempCoordinate.get(1);
+	private List<Road> fogSight(int x, int y) {
 		
-		//algoritmus a torony által látott utak felderítésére
-		for (int i = first-radius; i < first+radius+1; i++) {
-			for (int j = second-radius; j < second+radius+1; j++) {
-				if(i >= 0 && i < map.length) {
-					if(j >= 0 && j < map[i].length) {
-						if(map[i][j].isRoad()){
-							tempRoads.add((Road) map[i][j]);
+		List<Road> tempRoads = new ArrayList<Road>();
+		
+		if (map[y][x].isTower()) {
+
+			Tower tempTower = (Tower) map[y][x];
+			int radius = tempTower.getRadius() - 1;		//a torony látótávolságát le kell kérnünk, mert lehet, hogy látásnövelõ varázskõ van benne
+			
+			//algoritmus a torony által látott utak felderítésére
+			for (int i = y-radius; i < y+radius+1; i++) {
+				for (int j = x-radius; j < x+radius+1; j++) {
+					if (i >= 0 && i < map.length) {
+						if (j >= 0 && j < map[i].length) {
+							if(map[i][j].isRoad()){
+								tempRoads.add((Road) map[i][j]);
+							}
 						}
 					}
 				}
 			}
+			
 		}
-		
+			
 		return tempRoads;
 	}
+	
 	
 	/**
 	 * 
 	 * Függvény, mely megmondja, hogy az adott blokkon lévõ torony mely utakat látja, és ezekkel az utakkal frissíti az utakat a tornyokhoz rendelõ hashmapet.
 	 *
 	 */
-	/*private void setHashMap(int blockId) {
-		List<Road> tempRoads = new ArrayList<Road>();
-		List<Integer> tempCoordinate = blockIdToCoordinate(blockId);
-		Integer first = tempCoordinate.get(0);
-		Integer second = tempCoordinate.get(1);
-		
-		Tower tempTower = (Tower) map[first][second];
-		int radius = tempTower.getRadius();		//a torony látótávolságát le kell kérnünk, mert lehet, hogy látásnövelõ varázskõ van benne
-		
-		//algoritmus a torony által látott utak felderítésére
-		for (int i = first-radius; i < first+radius+1; i++) {
-			for (int j = second-radius; j < second+radius+1; j++) {
-				if(i >= 0 && i < map.length) {
-					if(j >= 0 && j < map[i].length) {
-						if(map[i][j].isRoad()){
-							tempRoads.add((Road) map[i][j]);
-						}
-					}
-				}
-			}
-		}
-		
-		towerRoads.put(tempTower, tempRoads);
-	}*/
 	
 	private void setHashMap(int x, int y) {
 		if (map[y][x].isTower()) {
 			List<Road> tempRoads = new ArrayList<Road>();
-			
+
 			Tower tempTower = (Tower) map[y][x];
 			int radius = tempTower.getRadius();		//a torony látótávolságát le kell kérnünk, mert lehet, hogy látásnövelõ varázskõ van benne
 			
@@ -248,10 +184,13 @@ public class Map {
 			if (!FOG) {
 				roads = towerRoads.get(tempTower);	//megnézzük, hogy melyik utakat látja a torony
 			} else {
-				roads = this.fogSight(tempTower);	//van köd, ilyekor más utakat lát a torony		
-			}
+				int indexX = tempTower.getX() / Block.blockSize;
+				int indexY = tempTower.getY() / Block.blockSize;
+				roads = this.fogSight(indexX, indexY);	//van köd, ilyekor más utakat lát a torony		
+			} 
 			
 			if (!DUPLICATE) {
+				System.out.println("BELELÉPSZ ? ");
 				boolean isDied = tempTower.shoot(roads);
 				if (isDied)
 					killedEnemies++;
@@ -443,6 +382,9 @@ public class Map {
 					map[i][j] = finalRoad;
 					this.finalRoad = finalRoad;
 				}
+				
+				System.out.println("Beallitott X: " + tempX);
+				System.out.println("Beallitott Y: " + tempY);
 				
 				map[i][j].setX(tempX);
 				map[i][j].setY(tempY);

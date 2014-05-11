@@ -488,6 +488,7 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 		List<Tower> towers= map.getTowers();
 		
 		if(fogOn == 3) {
+			System.out.println("LEERESZKEDETT A KÖD");
 			Map.FOG = true;
 			fogOff = 0;
 			for (int i=0; i < towers.size(); i++) {

@@ -119,7 +119,7 @@ public class Tower extends Block {
 		boolean died = false;	//kell egy visszatérési érték, ami megmondja, hogy a meglõtt ellenfél meghalt-e
 		
 		for (int i = 0; i < roads.size(); i++) {
-
+			System.out.println(roads.get(i));
 			Road tempRoad = roads.get(i);
 			List<Enemy> enemies = tempRoad.getEnemies();		//lekérjük az útról a rajta tartózkodó ellenfeleket
 			
