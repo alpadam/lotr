@@ -7,28 +7,20 @@ package game;
  *
  */
 public class Block {
-	public static int b_id = 1;		//ez a változó tartja számon a már kiosztott azonosítók számát
-	public int block_id;		//a blokk egyéni azonosítója
 	
-	public static int blockSize = 50;
+	public static int blockSize = 50;	//Állítható nézet, ekkora négyzetet fed le a blokk
 	
-	protected int x;
-	protected int y;
+	protected int x;	//A négyzet bal fölsõ sarkának x koordinátája
+	protected int y;	//A négyzet bal fölsõ sarkának y koordinátája
 	
-	public BlockView blockView;
+	public BlockView blockView;		//View architektúra része, ez az osztály felel a kirajzolásért
 	
 	public Block() {
-		block_id = b_id;
-		b_id++;
-		
+
 		blockView = new BlockView(this);
 		
 	}
-	
-	public int getBlockID() {
-		return block_id;
-	}
-	
+
 	public boolean isRoad(){
 		return false;
 	}

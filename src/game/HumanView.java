@@ -9,7 +9,7 @@ import javax.imageio.ImageIO;
 public class HumanView implements EnemyView {
 	static private BufferedImage bf;
 	
-	private Human human;
+	private Human human;		//Tárolja az embert, amit ki kell rajzolnia
 
 	public HumanView(Human human) {
 		this.human = human;

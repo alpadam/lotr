@@ -9,7 +9,7 @@ import javax.imageio.ImageIO;
 public class ElfView implements EnemyView {
 	static private BufferedImage bf;
 	
-	private Elf elf;
+	private Elf elf;		//Tárolja az elfet, amit ki kell rajzolnia
 
 	public ElfView(Elf elf) {
 		this.elf = elf;

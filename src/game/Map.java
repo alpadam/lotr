@@ -32,6 +32,7 @@ public class Map {
 	public static boolean FOG = false;		//van-e éppen köd a pályán
 	
 	public Road firstRoad;		//a kezdõút, ahova az ellenfelek belépnek
+	@SuppressWarnings("unused")
 	private Road finalRoad;		//a Végzet Hegye, az ellenfelek úticélja
 	
 	public Map() {
@@ -40,9 +41,6 @@ public class Map {
 		enemies = new ArrayList<Enemy>();
 		towers = new ArrayList<Tower>();
 		roads = new ArrayList<Road>();
-		Tower.t_id = 1;
-		Road.r_id = 1;
-		Block.b_id = 1;
 		
 		towerRoads = new HashMap<Tower, List<Road>>();
 	}
@@ -173,32 +171,32 @@ public class Map {
 	 *
 	 */
 	public int shootingTowers() {
-		System.out.println("Lövések:");	
-		
 		int killedEnemies = 0;
 		
 		for (int i = 0; i < towers.size(); i++) {
 			Tower tempTower = towers.get(i);
 			
-			List<Road> roads;
+			List<Road> tempRoads;
 			if (!FOG) {
-				roads = towerRoads.get(tempTower);	//megnézzük, hogy melyik utakat látja a torony
+				tempRoads = towerRoads.get(tempTower);	//megnézzük, hogy melyik utakat látja a torony
 			} else {
 				int indexX = tempTower.getX() / Block.blockSize;
 				int indexY = tempTower.getY() / Block.blockSize;
-				roads = this.fogSight(indexX, indexY);	//van köd, ilyekor más utakat lát a torony		
+				tempRoads = this.fogSight(indexX, indexY);	//van köd, ilyekor más utakat lát a torony		
 			}
 			
-			
-			
-			
+			for (int j = 0; j < tempRoads.size(); j++) {			//a controllerben csak akkor hívódik meg a lövést kirajzoló
+				if(tempRoads.get(j).getEnemies().size() > 0) { 		//függvény, ha vannak ellenségek a torony látótávolságán belül
+					tempTower.iSeeThem = true;
+				} 
+			}
 			
 			if (!DUPLICATE) {
-				boolean isDied = tempTower.shoot(roads);
+				boolean isDied = tempTower.shoot(tempRoads);
 				if (isDied)
 					killedEnemies++;
 			} else {
-				Enemy newEnemy = tempTower.duplicateShoot(roads);
+				Enemy newEnemy = tempTower.duplicateShoot(tempRoads);
 				if(newEnemy != null){
 					enemies.add(newEnemy);	//ha történt duplikálás, akkor frissítenünk kell az ellenféllistát
 				}
@@ -227,8 +225,6 @@ public class Map {
 		} else {
 			RIGHT = false;
 		}
-		
-		System.out.println("Lépések:");
 		
 		for (int i = 0; i < enemies.size(); i++) {
 			Enemy tempEnemy = enemies.get(i);
@@ -338,9 +334,6 @@ public class Map {
 		enemies = new ArrayList<Enemy>();
 		towers = new ArrayList<Tower>();
 		roads = new ArrayList<Road>();
-		Tower.t_id = 1;
-		Road.r_id = 1;
-		Block.b_id = 1;
 		
 		towerRoads = new HashMap<Tower, List<Road>>();
 		

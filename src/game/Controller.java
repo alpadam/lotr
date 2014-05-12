@@ -19,6 +19,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSeparator;
+import javax.swing.JToggleButton;
 import javax.swing.Timer;
 
 /**
@@ -29,6 +30,8 @@ import javax.swing.Timer;
  */
 public class Controller extends JPanel implements Runnable, MouseListener, ActionListener { 
 	
+	private static final long serialVersionUID = 1L;
+
 	Application app;
 	
 	private static int towerPrice = 20;			//torony ára statikus változó, így könnyen finomhangolható
@@ -36,24 +39,26 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 	private static int gemPrice = 10;			//varázskõ ára
 	public static int killedEnemyReward = 10;	//megölt ellenfelekért járó bónusz mágia
 	
-	public static int sumOfEnemies = 0;
-	private static int maxEnemies = 21;
-	private int roundCicle = 0;
+	public static int sumOfEnemies = 0;			//Éppen ennyi ellenség van pályán
+	private static int maxEnemies = 21;			//Ellenségek maximális száma
+	private int roundCicle = 0;					//Számoljuk a köröket
 	
-	private int fogOn = 0; 
-	private int fogOff = 0; 
+	private int fogOn = 0; 						//Köd random megjelenéséhez szükséges
+	private int fogOff = 0; 					//Köd eltûnéséhez szükséges
 	
 	private Map map;
 	private Player player;
 	private boolean gameOver = false;
 	
+	//Ez felel a léptetések gyorsaságáért
 	public static Timer timer;
 	
-	private BufferedImage image = new BufferedImage(1000, 600, BufferedImage.TYPE_INT_ARGB);
+	//Elõre bufferelt kép, amire rajzolhatunk Graphics g helyett
+	private BufferedImage image = new BufferedImage(1000, 600, BufferedImage.TYPE_INT_ARGB);	
 	
 	private JPanel controlPanel;
 	
-	private JButton buyGem;
+	private JButton buyGem;							//Ezekkel a gombokkal lehet különbözõ köveket vásárolni
 	private JRadioButton rangeExpander;
 	private JRadioButton damageIncreaser;
 	private JRadioButton shootingIncreaser;
@@ -62,14 +67,14 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 	private JLabel gemBuying;
 	private JLabel gemPlacing;
 	
-	private JRadioButton placeRangeExpander;
+	private JRadioButton placeRangeExpander;		//Ezekkel a gombokkal lehet kiválasztani, hogy melyiket követ akarjuk toronyba rakni
 	private JRadioButton placeDamageIncreaser;
 	private JRadioButton placeShootingIncreaser;
 	private JRadioButton placeMovementDecreaser;
 	
-	private JRadioButton removeGem;
+	private JRadioButton removeGem;					//Ezzel lehet kiszedni a toronyból a követ
+	private JToggleButton musicButton;				//Ezzel lehet zenét ki-be kapcsolni
 	
-	private JLabel duplikacio;
 	private JLabel magic;
 	private JLabel rangeExpanders;
 	private JLabel damageIncreasers;
@@ -105,7 +110,6 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 		placeShootingIncreaser = new JRadioButton("Tüzelést gyorsító kõ lerak");
 		placeMovementDecreaser = new JRadioButton("Mozgás lassító kõ lerak");
 		
-		duplikacio = new JLabel();
 		ellensegszam = new JLabel();
 		magic = new JLabel();
 		rangeExpanders = new JLabel();
@@ -114,6 +118,7 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 		movementDecreasers = new JLabel();
 		
 		removeGem = new JRadioButton("Kõ kivétel");
+		musicButton = new JToggleButton("Zene");
 		
 		buyGem.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent arg0) {
@@ -129,6 +134,20 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 		    		}
 		    	}
 		    }
+		});
+		
+		musicButton.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				if (e.getActionCommand().equals("Zene")) {
+					Music.getInstance();
+					Music.musicPlay();
+					musicButton.setActionCommand("MusicStop");
+				} else if (e.getActionCommand().equals("MusicStop")) {
+					Music.getInstance();
+					Music.musicStop();
+					musicButton.setActionCommand("Zene");
+			}}
 		});
 		
 		ButtonGroup gembuy = new ButtonGroup();
@@ -159,7 +178,7 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 		controlPanel.add(placeMovementDecreaser);
 		controlPanel.add(removeGem);
 		controlPanel.add(new JSeparator());
-		controlPanel.add(duplikacio);
+		controlPanel.add(musicButton);
 		controlPanel.add(ellensegszam);
 		controlPanel.add(magic);
 		controlPanel.add(rangeExpanders);
@@ -170,11 +189,12 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 		this.add(controlPanel, BorderLayout.LINE_END);
 	}
 
+	
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		if (image != null) {
-			g.drawImage(image, 0, 0, null);
+			g.drawImage(image, 0, 0, null);			//Kirajzolja a "vászonnak" használt BufferedImage-t
 		}
 	}
 	
@@ -197,11 +217,9 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 				return true;
 				
 			} else {
-				System.out.println("Torony építése sikertelen.");
 				return false;
 			}
 		} else {
-			System.out.println("Torony építése sikertelen, nincs elég mágia");
 			return false;
 		}
 	}
@@ -218,7 +236,6 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 				player.substractMagic(trapPrice);			//levonjuk a megfelelõ mágiát
 				magic.setText("Varázserõ: " + player.getMagic());
 				Graphics g = image.getGraphics();
-				//map.refreshRoads()? 
 				map.getMap()[y][x].blockView.draw(g);
 				g.dispose();
 			    repaint();
@@ -326,12 +343,6 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 		gameOver = false;
 		sumOfEnemies = 0;
 		maxEnemies = 21;
-		
-		Block.b_id = 1;
-		Road.r_id = 1;
-		Tower.t_id = 1;
-		MagicGem.id = 1;
-		Enemy.id = 1;
 	}
 	
 	public void endGame() {
@@ -377,10 +388,11 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 	}
 	
 	
-	//IDE RAKD VISSZA
-
-	
-	
+	/**
+	 * 
+	 * Egérkattintásra követ helyez el a toronyban, vagy kivesz belõle
+	 *
+	 */
 	static boolean gem_temp = false;
 	
 	@Override
@@ -421,15 +433,22 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 	@Override
 	public void mouseReleased(MouseEvent arg0) {}
 	
-	
+	/**
+	 * 
+	 * Eseménykezelõ függvény, ami a timer minden idõszeletében lefut
+	 *
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
-		fogOn = (((new Random().nextInt()) % 25) + 25) % 25; 
+		fogOn = (((new Random().nextInt()) % 25) + 25) % 25; 	//randomszám generálás a köd számára
 		fogOff++;
 		
 		ellensegszam.setText("Ellenségek száma: " + sumOfEnemies);
 		
+		//ellenségek generálása a típusukra nézve véletlenszerûen
+		//de mindig ugyanannyit, ugyanolyan idõközönként
+		//"csoportos támadás"
 		if ((roundCicle <= 5) || ((roundCicle > 20) && (roundCicle <= 25)) || ((roundCicle > 30) && (roundCicle <= 35)) || ((roundCicle > 40) && (roundCicle <= 45))) {
 			
 			int random = (((new Random().nextInt()) % 4) + 4) % 4 ; // 0,1,2,3 számok generálása
@@ -473,6 +492,7 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 			
 		List<Tower> towers= map.getTowers();
 		
+		//köd száll a toronyra, ha fogOn = 3
 		if(fogOn == 3) {
 			Map.FOG = true;
 			fogOff = 0;
@@ -484,6 +504,7 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 			}
 		}
 		
+		//a köd felszáll, ha lejárt az ideje
 		if(Map.FOG == true && fogOff == 5) {
 			Map.FOG = false;
 			for (int i=0; i< towers.size(); i++) {
@@ -494,12 +515,15 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 			}
 		}
 		
-		
+		//a tornyok jelzik, hogy mikor lõnek
 		if (sumOfEnemies != 0) {
 			for (int i=0; i< towers.size(); i++) {
 				
-				((TowerView)towers.get(i).blockView).drawShooting(this.getGraphics());
-				g = image.getGraphics();
+				if(towers.get(i).iSeeThem == true) {
+					((TowerView)towers.get(i).blockView).drawShooting(this.getGraphics());
+					g = image.getGraphics();
+					towers.get(i).iSeeThem = false;
+				}
 				
 			}
 			
@@ -522,6 +546,7 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 		g.dispose();
 		repaint();
 		
+		//játék végének lekezelése
 		if (gameOver) {
 			
 			try {
@@ -534,7 +559,6 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 		}
 		
 	}
-	
 	
 	public Map getMap() {
 		return map;

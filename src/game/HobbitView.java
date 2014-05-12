@@ -9,7 +9,7 @@ import javax.imageio.ImageIO;
 public class HobbitView implements EnemyView {
 	static private BufferedImage bf;
 	
-	private Hobbit hobbit;
+	private Hobbit hobbit;		//Tárolja a hobbitot, amit ki kell rajzolnia
 
 	public HobbitView(Hobbit hobbit) {
 		this.hobbit = hobbit;

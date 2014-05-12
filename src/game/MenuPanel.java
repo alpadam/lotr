@@ -12,14 +12,17 @@ import javax.swing.JPanel;
 
 public class MenuPanel extends JPanel implements ActionListener {
 	
+	private static final long serialVersionUID = 1L;
+
+
 	private static Font font = new Font("Matura MT Script Capitals", 0, 18);
 	
 	
 	private Application app;
 	
-	private JButton newGameButton;
-	private JButton exitButton;
-	private JButton resultsButton;
+	private JButton newGameButton;		//Új játék indítása
+	private JButton exitButton;			//Kilépés
+	//private JButton resultsButton;		<--Eredménylista - még nincs megírva
 	
 	
 	public MenuPanel(Application application) {
@@ -29,24 +32,22 @@ public class MenuPanel extends JPanel implements ActionListener {
 		newGameButton.addActionListener(this);
 		exitButton = new JButton("Kilépés");
 		exitButton.addActionListener(this);
-		resultsButton = new JButton("Ranglista");
-		resultsButton.addActionListener(this);
+		//resultsButton = new JButton("Ranglista");
+		//resultsButton.addActionListener(this);
 		
 		this.add(newGameButton);
 		this.add(exitButton);
-		this.add(resultsButton);
+		//this.add(resultsButton);
 		
-		for (Component c : this.getComponents()) {
+		
+		for (Component c : this.getComponents()) {		//Gombok betûtípusa
 		    c.setFont(font);
 		}
 		
-		
-		
-		
-		
-		
 	}
 	
+	
+	//Háttérkép
 	@Override
 	public void paintComponent(Graphics g) {
 		
@@ -62,7 +63,7 @@ public class MenuPanel extends JPanel implements ActionListener {
 		
 		if (event.equals("Új játék")) {
 			
-			app.changeToGame();
+			app.changeToGame();		//Új játék gomb megnyomása esetén meghívódik a menüt a pályára lecserélõ függvény
 			
 		}else if(event.equals("Kilépés")){
 			System.exit(0);

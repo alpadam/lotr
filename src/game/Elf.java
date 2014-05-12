@@ -11,12 +11,7 @@ public class Elf extends Enemy {
 		health = 30;
 		trappedValue = 0;
 		
-		enemy_id = id;
-		id++;
-		
 		enemyView = new ElfView(this);
-		
-		System.out.println("Az Elf#"+ enemy_id + " ellenség létrejött!");
 	}
 	
 	/**
@@ -42,10 +37,5 @@ public class Elf extends Enemy {
 		return elf;
 	}
 	
-	@Override
-	public String toString() {
-		return "\t"+"Ellenség#"+ enemy_id + "\t Elf.class" + "\t" + "Életerõ:"+ health
-				+"\t" + "Road:" + "Road#" + currentRoad.getRoadID();
-	}
 }
 

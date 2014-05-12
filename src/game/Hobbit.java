@@ -11,12 +11,7 @@ public class Hobbit extends Enemy {
 		health = 50;
 		trappedValue = 0;
 		
-		enemy_id = id;
-		id++;
-		
 		enemyView = new HobbitView(this);
-		
-		System.out.println("A Hobbit#"+ enemy_id + " ellenség létrejött!");
 	}
 	
 	/**
@@ -56,12 +51,6 @@ public class Hobbit extends Enemy {
 		hobbit.setCurrentRoad(currentRoad);		//az új hobbit az aktuális útra kerül
 		currentRoad.addEnemy(hobbit);
 		return hobbit;
-	}
-	
-	@Override
-	public String toString() {
-		return "\t"+"Ellenség#"+ enemy_id + "\t Hobbit.class" + "\t" + "Életerõ:"+ health
-				+"\t" + "Road:" + "Road#" + currentRoad.getRoadID();
 	}
 	
 }

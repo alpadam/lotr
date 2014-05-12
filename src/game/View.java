@@ -2,7 +2,8 @@ package game;
 
 import java.awt.Graphics;
 
-public interface View {
+//Közös View interfész a könnyebb elérhetõség miatt
+public interface View {		
 	
 	public void draw(Graphics g);
 

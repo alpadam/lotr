@@ -15,14 +15,9 @@ public class Tower extends Block {
 	private int damage; 	//az aktuális sebzés
 	private int radius;		//az a távolság, amerre a torony még "ellát"
 	
-	public static int t_id = 1;		//ez a változó tartja számon a már kiosztott toronyazonosítók számát
-	public int tower_id;		//a torony egyéni azonosítója
+	public boolean iSeeThem = false;	//arra van, hogy csak akkor lõjön a torony, amikor van ellenség a hatótávolságán belül
 	
 	public Tower() {
-		block_id-=1;
-		
-		tower_id = t_id;
-		t_id++;
 		
 		gem = null;
 		damage = simpleDamage;		//így könnyen finomhangolható a játékegyensúly
@@ -40,7 +35,6 @@ public class Tower extends Block {
 	 */
 	public boolean placeGem(MagicGem magicGem){
 		if (gem != null && magicGem.getType() == Type.MOVEMENT_DECREASER) {
-			System.out.println("Varázskõ elhelyezése sikertelen Torony#" + tower_id + "-n.");
 			return false;
 		} else {
 			gem = magicGem;
@@ -48,19 +42,15 @@ public class Tower extends Block {
 			switch (magicGem.getType()) { //megvizsgáljuk a kõ típusát
 				case RANGE_EXPANDER:
 					radius = radius + 1;  //egyel nõ a látott távolság
-					System.out.println("RangeExpander varázskõ Torony#" + tower_id + "-ban/ben elhelyezve.");
 				break;
 				case DAMAGE_INCREASER:
 					damage = simpleDamage + 15; 	//nõ az akutális sebzés
-					System.out.println("DamageIncreaser varázskõ Torony#" + tower_id + "-ban/ben elhelyezve.");
 				break;
 				case SHOOTING_INCREASER:
 					damage = 2 * simpleDamage;		//két lövedéket is lõ
-					System.out.println("ShootingIncreaser varázskõ Torony#" + tower_id + "-ban/ben elhelyezve.");
 				break;
 
 				default:
-					System.out.println("Nincs ilyen gem típus!");
 				break;
 			}
 		}
@@ -80,7 +70,6 @@ public class Tower extends Block {
 			try {
 				g = (MagicGem) gem.clone();	//klónozzuk az aktuális varázskövet, felkészülünk az esetleges kivételre
 			} catch (CloneNotSupportedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
@@ -119,7 +108,6 @@ public class Tower extends Block {
 		boolean died = false;	//kell egy visszatérési érték, ami megmondja, hogy a meglõtt ellenfél meghalt-e
 		
 		for (int i = 0; i < roads.size(); i++) {
-			System.out.println(roads.get(i));
 			Road tempRoad = roads.get(i);
 			List<Enemy> enemies = tempRoad.getEnemies();		//lekérjük az útról a rajta tartózkodó ellenfeleket
 			
@@ -128,8 +116,6 @@ public class Tower extends Block {
 				
 				died = tempEnemy.damage(damage);		//tudnunk kell, hogy meghalt-e az ellenfél
 				
-				System.out.println("Torony#" + tower_id + " lõtt Ellenség#" + tempEnemy.enemy_id + "-ra/re!");
-
 				if (died)
 					tempRoad.removeEnemy(tempEnemy);		//ha az ellenfél meghalt, akkor meg kell hívnunk a megfelelõ függényt, ami eltünteti
 				
@@ -154,9 +140,7 @@ public class Tower extends Block {
 			if (enemies.size() > 0) {
 				Enemy tempEnemy = enemies.get(0);
 				
-				System.out.println("Torony#" + tower_id + " lõtt Ellenség#" + tempEnemy.enemy_id + "-ra/re kettészedõ lövedékkel!");
 				Enemy newEnemy = tempEnemy.duplicate();		//duplikálódik az ellenfél
-				System.out.println("Új ellenség: " + newEnemy);
 				
 				return newEnemy;
 			}
@@ -167,17 +151,8 @@ public class Tower extends Block {
 	}
 	
 	@Override
-	public String toString() {
-		return "Tower#" + tower_id + "\t" + "gem: " + gem + " Helye: Block#" + block_id;
-	}
-	
-	@Override
 	public boolean isTower() {		
 		return true;
-	}
-	
-	public int getTowerID(){
-		return tower_id;
 	}
 	
 	public int getRadius(){

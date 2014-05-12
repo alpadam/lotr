@@ -3,7 +3,7 @@ package game;
 import java.awt.Graphics;
 
 public class MapView implements View {
-	private Map map;
+	private Map map;		//A pályát kell kirajzolnia
 	
 	public MapView(Map map) {
 		this.map = map;
@@ -16,8 +16,8 @@ public class MapView implements View {
 		for (int i = 0; i < blocks.length; i++){
 			for (int j = 0; j < blocks[i].length; j++){
 				
-				Block tempBlock = blocks[i][j];
-				tempBlock.blockView.draw(g);
+				Block tempBlock = blocks[i][j];		//Kirajzolja az összes blokkot
+				tempBlock.blockView.draw(g);		//az utak felül vannak definiálva
 			}
 		}
 	}

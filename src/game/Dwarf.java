@@ -11,12 +11,7 @@ public class Dwarf extends Enemy {
 		health = 60;		//a törpék szívósabbak, mint a többi faj, több élettel kezdenek
 		trappedValue = 0;
 		
-		enemy_id = id;
-		id++;
-		
 		enemyView = new DwarfView(this);
-		
-		System.out.println("A Dwarf#"+ enemy_id + " ellenség létrejött!");
 	}
 	
 	/**
@@ -43,10 +38,4 @@ public class Dwarf extends Enemy {
 		return dwarf;
 	}
 	
-	@Override
-	public String toString() {
-		return "\t"+"Ellenség#"+ enemy_id + "\t Dwarf.class" + "\t" + "Életerõ:"+ health
-				+"\t" + "Road:" + "Road#" + currentRoad.getRoadID();
-	}
-
 }

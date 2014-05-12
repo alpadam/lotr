@@ -1,14 +1,12 @@
 package game;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.util.List;
 
 public class RoadView extends BlockView {
 	
-	private Road road;
+	private Road road;		//Tároljuk az utat, amit ki kell rajzolnunk
 	
 	public RoadView(Road road) {
 		this.road = road;
@@ -18,9 +16,9 @@ public class RoadView extends BlockView {
 	public void draw(Graphics g) {
 		
 		if (road.isFinal()) {
-			g.setColor(Color.CYAN);
+			g.setColor(Color.CYAN);		//A végsõ út színe ciánkék
 		} else {
-			g.setColor(Color.YELLOW);		
+			g.setColor(Color.YELLOW);	//Az utak színe sárga		
 		}
 		
 		
@@ -32,9 +30,9 @@ public class RoadView extends BlockView {
 		
 		if (road.isTrap()) {
 			if (road.getGemType() == Type.MOVEMENT_DECREASER){
-				g.setColor(Color.BLACK);
+				g.setColor(Color.BLACK);		//Amennyiben a csapdában van kõ, a csapda fekete színû; X alakú
 			}else{
-				g.setColor(Color.RED);
+				g.setColor(Color.RED);			//Egyébként piros; X alakú
 			}
 				
 			g.drawLine(x, y, x + Block.blockSize-1, y + Block.blockSize-1);

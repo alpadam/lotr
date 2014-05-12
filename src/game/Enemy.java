@@ -10,9 +10,6 @@ public abstract class Enemy {
 	protected Road currentRoad; 	//az az útelem, melyen az ellenfél tartózkodik
 	protected int trappedValue;		//megmutatja, hogy az ellenfél mennyi idõt tölt még akadályon, ha egyáltalán akadályon van
 	
-	public static int id = 1;		//ez a változó tartja számon a már kiosztott ellenfélazonosítók számát
-	public int enemy_id;			//az ellenfél egyéni azonosítója
-	
 	public EnemyView enemyView;
 	
 	public abstract Enemy duplicate();
@@ -43,8 +40,6 @@ public abstract class Enemy {
 				}
 			} else {
 				trappedValue--;		//ha akadálon volt, akkor próbál kiszabadulni belõle, a megfelelõ érték egyel csökken
-				
-				System.out.println("Ellenség#" + this.enemy_id  + " csapdába esett Road#" + currentRoad.road_id + "-n ");
 				return false;		//mivel ilyenkor nem mozgott tovább, biztosan nem érte el a Végzet Hegyét
 			}
 		}
@@ -80,10 +75,6 @@ public abstract class Enemy {
 	
 	public int getHealth(){
 		return health;
-	}
-	
-	public int getEnemyID(){
-		return enemy_id;
 	}
 	
 	public Road getCurrentRoad(){

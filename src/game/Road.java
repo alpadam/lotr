@@ -19,9 +19,6 @@ public class Road extends Block {
 	private Road nextRoad;		//a következõ útelem, amerre folytatódik az útvonal
 	private Road nextRoad2;		//alapvetõen az értéke null, kivéve, ha van elágazás, ilyenkor ez a másik lehetõség, amerre az útvonal tarthat
 	
-	public static int r_id = 1;		//ez a változó tartja számon a már kiosztott útazonosítók számát
-	public int road_id;		//az út egyéni azonosítója
-	
 	public Road() {
 		isTrap = false;
 		isFinal = false;
@@ -33,8 +30,6 @@ public class Road extends Block {
 		
 		enemies = new ArrayList<Enemy>();
 		
-		road_id = r_id;
-		r_id++;
 	}
 	
 	/**
@@ -63,10 +58,8 @@ public class Road extends Block {
 	 */
 	public boolean placeGem(MagicGem magicGem){
 		if (gem != null && !isTrap) {
-			System.out.println("Varázskõ elhelyezése sikertelen Road#" + road_id + "-n.");
 			return false;
 		} else {
-			System.out.println("Varázskõ Road#" + road_id + " akadállyal ellátott úton elhelyezve.");
 			gem = magicGem;
 		}
 		
@@ -165,17 +158,6 @@ public class Road extends Block {
 	 */
 	public List<Enemy> getEnemies(){
 		return enemies;
-	}
-	
-	@Override
-	public String toString() {
-		
-			return "\t" +"Road#"+ road_id + "\t" + "helye: Block#" + block_id + "\t"
-			+ "Akadály-e:"+(isTrap ? "Igen" : "Nem")+ "\t "+ " Ellenségek:";
-	}
-	
-	public int getRoadID(){
-		return road_id;
 	}
 	
 }

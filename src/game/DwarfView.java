@@ -9,7 +9,7 @@ import javax.imageio.ImageIO;
 public class DwarfView implements EnemyView {
 	static private BufferedImage bf;
 	
-	private Dwarf dwarf;
+	private Dwarf dwarf;		//Tárolja a törpöt, amit ki kell rajzolnia
 
 	public DwarfView(Dwarf dwarf) {
 		this.dwarf = dwarf;

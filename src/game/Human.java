@@ -11,12 +11,7 @@ public class Human extends Enemy {
 		health = 50;
 		trappedValue = 0;
 		
-		enemy_id = id;
-		id++;
-		
 		enemyView = new HumanView(this);
-		
-		System.out.println("A Human#"+ enemy_id + " ellenség létrejött!");
 	}
 	
 	/**
@@ -57,10 +52,4 @@ public class Human extends Enemy {
 		return human;
 	}
 	
-	@Override
-	public String toString() {
-		return "\t"+"Ellenség#"+ enemy_id + "\t Human.class" + "\t" + "Életerõ:"+ health
-				+"\t" + "Road:" + "Road#" + currentRoad.getRoadID();
-	}
-
 }
