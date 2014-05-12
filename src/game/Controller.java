@@ -19,7 +19,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSeparator;
-import javax.swing.JToggleButton;
 import javax.swing.Timer;
 
 /**
@@ -73,7 +72,6 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 	private JRadioButton placeMovementDecreaser;
 	
 	private JRadioButton removeGem;					//Ezzel lehet kiszedni a toronyból a követ
-	private JToggleButton musicButton;				//Ezzel lehet zenét ki-be kapcsolni
 	
 	private JLabel magic;
 	private JLabel rangeExpanders;
@@ -118,7 +116,6 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 		movementDecreasers = new JLabel();
 		
 		removeGem = new JRadioButton("Kõ kivétel");
-		musicButton = new JToggleButton("Zene");
 		
 		buyGem.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent arg0) {
@@ -136,19 +133,6 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 		    }
 		});
 		
-		musicButton.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent e) {
-				if (e.getActionCommand().equals("Zene")) {
-					Music.getInstance();
-					Music.musicPlay();
-					musicButton.setActionCommand("MusicStop");
-				} else if (e.getActionCommand().equals("MusicStop")) {
-					Music.getInstance();
-					Music.musicStop();
-					musicButton.setActionCommand("Zene");
-			}}
-		});
 		
 		ButtonGroup gembuy = new ButtonGroup();
 		rangeExpander.setSelected(true);
@@ -178,7 +162,6 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 		controlPanel.add(placeMovementDecreaser);
 		controlPanel.add(removeGem);
 		controlPanel.add(new JSeparator());
-		controlPanel.add(musicButton);
 		controlPanel.add(ellensegszam);
 		controlPanel.add(magic);
 		controlPanel.add(rangeExpanders);
