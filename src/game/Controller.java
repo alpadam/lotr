@@ -441,7 +441,7 @@ public class Controller extends JPanel implements Runnable, MouseListener, Actio
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
-		fogOn = (((new Random().nextInt()) % 25) + 25) % 25; 	//randomszám generálás a köd számára
+		fogOn = (((new Random().nextInt()) % 20) + 20) % 20; 	//randomszám generálás a köd számára
 		fogOff++;
 		
 		ellensegszam.setText("Ellenségek száma: " + sumOfEnemies);
